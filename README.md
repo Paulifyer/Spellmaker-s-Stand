@@ -1,0 +1,2 @@
+# Spellmaker-s-Stand
+Sgames
