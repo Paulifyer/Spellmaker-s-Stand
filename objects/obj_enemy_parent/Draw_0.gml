@@ -15,3 +15,15 @@ if (flash_alpha > 0)
 	// Reset the shader back to the basic shader
 	shader_reset();
 }
+
+if (burn_timer > 0) {
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_red, 0.3);
+}
+
+if (slow_timer > 0) {
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_teal, 0.3);
+}
+
+if (stun_timer > 0) {
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_yellow, 0.3);
+}

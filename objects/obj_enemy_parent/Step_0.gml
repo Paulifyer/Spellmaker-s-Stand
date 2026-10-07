@@ -1,39 +1,44 @@
 /// @description Enemy Parent
 
+// Set the sprite to the sideways sprite
+sprite_index = walk_side_sprite;
+	
+// Set the sprite's direction 
+image_xscale = -1;
+	
+// Set path speed to normal speed
+path_speed = my_speed;
 
-// Get the direction the enemy is moving
-var _dir = point_direction(x_previous, y_previous, x, y);
-
-// If that direction is pointed up
-if (_dir < 135) && (_dir > 45) 
-{
-	// Set the sprite to the walk up sprite
-	sprite_index = walk_up_sprite;
-	
-	// Use the vertical path speed
-	path_speed = v_speed;
-} 
-// If that direction is pointed down
-else if (_dir > 235) && (_dir < 315) 
-{
-	// Set the sprite to the walk down sprite
-	sprite_index = walk_down_sprite;
-	
-	// Use the vertical path speed
-	path_speed = v_speed;
-} 
-// Otherwise the enemy is moving sideways
-else 
-{
-	// Set the sprite to the sideways sprite
-	sprite_index = walk_side_sprite;
-	
-	// Set the sprite's direction 
-	image_xscale = sign(x - x_previous);
-	
-	// Set path speed to normal speed
-	path_speed = my_speed;
+if (burn_timer > 0) { //burn_handler
+	if (burn_timer mod 5 == 0) {
+		deal_damage(self, burn_dmg / (TARGET_ROOM_SPEED / 5))
+	}
+	burn_timer--;
 }
+
+if (slow_timer > 0) {
+	my_speed = (1 - slow_amt) * ENEMY_SPEED
+	slow_timer--;
+}
+if (slow_timer == 0) my_speed = ENEMY_SPEED;
+
+if (stun_timer > 0) {
+	my_speed = 0;
+	stun_timer--;
+}
+if (stun_timer == 0) {
+	my_speed = ENEMY_SPEED;
+	stun_timer = -1;
+	stun_immune_timer = TARGET_ROOM_SPEED;
+}
+if (stun_immune_timer > TARGET_ROOM_SPEED) {
+	stun_timer = -1;
+}
+
+
+
+
+
 
 // Save it's current x and y
 x_previous = x;

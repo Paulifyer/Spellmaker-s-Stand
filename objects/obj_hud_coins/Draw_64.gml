@@ -33,11 +33,11 @@ with (obj_gameplay_manager)
 event_inherited();
 
 // Use our custom function to draw the text and the outline 
-draw_text_transformed_outlined(x + 50, y + 42, string(get_money()), _scale, _scale, 0, c_black, c_white);
+draw_text_transformed_outlined(x + 50, y + 42, string(get_player_mana()), _scale, _scale, 0, c_black, c_white);
 
 // Check if _alpha is greater than zero
 if (_alpha > 0)
 {
 	// Draw the text again using the color and alpha values to change the text's color
-	draw_text_transformed_color(x + 50, y + 42, string(get_money()), _scale, _scale, 0, _color, _color, _color, _color, _alpha);
+	draw_text_transformed_color(x + 50, y + 42, string(get_player_mana()), _scale, _scale, 0, _color, _color, _color, _color, _alpha);
 }

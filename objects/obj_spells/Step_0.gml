@@ -1,4 +1,6 @@
 // Step
 
-projectile.on_step(self);
-if (--lifetime <= 0) instance_destroy();
+if (!form.is_channel) {
+	if (--lifetime <= 0) instance_destroy();
+}
+form.on_step(self);

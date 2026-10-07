@@ -61,6 +61,7 @@
     {"name":"inst_14B6961B","path":"rooms/rm_level_1/rm_level_1.yy",},
     {"name":"inst_407CF423","path":"rooms/rm_level_1/rm_level_1.yy",},
     {"name":"inst_68CF61E4","path":"rooms/rm_level_1/rm_level_1.yy",},
+    {"name":"inst_AF2CA8D","path":"rooms/rm_level_1/rm_level_1.yy",},
   ],
   "isDnd":true,
   "layers":[
@@ -133,6 +134,7 @@
         {"$GMRInstance":"v4","%Name":"inst_65D06EBD","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_65D06EBD","objectId":{"name":"obj_tree_green","path":"objects/obj_tree_green/obj_tree_green.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":-1.0,"scaleY":1.0,"x":1900.0,"y":820.0,},
         {"$GMRInstance":"v4","%Name":"inst_14B6961B","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_14B6961B","objectId":{"name":"obj_tree_bare","path":"objects/obj_tree_bare/obj_tree_bare.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1840.0,"y":860.0,},
         {"$GMRInstance":"v4","%Name":"inst_407CF423","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_407CF423","objectId":{"name":"obj_tree_bare","path":"objects/obj_tree_bare/obj_tree_bare.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1900.0,"y":920.0,},
+        {"$GMRInstance":"v4","%Name":"inst_AF2CA8D","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_AF2CA8D","objectId":{"name":"Player","path":"objects/Player/Player.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":95.0,"y":205.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":true,"visible":true,},
     {"$GMRAssetLayer":"","%Name":"Road","assets":[
         {"$GMRSpriteGraphic":"v1","%Name":"graphic_45DE5316","animationSpeed":1.0,"colour":4294967295,"frozen":false,"headPosition":0.0,"ignore":false,"inheritedItemId":null,"inheritItemSettings":false,"name":"graphic_45DE5316","resourceType":"GMRSpriteGraphic","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"spriteId":{"name":"spr_path_individual_1","path":"sprites/spr_path_individual_1/spr_path_individual_1.yy",},"x":1676.0,"y":243.0,},

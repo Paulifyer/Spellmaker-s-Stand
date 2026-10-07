@@ -33,6 +33,15 @@ function get_money()
 	return - 1;
 }
 
+function get_player_mana()
+{
+	with (Player)
+	{
+		return mana;
+	}
+	return -1;
+}
+
 /// @description Adjusts the amount of money available
 /// @param {real} _amount
 function adjust_money(_amount)

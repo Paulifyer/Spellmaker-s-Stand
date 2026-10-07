@@ -11,8 +11,8 @@ global.lane_top = [144, 288, 432, 576, 720];
 function grid_to_world_center(_col, _row) {
 	var _lane = _row div ROWS_PER_LANE;
 	return {
-		x : GRID_X0 + col * TILE_W + TILE_W / 2,
-		y : global.lane_top[lane] + (_row mod ROWS_PER_LANE) * TILE_H + TILE_H / 2,
+		x : GRID_X0 + _col * TILE_W + TILE_W / 2,
+		y : global.lane_top[_lane] + (_row mod ROWS_PER_LANE) * TILE_H + TILE_H / 2,
 	};
 }
 

@@ -5,9 +5,10 @@
 	but many of them will be overridden in the child's create event.
 */
 
+#macro ENEMY_SPEED 1 // Original speed of enemy
 
 // This variable stores the enemies max health and is used to scale the health bar
-max_hp = 3;
+max_hp = 150;
 
 // Set the enemies hp to its max hp
 hp = max_hp;
@@ -23,7 +24,7 @@ health_offset_y = 0;
 my_value = 2;
 
 // This variable holds the speed for the enemy
-my_speed = 1;
+my_speed = ENEMY_SPEED;
 
 // This variable is used for the enemy's hit flash.
 // It is set to 1 when the enemy is hit by something
@@ -53,3 +54,11 @@ defeat_side_object = obj_zombie_defeat_side;
 
 // The defeated enemy to spawn if the enemy is moving down
 defeat_down_object = obj_zombie_defeat_down;
+
+
+burn_dmg = 0;
+burn_timer = 0;
+slow_amt = 0;
+slow_timer = 0;
+stun_timer = 0;
+stun_immune_timer = 0;

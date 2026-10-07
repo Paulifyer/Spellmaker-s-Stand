@@ -4,7 +4,7 @@
 event_inherited();
 
 // This variable stores the enemies max health and is used to scale the health bar
-max_hp = 12;
+max_hp = 450;
 
 // Set the enemies hp to its max hp
 hp = max_hp;
