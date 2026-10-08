@@ -7,7 +7,7 @@ if (mana <= 0) {
 
 if (mana < MAX_MANA) {
 	if (mana_ticks == 0) {
-		var _regen_multiplier = mana_exhausted ? 3 : 1;
+		var _regen_multiplier = mana_exhausted ? mana_exhausted_regen_multiplier : 1;
 		mana = min(MAX_MANA, mana + mana_regen_rate * _regen_multiplier);
 		mana_ticks = 6;
 	}

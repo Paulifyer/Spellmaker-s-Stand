@@ -49,8 +49,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	
 	if (!is_struct(_f) || !is_struct(_e) || !is_struct(_m)) return noone;
 	var _cost = _f.cost + _e.cost + _m.cost;
-	if (_caster.mana < _cost) return noone;
-	_caster.mana -= _cost;
+	_caster.mana = max(0, _caster.mana - _cost);
 	if (_caster.mana <= 0) {
 		_caster.mana = 0;
 		_caster.mana_exhausted = true;
