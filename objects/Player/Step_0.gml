@@ -1,11 +1,22 @@
 
 // Mana Regen
-if (mana != MAX_MANA) {
+if (mana <= 0) {
+	mana = 0;
+	mana_exhausted = true;
+}
+
+if (mana < MAX_MANA) {
 	if (mana_ticks == 0) {
-		mana = min(MAX_MANA, mana + mana_regen_rate);
+		var _regen_multiplier = mana_exhausted ? 3 : 1;
+		mana = min(MAX_MANA, mana + mana_regen_rate * _regen_multiplier);
 		mana_ticks = 6;
 	}
 	mana_ticks--
+}
+
+if (mana >= MAX_MANA) {
+	mana = MAX_MANA;
+	mana_exhausted = false;
 }
 
 // Glyph inputs
@@ -54,8 +65,19 @@ if (channel != noone) {
 	if (!_release) {
 		// Draining mana while held
 		var _drain = channel.form.drain_per_sec / TARGET_ROOM_SPEED;
-		if (mana >= _drain) mana -= _drain;
-		else _release = true;
+		if (mana >= _drain) {
+			mana -= _drain;
+			if (mana <= 0) {
+				mana = 0;
+				mana_exhausted = true;
+				_release = true;
+			}
+		}
+		else {
+			mana = 0;
+			mana_exhausted = true;
+			_release = true;
+		}
 	}
 	if  (_release || !instance_exists(channel)) {
 		if (instance_exists(channel)) instance_destroy(channel);

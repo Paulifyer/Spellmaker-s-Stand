@@ -41,6 +41,8 @@ function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
 }
 
 function cast_spell(_caster, _loadout, _col, _row) {
+	if (_caster.mana_exhausted) return noone;
+
 	var _f = global.spell_glyphs.form[$ _loadout.form];
 	var _e = global.spell_glyphs.element[$ (_loadout.element ?? "none") ];
 	var _m = global.spell_glyphs.modifier[$ (_loadout.modifier ?? "none")];
@@ -49,6 +51,10 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	var _cost = _f.cost + _e.cost + _m.cost;
 	if (_caster.mana < _cost) return noone;
 	_caster.mana -= _cost;
+	if (_caster.mana <= 0) {
+		_caster.mana = 0;
+		_caster.mana_exhausted = true;
+	}
 	
 	return instance_create_layer(_caster.x, _caster.y, "Instances", obj_spells, {
 		caster		: _caster,
