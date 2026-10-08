@@ -2,6 +2,7 @@
 
 
 var _scale, _alpha, _color;
+var _mana_color = c_white;
 
 // Set _scale's default value to 1
 _scale = 1;
@@ -32,8 +33,17 @@ with (obj_gameplay_manager)
 // Inherit the parent event
 event_inherited();
 
+// Show that spellcasting is locked while mana is recovering from exhaustion
+with (Player)
+{
+	if (mana_exhausted)
+	{
+		_mana_color = c_red;
+	}
+}
+
 // Use our custom function to draw the text and the outline 
-draw_text_transformed_outlined(x + 50, y + 42, string(get_player_mana()), _scale, _scale, 0, c_black, c_white);
+draw_text_transformed_outlined(x + 50, y + 42, string(get_player_mana()), _scale, _scale, 0, c_black, _mana_color);
 
 // Check if _alpha is greater than zero
 if (_alpha > 0)
