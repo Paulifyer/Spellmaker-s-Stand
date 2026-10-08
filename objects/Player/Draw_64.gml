@@ -2,8 +2,11 @@
 
 for (var i = 0; i < 3; i++) {
 	var _x = 100 + i * 200;
-	draw_rectangle(_x, 40, _x + 60, 100, true);
-	if (i < array_length(input_glyphs)) draw_text(_x + 8, 60, input_glyphs[i]); //text for each glyph selected
+	var _rec_color = (is_spell_on_cd) ? c_gray : c_fuchsia;
+	draw_set_colour(_rec_color);
+	draw_rectangle(_x, 864, _x + 60, 924, true);
+	if (i < array_length(input_glyphs)) draw_text(_x + 8, 894, input_glyphs[i]); //text for each glyph selected
+	draw_set_colour(c_white);
 }
 
 // Draws the selected tile

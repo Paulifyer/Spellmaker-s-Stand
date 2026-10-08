@@ -12,7 +12,7 @@ if (position < array_length(current_wave_struct.enemy_array))
 {	
 	var lane_index = irandom_range(0, 4);
 
-	// Create an instance of that enemy inside of a with statement 
+	// Create an instance of that enemy inside of a with statement
 	with (instance_create_layer(x, y, layer, current_wave_struct.enemy_array[position])) 
 	{
 		// So that we can start it on the path

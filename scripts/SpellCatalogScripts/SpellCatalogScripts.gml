@@ -1,3 +1,4 @@
+
 global.spell_glyphs = {
 	form : {
 		projectile : new Form_Projectile(),

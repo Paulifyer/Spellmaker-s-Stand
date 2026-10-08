@@ -5,7 +5,7 @@
 money = 150;
 
 // This variable stores the amount of health the village has
-village_hp = 10;
+village_hp = 30;
 
 // This variable stores the money_flash_alpha number,
 // and is how we animate the money text in the HUD.

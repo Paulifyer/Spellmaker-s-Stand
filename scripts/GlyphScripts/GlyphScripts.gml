@@ -92,7 +92,7 @@ function Form_Beam() : FormGlyph("Beam", FORM_MANA_COST) constructor {
 
 		spell.beam_lanes = [];
 		for (var l = _first; l <= _last; l++) {
-			var _top = global.lane_top[l];
+			var _top = global.lane_top[l] + 20;
 			var _end = GRID_X0 + GRID_COLS * TILE_W;
 
 			if (spell.pierce <= 0) {
@@ -104,7 +104,7 @@ function Form_Beam() : FormGlyph("Beam", FORM_MANA_COST) constructor {
 			array_push(spell.beam_lanes, { lane: l, len: _len });
 
 			var _list = ds_list_create();
-			collision_rectangle_list(spell.x, _top, spell.x + _len, _top + LANE_H,
+			collision_rectangle_list(spell.x, _top, spell.x + _len, _top + LANE_H - 20,
 				                     obj_enemy_parent, false, true, _list, false);
 			for (var i = 0; i < ds_list_size(_list); i++) spell_hit(spell, _list[| i]);
 			ds_list_destroy(_list);
