@@ -137,6 +137,7 @@
     {"id":{"name":"Path3","path":"paths/Path3/Path3.yy",},},
     {"id":{"name":"Path4","path":"paths/Path4/Path4.yy",},},
     {"id":{"name":"Path5","path":"paths/Path5/Path5.yy",},},
+    {"id":{"name":"Path6","path":"paths/Path6/Path6.yy",},},
     {"id":{"name":"rm_level_1","path":"rooms/rm_level_1/rm_level_1.yy",},},
     {"id":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
     {"id":{"name":"GameplayScripts","path":"scripts/GameplayScripts/GameplayScripts.yy",},},

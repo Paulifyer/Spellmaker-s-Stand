@@ -1,0 +1,19 @@
+{
+  "$GMPath":"",
+  "%Name":"Path6",
+  "closed":false,
+  "kind":0,
+  "name":"Path6",
+  "parent":{
+    "name":"Paths",
+    "path":"folders/Paths.yy",
+  },
+  "points":[
+    {"speed":100.0,"x":1792.0,"y":936.0,},
+    {"speed":100.0,"x":128.0,"y":936.0,},
+    {"speed":100.0,"x":128.0,"y":936.0,},
+  ],
+  "precision":4,
+  "resourceType":"GMPath",
+  "resourceVersion":"2.0",
+}

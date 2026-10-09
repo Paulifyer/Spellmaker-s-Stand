@@ -1,12 +1,12 @@
 #macro TILE_W 128
 #macro TILE_H 72
 #macro GRID_COLS 13
-#macro LANE_COUNT 5
+#macro LANE_COUNT 6
 #macro ROWS_PER_LANE 2
 #macro LANE_H 144
 #macro GRID_X0 128 // x of the lanes' left edge
 
-global.lane_top = [144, 288, 432, 576, 720];
+global.lane_top = [144, 288, 432, 576, 720, 864];
 
 function grid_to_world_center(_col, _row) {
 	var _lane = _row div ROWS_PER_LANE;
