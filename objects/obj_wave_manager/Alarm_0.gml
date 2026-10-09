@@ -10,7 +10,7 @@
 // Check if the current position is less than the length of the enemy array in the current wave
 if (position < array_length(current_wave_struct.enemy_array)) 
 {	
-	var lane_index = irandom_range(0, 4);
+	var lane_index = irandom(array_length(level_paths) - 1);
 
 	// Create an instance of that enemy inside of a with statement
 	with (instance_create_layer(x, y, layer, current_wave_struct.enemy_array[position])) 
@@ -25,4 +25,3 @@ if (position < array_length(current_wave_struct.enemy_array))
 	// Reset the alarm using the current wave's wave delay
 	alarm[0] = current_wave_struct.wave_delay;	
 }
-

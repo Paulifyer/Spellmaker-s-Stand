@@ -25,9 +25,8 @@ wave_flash_alpha = 0;
 
 // This variable holds the path to use for the enemies that spawn
 // It should be overwritten in the child object
-level_paths = [Path1, Path2, Path3, Path4, Path5];
+level_paths = [Path1, Path2, Path3, Path4, Path5, Path6];
 
 
 // Create start wave button for first wave
 layer_sequence_create("Sequences", 0, 0, seq_wave_start_button);
-
