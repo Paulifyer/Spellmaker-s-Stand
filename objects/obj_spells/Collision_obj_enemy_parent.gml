@@ -15,3 +15,4 @@ if (!array_contains(hit_list, other)) {
 		instance_destroy();	
 	}
 }
+

@@ -40,10 +40,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"Sprite79",
-    "path":"sprites/Sprite79/Sprite79.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

@@ -13,3 +13,9 @@ hit_list = []; beam_lanes = [];
 form.on_cast(self);
 element.on_cast(self);
 modifier.on_cast(self);
+
+if (form.uses_mask && form.sprite != undefined) {
+	mask_index = form.sprite;
+	image_yscale = 0.5;
+	image_angle = dir;
+}

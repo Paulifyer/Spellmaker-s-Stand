@@ -29,3 +29,9 @@ function world_to_grid(_x, _y) {
 	}
 	return undefined
 }
+
+function enemy_lane(_e) {
+	if (variable_instance_exists(_e, "lane")) return _e.lane;
+	var _t = world_to_grid(_e.x, _e.y);
+	return (_t != undefined) ? _t.lane : -1;
+}

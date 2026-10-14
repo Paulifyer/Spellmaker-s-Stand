@@ -3,9 +3,6 @@
 // Set the sprite to the sideways sprite
 sprite_index = walk_side_sprite;
 	
-// Set the sprite's direction 
-image_xscale = -1;
-	
 // Set path speed to normal speed
 path_speed = my_speed;
 
@@ -17,17 +14,20 @@ if (burn_timer > 0) { //burn_handler
 }
 
 if (slow_timer > 0) {
-	my_speed = (1 - slow_amt) * ENEMY_SPEED
+	my_speed = (1 - slow_amt) * base_speed
 	slow_timer--;
 }
-if (slow_timer == 0) my_speed = ENEMY_SPEED;
+if (slow_timer == 0) {
+	my_speed = base_speed;
+	slow_amt = 0;
+}
 
 if (stun_timer > 0) {
 	my_speed = 0;
 	stun_timer--;
 }
 if (stun_timer == 0) {
-	my_speed = ENEMY_SPEED;
+	my_speed = base_speed;
 	stun_timer = -1;
 	stun_immune_timer = TARGET_ROOM_SPEED;
 }
@@ -35,9 +35,7 @@ if (stun_immune_timer > TARGET_ROOM_SPEED) {
 	stun_timer = -1;
 }
 
-
-
-
+if (stun_immune_timer > 0) stun_immune_timer--;
 
 
 // Save it's current x and y

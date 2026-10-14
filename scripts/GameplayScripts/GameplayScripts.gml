@@ -116,13 +116,13 @@ function deal_damage(_id, _amount)
 	if (_id.hp > 0)
 	{
 		// Check if the enemy is a zombie
-		if (_id.object_index == obj_zombie)
+		if (_id.object_index == obj_mook)
 		{
 			// If so, choose a zombie groan sound to play
 			audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false);
 		} 
 		// Otherwise check if the enemy is a frankenstein
-		else if (_id.object_index == obj_frankenstein)
+		else if (_id.object_index == obj_brute)
 		{
 			// If so, choose a frankenstein groan sound to play
 			audio_play_sound(choose(snd_frankenstein_groan_01, snd_frankenstein_groan_02, snd_frankenstein_groan_03), 10, false);		

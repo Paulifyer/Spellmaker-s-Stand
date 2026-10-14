@@ -17,30 +17,30 @@ event_inherited();
 	
 	This is the same as doing:
 	
-	var _enemies_in_wave = [obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_frankenstein];
+	var _enemies_in_wave = [obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_brute];
 	var _new_wave_struct = new WaveData(_enemies_in_wave, 180);
 	array_push(wave_array, _new_wave_struct);
 */
 
 // Wave 1
 array_push(wave_array, new WaveData(
-	[obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_frankenstein],
+	[obj_mook, obj_ranger, obj_mook, obj_mook, obj_mook, obj_mook, obj_brute],
 	(TARGET_ROOM_SPEED * 3)
 ));
 
 // Wave 2
 array_push(wave_array, new WaveData(
-	[obj_zombie, obj_zombie, obj_frankenstein, obj_zombie, obj_zombie, 
-	obj_zombie, obj_zombie, obj_frankenstein,	obj_frankenstein, obj_frankenstein],
+	[obj_mook, obj_mook, obj_brute, obj_mook, obj_mook, 
+	obj_mook, obj_mook, obj_brute,	obj_brute, obj_brute],
 	TARGET_ROOM_SPEED * 1.75
 ));
 
 // Wave 3
 array_push(wave_array, new WaveData(
-	[obj_zombie, obj_zombie, obj_frankenstein, obj_zombie, obj_zombie, 
-	obj_zombie, obj_zombie, obj_frankenstein,	obj_frankenstein, obj_frankenstein, 
-	obj_zombie, obj_zombie, obj_zombie,	obj_zombie, obj_zombie, 
-	obj_frankenstein, obj_frankenstein, obj_frankenstein,	obj_frankenstein, obj_frankenstein],
+	[obj_mook, obj_mook, obj_brute, obj_mook, obj_mook, 
+	obj_mook, obj_mook, obj_brute,	obj_brute, obj_brute, 
+	obj_mook, obj_mook, obj_mook,	obj_mook, obj_mook, 
+	obj_brute, obj_brute, obj_brute,	obj_brute, obj_brute],
 	(TARGET_ROOM_SPEED  * 1.55)
 ));
 

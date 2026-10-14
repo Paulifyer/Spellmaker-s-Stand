@@ -27,18 +27,27 @@ global.glyph_order = {
 	modifier:	["area", "amplify", "pierce"]
 };
 
+
+
+function spell_cost(_l) {
+	if (_l == undefined || _l.form == undefined) return 0;
+	var _f_cost; var _e_cost; var _m_cost;
+	return global.spell_glyphs.form[$ _l.form].cost
+         + global.spell_glyphs.element[$ (_l.element ?? "none")].cost
+         + global.spell_glyphs.modifier[$ (_l.modifier ?? "none")].cost;
+}
+
 function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
-	_col1 = max(_col1, 0); _col2 = min(_col2, GRID_COLS - 1);
+	_col1 = max(_col1, 0); _col  = min(_col2, GRID_COLS - 1);
 	_lane1 = max(_lane1, 0); _lane2 = min(_lane2, LANE_COUNT - 1);
-	var _x1 = GRID_X0 + _col1 * TILE_W;
-    var _x2 = GRID_X0 + (_col2 + 1) * TILE_W;
-    var _y1 = global.lane_top[_lane1];
-    var _y2 = global.lane_top[_lane2] + LANE_H;
 	
-	var _list = ds_list_create();
-    collision_rectangle_list(_x1, _y1, _x2, _y2, obj_enemy_parent, false, true, _list, false);
-    for (var i = 0; i < ds_list_size(_list); i++) spell_hit(_spell, _list[| i]);
-    ds_list_destroy(_list);
+	with (obj_enemy_parent) {
+		var _l = enemy_lane(id);
+		var _c = (x - GRID_X0) div TILE_W;
+		if (_l >= _lane1 && _l <= _lane2 && _c >= _col1 && _c <= _col2) {
+			spell_hit(_spell, id);
+		}
+	}
 }
 
 function cast_spell(_caster, _loadout, _col, _row) {
@@ -50,7 +59,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	
 	if (!is_struct(_f) || !is_struct(_e) || !is_struct(_m)) return noone;
 	var _cost = _f.cost + _e.cost + _m.cost;
-	_caster.mana = max(0, _caster.mana - _cost);
+	if (!is_instanceof(_f, Form_Beam)) _caster.mana = max(0, _caster.mana - _cost);
 	if (_caster.mana <= 0) {
 		_caster.mana = 0;
 		_caster.mana_exhausted = true;
