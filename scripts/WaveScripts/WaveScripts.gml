@@ -10,6 +10,14 @@
 // This is the what we are using for our room speed (60 fps) as room_speed is discouraged
 #macro TARGET_ROOM_SPEED 60
 
+enum WaveState
+{
+	WAITING,
+	SPAWNING,
+	CLEANUP,
+	FINISHED
+}
+
 /// @description This function is a constructor that creates a struct that contains data for a wave
 /// @param {array} _enemy_array 
 /// @param {real} _wave_delay 
@@ -388,45 +396,100 @@ function generate_standard_waves(_config, _run_seed)
 	return _generated_waves;
 }
 
-/// @description Start the next wave
-function start_next_wave()
+/// @description Start a specific one-based wave number
+/// @param {real} _wave_number
+/// @returns {bool}
+function start_wave(_wave_number)
 {
-
-	// Uses with() to access the instance of obj_wave_manager.
-	// with() only works if an instance of the object exists.
-	with (obj_wave_manager)
+	var _manager = instance_find(obj_wave_manager, 0);
+	if (!instance_exists(_manager))
 	{
-		// Assing the next wave struct to the current_wave_struct.
-		// The position is wave - 1 because the waves start counting at 1, but arrays are zero indexed.
-		current_wave_struct = wave_array[wave - 1];
-		
-		// This variable marks the current position in the enemy array
-		// and will be increased each time an enemy is spawned
-		position = 0;
-		
-		// This variable tells whether a wave is currently running
-		wave_running = true;	
-		
-		// Spawn the first enemy in the wave
+		return false;
+	}
+
+	if (_wave_number < 1 || _wave_number > array_length(_manager.wave_array))
+	{
+		show_debug_message("Cannot start wave " + string(_wave_number) + ": wave number is out of range");
+		return false;
+	}
+
+	if (_manager.state == WaveState.SPAWNING || _manager.state == WaveState.FINISHED)
+	{
+		return false;
+	}
+
+	_manager.alarm[0] = -1;
+	_manager.wave = _wave_number;
+	_manager.current_wave_struct = _manager.wave_array[_wave_number - 1];
+	_manager.position = 0;
+	_manager.state = WaveState.SPAWNING;
+	_manager.wave_running = true;
+	_manager.waves_over = false;
+
+	with (_manager)
+	{
 		event_perform(ev_alarm, 0);
 	}
-	
-	// Create the wave start banner sequence
+
 	layer_sequence_create("Sequences", 0, 0, seq_wave_start_banner);
+	return true;
+}
+
+/// @description Start the first wave or advance from cleanup to the next wave
+/// @returns {bool}
+function start_next_wave()
+{
+	var _manager = instance_find(obj_wave_manager, 0);
+	if (!instance_exists(_manager))
+	{
+		return false;
+	}
+
+	if (_manager.state == WaveState.WAITING)
+	{
+		return start_wave(_manager.wave);
+	}
+
+	if (_manager.state == WaveState.CLEANUP)
+	{
+		return start_wave(_manager.wave + 1);
+	}
+
+	return false;
+}
+
+/// @description Complete cleanup and either start another wave or finish the level
+/// @returns {bool}
+function advance_wave()
+{
+	var _manager = instance_find(obj_wave_manager, 0);
+	if (!instance_exists(_manager) || _manager.state != WaveState.CLEANUP)
+	{
+		return false;
+	}
+
+	if (_manager.wave < array_length(_manager.wave_array))
+	{
+		return start_wave(_manager.wave + 1);
+	}
+
+	_manager.alarm[0] = -1;
+	_manager.state = WaveState.FINISHED;
+	_manager.wave_running = false;
+	_manager.waves_over = true;
+	instance_destroy(obj_button_wave_skip);
+	return true;
 }
 
 /// @description Returns true if the wave is currently running, otherwise returns false
 /// @returns bool
 function wave_is_running()
 {
-
-	// Uses with() to access the instance of obj_wave_manager.
-	// with() only works if an instance of the object exists.
-	with (obj_wave_manager)
+	var _manager = instance_find(obj_wave_manager, 0);
+	if (instance_exists(_manager))
 	{
-		// Return the boolean value stored in the wave_running variable of obj_wave_manager.
-		// return will end the function
-		return wave_running;
+		return _manager.state == WaveState.SPAWNING
+			|| _manager.state == WaveState.CLEANUP;
 	}
 	
 	// If we make it here, then there is no instance of obj_wave_manager to check,
@@ -438,14 +501,10 @@ function wave_is_running()
 /// @returns bool
 function waves_are_over()
 {
-	
-	// Uses with() to access the instance of obj_wave_manager.
-	// with() only works if an instance of the object exists.
-	with (obj_wave_manager)
+	var _manager = instance_find(obj_wave_manager, 0);
+	if (instance_exists(_manager))
 	{
-		// Return the boolean value stored in the waves_over variable of obj_wave_manager.
-		// return will end the function
-		return waves_over;
+		return _manager.state == WaveState.FINISHED;
 	}
 	
 	// If we make it here, then there is no instance of obj_wave_manager to check,

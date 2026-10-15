@@ -7,8 +7,14 @@
 */
 
 
+// Ignore stale alarms after the wave has stopped or the game has ended.
+if (state != WaveState.SPAWNING)
+{
+	exit;
+}
+
 // Check if the current position is less than the length of the enemy array in the current wave
-if (position < array_length(current_wave_struct.enemy_array)) 
+if (position < array_length(current_wave_struct.enemy_array))
 {	
 	var lane_index = irandom(array_length(level_paths) - 1);
 
@@ -22,6 +28,13 @@ if (position < array_length(current_wave_struct.enemy_array))
 	// Increase the position variable so that next time we spawn the next enemy
 	position += 1;
 	
-	// Reset the alarm using the current wave's wave delay
-	alarm[0] = current_wave_struct.wave_delay;	
+	// Schedule another spawn only while entries remain in this queue.
+	if (position < array_length(current_wave_struct.enemy_array))
+	{
+		alarm[0] = current_wave_struct.wave_delay;
+	}
+	else
+	{
+		state = WaveState.CLEANUP;
+	}
 }

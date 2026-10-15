@@ -7,6 +7,9 @@ wave_running = false;
 // This variable tells whether all the waves have been completed 
 waves_over = false;
 
+// The state machine is the authoritative source for wave lifecycle checks.
+state = WaveState.WAITING;
+
 // This variable stores the wave number
 wave = 1;
 
