@@ -37,12 +37,13 @@ draw_set_halign(fa_left);
 
 // Caster Draw GUI
 for (var i = 0; i < SPELL_SLOTS; i++) {
-    var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 90;
+    var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 180;
     var _l = global.spellbook[i];
     draw_set_color(i == spell_selected ? c_aqua : c_white);
     draw_rectangle(_x2, _y2, _x2 + 70, _y2 + 70, true);
     draw_set_color(c_white);
     if (_l != undefined && _l.form != undefined) {
+		draw_set_font(-1);
         draw_text(_x2 + 4, _y2 + 4, string(i + 1) + " " + _l.form);
         draw_text(_x2 + 4, _y2 + 40, string(spell_cost(_l)));
         // swap for glyph icons later

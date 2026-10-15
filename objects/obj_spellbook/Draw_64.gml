@@ -98,6 +98,8 @@ draw_text_ext(1610, 680, hover_text, 26, 220);
 // ---- Start ----
 if (!close_requested && !naming && gui_button(1340, 950, 150, 70, "Start", false)) {
     close_requested = true;
+	start_next_wave();
+	audio_play_sound(snd_button_click, 0, false);
     alarm[0] = 1;
 }
 

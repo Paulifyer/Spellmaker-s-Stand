@@ -44,4 +44,5 @@ ready_to_attack = true;
 damage_dealt = 3;
 
 // This variable is the delay in seconds between this enemy's attacks
-attack_delay = 2;
+max_attack_delay = 2;
+attack_delay = max_attack_delay;

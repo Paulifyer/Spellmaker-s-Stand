@@ -33,16 +33,12 @@ if (wave_running)
 			// wave starts at one but arrays start at zero.
 			if ((wave - 1) < array_length(wave_array)) 
 			{		
-				// Spawn the wave start button 
-				layer_sequence_create("Sequences", 0, 0, seq_wave_start_button);
-								
+				// immediately start the next wave
 				// Destroy the wave skip button if it exists since it is no longer needed
+				start_next_wave(); 
 				instance_destroy(obj_button_wave_skip);
-			} 
-			// If all waves have been completed
-			else 
-			{
-				// Set waves_over to true
+			}
+			if (wave == array_length(wave_array)) {
 				waves_over = true;
 			}
 		}
