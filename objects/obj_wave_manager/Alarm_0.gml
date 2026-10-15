@@ -16,7 +16,7 @@ if (state != WaveState.SPAWNING)
 if (position < array_length(current_wave_struct.enemy_groups))
 {
 	var _enemy_group = current_wave_struct.enemy_groups[position];
-	var _group_size = array_length(_enemy_group);
+	var _group_size = array_length(_enemy_group.enemy_array);
 	var _lane_count = array_length(level_paths);
 
 	if (_group_size > _lane_count)
@@ -44,7 +44,7 @@ if (position < array_length(current_wave_struct.enemy_groups))
 	for (var k = 0; k < _group_size; k++)
 	{
 		var _lane_index = _lane_indices[k];
-		var _enemy = instance_create_layer(x, y, layer, _enemy_group[k]);
+		var _enemy = instance_create_layer(x, y, layer, _enemy_group.enemy_array[k]);
 		_enemy.wave_owner = id;
 		_enemy.spawn_wave = wave;
 		active_enemy_count += 1;
@@ -57,10 +57,10 @@ if (position < array_length(current_wave_struct.enemy_groups))
 
 	position += 1;
 
-	// wave_delay now measures time between groups rather than individual enemies.
+	// Each generated group owns its varied delay before the next group.
 	if (position < array_length(current_wave_struct.enemy_groups))
 	{
-		alarm[0] = current_wave_struct.wave_delay;
+		alarm[0] = _enemy_group.delay_after;
 	}
 	else
 	{
