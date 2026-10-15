@@ -27,6 +27,12 @@ plus or minus 25 percent. Groups are limited to six enemies and every enemy in a
 group is spawned on a distinct, randomly selected lane. The original flat enemy
 queue is retained for validation and systems such as the spellbook.
 
+The delay after each group is also generated from the run seed. It varies the
+wave's base delay by a small random amount and by the group's total threat:
+lighter groups are followed slightly sooner, while unusually strong groups give
+the player slightly more recovery time. The combined adjustment is limited to
+75–125 percent of the configured base delay.
+
 The generated order varies between runs, but budgets, introductions, rarity
 weights, and per-wave limits keep the level's structure comparable. The run seed
 is printed to the debug log and can be passed back to
