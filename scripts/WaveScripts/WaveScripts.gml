@@ -9,6 +9,7 @@
 
 // This is the what we are using for our room speed (60 fps) as room_speed is discouraged
 #macro TARGET_ROOM_SPEED 60
+#macro MAX_WAVE_GROUP_SIZE 6
 
 enum WaveState
 {
@@ -20,14 +21,18 @@ enum WaveState
 
 /// @description This function is a constructor that creates a struct that contains data for a wave
 /// @param {array} _enemy_array 
+/// @param {array} _enemy_groups
 /// @param {real} _wave_delay 
 /// @returns {struct} 
-function WaveData(_enemy_array, _wave_delay) constructor 
+function WaveData(_enemy_array, _enemy_groups, _wave_delay) constructor
 {
-	// enemy_array should be an array of GameMaker Objects
+	// The flat array is retained for validation and systems that inspect the level roster.
 	enemy_array = _enemy_array;
+
+	// Each nested array is a group of enemies that should spawn simultaneously.
+	enemy_groups = _enemy_groups;
 	
-	// wave_delay should be the amount of time in frames you want to wait before spawning a new enemy
+	// wave_delay is the amount of time in frames between enemy groups.
 	wave_delay = _wave_delay;
 }
 
@@ -328,6 +333,114 @@ function wave_shuffle_enemy_array(_enemy_array, _random)
 	return _enemy_array;
 }
 
+/// @description Calculate the base threat target for one simultaneous spawn group
+/// @param {struct.LevelWaveConfig} _config
+/// @param {real} _wave_number
+/// @returns {real}
+function wave_group_base_threat(_config, _wave_number)
+{
+	var _progress = 0;
+	if (_config.wave_count > 1)
+	{
+		_progress = (_wave_number - 1) / (_config.wave_count - 1);
+	}
+
+	return lerp(2.5, 6, _progress);
+}
+
+/// @description Calculate a varied threat target for the next simultaneous spawn group
+/// @param {struct.LevelWaveConfig} _config
+/// @param {real} _wave_number
+/// @param {struct} _random
+/// @returns {real}
+function wave_group_target_threat(_config, _wave_number, _random)
+{
+	var _variation = lerp(0.75, 1.25, wave_random_next(_random));
+	return max(1, wave_group_base_threat(_config, _wave_number) * _variation);
+}
+
+/// @description Return the configured threat cost of an enemy object
+/// @param {struct.LevelWaveConfig} _config
+/// @param {object_asset} _enemy_object
+/// @returns {real}
+function wave_enemy_cost(_config, _enemy_object)
+{
+	var _roster_index = wave_roster_index(_config, _enemy_object);
+	if (_roster_index < 0)
+	{
+		return 0;
+	}
+
+	return _config.enemy_roster[_roster_index].cost;
+}
+
+/// @description Split a flat generated queue into varied simultaneous spawn groups
+/// @param {struct.LevelWaveConfig} _config
+/// @param {real} _wave_number
+/// @param {array} _enemy_array
+/// @param {struct} _random
+/// @returns {array}
+function generate_standard_wave_groups(_config, _wave_number, _enemy_array, _random)
+{
+	var _groups = [];
+	var _current_group = [];
+	var _current_threat = 0;
+	var _target_threat = wave_group_target_threat(_config, _wave_number, _random);
+
+	for (var i = 0; i < array_length(_enemy_array); i++)
+	{
+		var _enemy_object = _enemy_array[i];
+		var _enemy_cost = wave_enemy_cost(_config, _enemy_object);
+		var _group_size = array_length(_current_group);
+		var _would_exceed_soft_limit = _current_threat + _enemy_cost > _target_threat * 1.25;
+		var _has_most_of_target = _current_threat >= _target_threat * 0.65;
+
+		// Close a healthy group before adding an enemy that would make it much
+		// stronger than its target. A costly enemy may still form a singleton.
+		if (_group_size >= MAX_WAVE_GROUP_SIZE
+		|| (_group_size >= 2 && _current_threat >= _target_threat)
+		|| (_group_size > 0 && _would_exceed_soft_limit && _has_most_of_target))
+		{
+			array_push(_groups, _current_group);
+			_current_group = [];
+			_current_threat = 0;
+			_target_threat = wave_group_target_threat(_config, _wave_number, _random);
+		}
+
+		array_push(_current_group, _enemy_object);
+		_current_threat += _enemy_cost;
+	}
+
+	if (array_length(_current_group) > 0)
+	{
+		array_push(_groups, _current_group);
+	}
+
+	// Merge adjacent singleton groups so the schedule cannot fall back into a
+	// one-enemy-at-a-time conveyor belt when several strong enemies are adjacent.
+	var _repaired_groups = [];
+	for (var j = 0; j < array_length(_groups); j++)
+	{
+		var _group = _groups[j];
+		var _repaired_count = array_length(_repaired_groups);
+
+		if (array_length(_group) == 1 && _repaired_count > 0)
+		{
+			var _previous_group = _repaired_groups[_repaired_count - 1];
+			if (array_length(_previous_group) == 1)
+			{
+				array_push(_previous_group, _group[0]);
+				_repaired_groups[_repaired_count - 1] = _previous_group;
+				continue;
+			}
+		}
+
+		array_push(_repaired_groups, _group);
+	}
+
+	return _repaired_groups;
+}
+
 /// @description Find an enemy object in a level roster
 /// @param {struct.LevelWaveConfig} _config
 /// @param {object_asset} _enemy_object
@@ -370,6 +483,52 @@ function validate_generated_waves(_config, _generated_waves)
 		if (array_length(_wave_data.enemy_array) < 1)
 		{
 			return wave_config_error("the generator created an empty wave " + string(_wave_number));
+		}
+
+		if (!variable_struct_exists(_wave_data, "enemy_groups")
+		|| array_length(_wave_data.enemy_groups) < 1)
+		{
+			return wave_config_error("the generator created no spawn groups for wave " + string(_wave_number));
+		}
+
+		var _flattened_position = 0;
+		var _previous_group_was_singleton = false;
+		for (var _group_index = 0; _group_index < array_length(_wave_data.enemy_groups); _group_index++)
+		{
+			var _group = _wave_data.enemy_groups[_group_index];
+			var _group_size = array_length(_group);
+
+			if (_group_size < 1 || _group_size > MAX_WAVE_GROUP_SIZE)
+			{
+				return wave_config_error("wave " + string(_wave_number)
+					+ " contains a spawn group with an invalid size");
+			}
+
+			if (_group_size == 1 && _previous_group_was_singleton)
+			{
+				return wave_config_error("wave " + string(_wave_number)
+					+ " contains consecutive singleton spawn groups");
+			}
+
+			_previous_group_was_singleton = _group_size == 1;
+
+			for (var _group_enemy_index = 0; _group_enemy_index < _group_size; _group_enemy_index++)
+			{
+				if (_flattened_position >= array_length(_wave_data.enemy_array)
+				|| _group[_group_enemy_index] != _wave_data.enemy_array[_flattened_position])
+				{
+					return wave_config_error("wave " + string(_wave_number)
+						+ " spawn groups do not match its generated enemy queue");
+				}
+
+				_flattened_position += 1;
+			}
+		}
+
+		if (_flattened_position != array_length(_wave_data.enemy_array))
+		{
+			return wave_config_error("wave " + string(_wave_number)
+				+ " spawn groups do not contain every generated enemy");
 		}
 
 		for (var i = 0; i < array_length(_wave_data.enemy_array); i++)
@@ -479,9 +638,16 @@ function generate_standard_waves(_config, _run_seed)
 		}
 
 		_enemy_array = wave_shuffle_enemy_array(_enemy_array, _random);
+		var _enemy_groups = generate_standard_wave_groups(
+			_config,
+			_wave_number,
+			_enemy_array,
+			_random
+		);
 
 		var _wave_data = new WaveData(
 			_enemy_array,
+			_enemy_groups,
 			wave_config_delay(_config, _wave_number)
 		);
 		_wave_data.threat_budget = _budget;
