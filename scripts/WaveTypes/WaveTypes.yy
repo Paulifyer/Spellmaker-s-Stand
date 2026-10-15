@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"WaveTypes",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Waves",
+    "path":"folders/Scripts/Waves.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

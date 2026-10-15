@@ -19,11 +19,11 @@ enum WaveState
 /// @param {real} _weight
 /// @param {real} _intro_wave
 /// @param {real} _max_per_wave
-function EnemyWaveDefinition(_enemy_object, _cost, _weight, _intro_wave, _max_per_wave) constructor
+function EnemyWaveDefinition(_enemy, _enemy_weight, _intro_wave, _max_per_wave) constructor
 {
-	enemy_object = _enemy_object;
-	cost = _cost;
-	weight = _weight;
+	enemy_object = _enemy.object;
+	cost = _enemy.cost;
+	weight = _enemy_weight;
 	intro_wave = _intro_wave;
 	max_per_wave = _max_per_wave;
 }

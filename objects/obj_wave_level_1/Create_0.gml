@@ -3,12 +3,17 @@
 // Inherit the parent event.
 event_inherited();
 
+// Init enemy catalog
+if (!variable_global_exists("EnemyCatalog")) {
+    init_enemy_catalog();
+}
+
 // Define every enemy type that can appear in this level. Staggered introduction
 // waves guarantee every type while adding stronger enemies as difficulty rises.
 var _enemy_roster = [
-	new EnemyWaveDefinition(obj_mook, 1, 10, 1, 999),
-	new EnemyWaveDefinition(obj_ranger, 2, 4, 2, 5),
-	new EnemyWaveDefinition(obj_brute, 5, 1, 3, 10)
+	new EnemyWaveDefinition(global.EnemyCatalog.MOOK, 10, 1, 999),
+	new EnemyWaveDefinition(global.EnemyCatalog.RANGER, 4, 2, 5),
+	new EnemyWaveDefinition(global.EnemyCatalog.BRUTE, 1, 3, 10)
 ];
 
 // Wave budgets replace manually repeated enemy arrays. Enemy selection and
