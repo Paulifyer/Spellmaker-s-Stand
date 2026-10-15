@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"WaveScripts",
+  "%Name":"WaveGeneration",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"WaveScripts",
+  "name":"WaveGeneration",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",
