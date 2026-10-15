@@ -26,6 +26,8 @@ function start_wave(_wave_number)
 	_manager.wave = _wave_number;
 	_manager.current_wave_struct = _manager.wave_array[_wave_number - 1];
 	_manager.position = 0;
+	_manager.group_enemy_position = 0;
+	_manager.group_lane_indices = [];
 	_manager.state = WaveState.SPAWNING;
 	_manager.wave_running = true;
 	_manager.waves_over = false;

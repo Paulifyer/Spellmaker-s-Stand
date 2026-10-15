@@ -22,14 +22,14 @@ function WaveData(_enemy_array, _enemy_groups, _wave_delay) constructor
 	// The flat array is retained for validation and systems that inspect the level roster.
 	enemy_array = _enemy_array;
 
-	// Each record describes enemies that spawn together and the delay afterward.
+	// Each record describes a tightly staggered enemy group and its delay afterward.
 	enemy_groups = _enemy_groups;
 
 	// wave_delay is the amount of time in frames between enemy groups.
 	wave_delay = _wave_delay;
 }
 
-/// @description Defines one simultaneous enemy spawn and the pause that follows it
+/// @description Defines one coordinated enemy spawn group and the pause that follows it
 /// @param {array} _enemy_array
 /// @param {real} _threat
 /// @param {real} _delay_after

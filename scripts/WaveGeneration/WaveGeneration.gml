@@ -135,7 +135,7 @@ function wave_shuffle_enemy_array(_enemy_array, _random)
 	return _enemy_array;
 }
 
-/// @description Calculate the base threat target for one simultaneous spawn group
+/// @description Calculate the base threat target for one coordinated spawn group
 /// @param {struct.LevelWaveConfig} _config
 /// @param {real} _wave_number
 /// @returns {real}
@@ -150,7 +150,7 @@ function wave_group_base_threat(_config, _wave_number)
 	return lerp(2.5, 6, _progress);
 }
 
-/// @description Calculate a varied threat target for the next simultaneous spawn group
+/// @description Calculate a varied threat target for the next coordinated spawn group
 /// @param {struct.LevelWaveConfig} _config
 /// @param {real} _wave_number
 /// @param {struct} _random
@@ -192,7 +192,7 @@ function wave_enemy_cost(_config, _enemy_object)
 	return _config.enemy_roster[_roster_index].cost;
 }
 
-/// @description Split a flat generated queue into varied simultaneous spawn groups
+/// @description Split a flat generated queue into varied coordinated spawn groups
 /// @param {struct.LevelWaveConfig} _config
 /// @param {real} _wave_number
 /// @param {array} _enemy_array

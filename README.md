@@ -5,7 +5,7 @@
 Levels define a threat curve and an enemy roster instead of manually repeating
 enemy objects in every wave. At room creation, `generate_standard_waves()` builds
 the concrete `WaveData.enemy_array` queues used by the wave manager, then divides
-each queue into simultaneous spawn groups.
+each queue into coordinated spawn groups.
 
 An enemy roster entry contains:
 
@@ -24,8 +24,10 @@ represent the time between groups rather than the time between enemies.
 Group composition is generated automatically. Early waves target roughly 2.5
 threat per group and late waves target roughly 6, with seeded variation of
 plus or minus 25 percent. Groups are limited to six enemies and every enemy in a
-group is spawned on a distinct, randomly selected lane. The original flat enemy
-queue is retained for validation and systems such as the spellbook.
+group is spawned on a distinct, randomly selected lane. Members enter 0.1 seconds
+apart, keeping each group visually connected without placing every enemy on the
+same frame. The original flat enemy queue is retained for validation and systems
+such as the spellbook.
 
 The delay after each group is also generated from the run seed. It varies the
 wave's base delay by a small random amount and by the group's total threat:
