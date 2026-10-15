@@ -13,7 +13,7 @@ hp = max_hp;
 my_value = 3;
 
 // This variable holds the base speed for the enemy
-base_speed = 1.3;
+base_speed = 1.8;
 
 // This variable holds the current speed for the enemy
 my_speed = base_speed;

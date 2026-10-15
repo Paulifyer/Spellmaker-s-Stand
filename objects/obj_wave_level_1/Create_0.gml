@@ -14,13 +14,12 @@ var _enemy_roster = [
 // Wave budgets replace manually repeated enemy arrays. Enemy selection and
 // order vary each run, while these settings keep the overall curve stable.
 level_wave_config = new LevelWaveConfig(
-	3,
-	7,
-	30,
-	1.35,
+	3, // Threat count
+	7, // Starting budget
+	30, // Ending budget
+	1.00, // Difficulty curve
 	_enemy_roster
 );
 
-wave_run_seed = create_wave_run_seed();
-wave_array = generate_standard_waves(level_wave_config, wave_run_seed);
+wave_array = generate_standard_waves(level_wave_config);
 

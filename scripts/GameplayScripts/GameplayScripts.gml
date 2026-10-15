@@ -231,8 +231,6 @@ function set_game_over()
 	with (obj_wave_manager)
 	{
 		// Stop the current wave and cancel any pending enemy spawn.
-		wave_running = false;
-		waves_over = false;
 		state = WaveState.WAITING;
 		intermission_timer = 0;
 		alarm[0] = -1;

@@ -15,15 +15,12 @@ glyph_row_y   = [265, 490, 835];     // palette rows, under each heading
 slot_angles   = [90, 330, 210];      // placed glyph positions: top, lower right, lower left
 craft_cx = 1142; craft_cy = 495;     // centre of the hexagram
 
-// Unique enemies for this level, taken from the waves
+// Unique enemies for this level, taken directly from its configured roster.
 enemies_in_level = [];
 with (obj_wave_manager) {
-    for (var w = 0; w < array_length(wave_array); w++) {
-        var _arr = wave_array[w].enemy_array;
-        for (var i = 0; i < array_length(_arr); i++) {
-            if (!array_contains(other.enemies_in_level, _arr[i]))
-                array_push(other.enemies_in_level, _arr[i]);
-        }
+    var _roster = level_wave_config.enemy_roster;
+    for (var i = 0; i < array_length(_roster); i++) {
+        array_push(other.enemies_in_level, _roster[i].enemy_object);
     }
 }
 

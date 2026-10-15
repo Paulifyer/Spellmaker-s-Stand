@@ -13,26 +13,6 @@ enum WaveState
 	FINISHED
 }
 
-/// @description This function is a constructor that creates a struct that contains data for a wave
-/// @param {array} _enemy_array
-/// @param {array} _enemy_groups
-/// @returns {struct}
-function WaveData(_enemy_array, _enemy_groups) constructor
-{
-	// The flat array is retained for validation and systems that inspect the level roster.
-	enemy_array = _enemy_array;
-
-	// Each record describes one tightly staggered enemy group.
-	enemy_groups = _enemy_groups;
-}
-
-/// @description Defines one coordinated enemy spawn group
-/// @param {array} _enemy_array
-function WaveSpawnGroup(_enemy_array) constructor
-{
-	enemy_array = _enemy_array;
-}
-
 /// @description Defines one enemy type that may be selected by a level's wave generator
 /// @param {object_asset} _enemy_object
 /// @param {real} _cost

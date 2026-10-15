@@ -72,4 +72,3 @@ attack_delay = 0;
 
 // Assigned by a wave manager after this Create event when the enemy is spawned.
 wave_owner = noone;
-spawn_wave = -1;

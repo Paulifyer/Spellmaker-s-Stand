@@ -19,45 +19,13 @@ function wave_config_budget(_config, _wave_number)
 	));
 }
 
-/// @description Create a seed for one generated level run
-/// @returns {real}
-function create_wave_run_seed()
-{
-	randomize();
-	return irandom(2147483645) + 1;
-}
-
-/// @description Create the isolated random-number state used by wave generation
-/// @param {real} _seed
-/// @returns {struct}
-function create_wave_random(_seed)
-{
-	var _safe_seed = abs(floor(_seed)) mod 2147483647;
-	if (_safe_seed == 0)
-	{
-		_safe_seed = 1;
-	}
-
-	return { seed: _safe_seed };
-}
-
-/// @description Return a deterministic value in the range [0, 1)
-/// @param {struct} _random
-/// @returns {real}
-function wave_random_next(_random)
-{
-	_random.seed = (_random.seed * 48271) mod 2147483647;
-	return _random.seed / 2147483647;
-}
-
 /// @description Select an affordable enemy definition using its configured weight
 /// @param {struct.LevelWaveConfig} _config
 /// @param {real} _wave_number
 /// @param {real} _remaining_budget
 /// @param {array} _counts
-/// @param {struct} _random
 /// @returns {real}
-function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _counts, _random)
+function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _counts)
 {
 	var _total_weight = 0;
 	var _roster_length = array_length(_config.enemy_roster);
@@ -78,7 +46,7 @@ function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _coun
 		return -1;
 	}
 
-	var _selection = wave_random_next(_random) * _total_weight;
+	var _selection = random(_total_weight);
 	var _running_weight = 0;
 
 	for (var j = 0; j < _roster_length; j++)
@@ -99,151 +67,52 @@ function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _coun
 	return -1;
 }
 
-/// @description Shuffle an enemy queue without using GameMaker's global random stream
+/// @description Split a generated enemy queue into varied spawn groups
 /// @param {array} _enemy_array
-/// @param {struct} _random
 /// @returns {array}
-function wave_shuffle_enemy_array(_enemy_array, _random)
-{
-	for (var i = array_length(_enemy_array) - 1; i > 0; i--)
-	{
-		var j = floor(wave_random_next(_random) * (i + 1));
-		var _temporary = _enemy_array[i];
-		_enemy_array[i] = _enemy_array[j];
-		_enemy_array[j] = _temporary;
-	}
-
-	return _enemy_array;
-}
-
-/// @description Calculate the base threat target for one coordinated spawn group
-/// @param {struct.LevelWaveConfig} _config
-/// @param {real} _wave_number
-/// @returns {real}
-function wave_group_base_threat(_config, _wave_number)
-{
-	var _progress = 0;
-	if (_config.wave_count > 1)
-	{
-		_progress = (_wave_number - 1) / (_config.wave_count - 1);
-	}
-
-	return lerp(2.5, 6, _progress);
-}
-
-/// @description Calculate a varied threat target for the next coordinated spawn group
-/// @param {struct.LevelWaveConfig} _config
-/// @param {real} _wave_number
-/// @param {struct} _random
-/// @returns {real}
-function wave_group_target_threat(_config, _wave_number, _random)
-{
-	var _variation = lerp(0.75, 1.25, wave_random_next(_random));
-	return max(1, wave_group_base_threat(_config, _wave_number) * _variation);
-}
-
-/// @description Return the configured threat cost of an enemy object
-/// @param {struct.LevelWaveConfig} _config
-/// @param {object_asset} _enemy_object
-/// @returns {real}
-function wave_enemy_cost(_config, _enemy_object)
-{
-	var _roster_index = wave_roster_index(_config, _enemy_object);
-	if (_roster_index < 0)
-	{
-		return 0;
-	}
-
-	return _config.enemy_roster[_roster_index].cost;
-}
-
-/// @description Split a flat generated queue into varied coordinated spawn groups
-/// @param {struct.LevelWaveConfig} _config
-/// @param {real} _wave_number
-/// @param {array} _enemy_array
-/// @param {struct} _random
-/// @returns {array}
-function generate_standard_wave_groups(_config, _wave_number, _enemy_array, _random)
+function generate_standard_wave_groups(_enemy_array)
 {
 	var _groups = [];
-	var _current_group = [];
-	var _current_threat = 0;
-	var _target_threat = wave_group_target_threat(_config, _wave_number, _random);
+	var _position = 0;
+	var _enemy_count = array_length(_enemy_array);
 
-	for (var i = 0; i < array_length(_enemy_array); i++)
+	while (_position < _enemy_count)
 	{
-		var _enemy_object = _enemy_array[i];
-		var _enemy_cost = wave_enemy_cost(_config, _enemy_object);
-		var _group_size = array_length(_current_group);
-		var _would_exceed_soft_limit = _current_threat + _enemy_cost > _target_threat * 1.25;
-		var _has_most_of_target = _current_threat >= _target_threat * 0.65;
+		var _remaining = _enemy_count - _position;
+		var _maximum_size = min(MAX_WAVE_GROUP_SIZE, _remaining);
+		var _group_size = _remaining == 1 ? 1 : irandom_range(2, _maximum_size);
 
-		// Close a healthy group before adding an enemy that would make it much
-		// stronger than its target. A costly enemy may still form a singleton.
-		if (_group_size >= MAX_WAVE_GROUP_SIZE
-		|| (_group_size >= 2 && _current_threat >= _target_threat)
-		|| (_group_size > 0 && _would_exceed_soft_limit && _has_most_of_target))
+		// Avoid leaving a one-enemy final group when the enemies can fit together.
+		if (_remaining - _group_size == 1)
 		{
-			array_push(_groups, _current_group);
-			_current_group = [];
-			_current_threat = 0;
-			_target_threat = wave_group_target_threat(_config, _wave_number, _random);
+			_group_size = _remaining <= MAX_WAVE_GROUP_SIZE
+				? _remaining
+				: _group_size - 1;
 		}
 
-		array_push(_current_group, _enemy_object);
-		_current_threat += _enemy_cost;
-	}
-
-	if (array_length(_current_group) > 0)
-	{
-		array_push(_groups, _current_group);
-	}
-
-	// Merge adjacent singleton groups so the schedule cannot fall back into a
-	// one-enemy-at-a-time conveyor belt when several strong enemies are adjacent.
-	var _repaired_groups = [];
-	for (var j = 0; j < array_length(_groups); j++)
-	{
-		var _group = _groups[j];
-		var _repaired_count = array_length(_repaired_groups);
-
-		if (array_length(_group) == 1 && _repaired_count > 0)
+		var _group = [];
+		for (var i = 0; i < _group_size; i++)
 		{
-			var _previous_group = _repaired_groups[_repaired_count - 1];
-			if (array_length(_previous_group) == 1)
-			{
-				array_push(_previous_group, _group[0]);
-				_repaired_groups[_repaired_count - 1] = _previous_group;
-				continue;
-			}
+			array_push(_group, _enemy_array[_position + i]);
 		}
 
-		array_push(_repaired_groups, _group);
+		array_push(_groups, _group);
+		_position += _group_size;
 	}
 
-	// Turn the temporary enemy arrays into complete spawn-group records.
-	var _spawn_groups = [];
-	for (var k = 0; k < array_length(_repaired_groups); k++)
-	{
-		array_push(_spawn_groups, new WaveSpawnGroup(_repaired_groups[k]));
-	}
-
-	return _spawn_groups;
+	return _groups;
 }
 
 /// @description Generate every standard wave for a level
 /// @param {struct.LevelWaveConfig} _config
-/// @param {real} _run_seed
-/// @returns {array<WaveData>}
-function generate_standard_waves(_config, _run_seed)
+/// @returns {array}
+function generate_standard_waves(_config)
 {
 	validate_wave_config(_config);
+	randomize();
 
-	var _random = create_wave_random(_run_seed);
 	var _generated_waves = [];
 	var _roster_length = array_length(_config.enemy_roster);
-
-	show_debug_message("Wave generation seed: " + string(_run_seed));
 
 	for (var _wave_number = 1; _wave_number <= _config.wave_count; _wave_number++)
 	{
@@ -270,8 +139,7 @@ function generate_standard_waves(_config, _run_seed)
 				_config,
 				_wave_number,
 				_remaining_budget,
-				_counts,
-				_random
+				_counts
 			);
 
 			if (_selected_index < 0)
@@ -285,23 +153,10 @@ function generate_standard_waves(_config, _run_seed)
 			_remaining_budget -= _selected_enemy.cost;
 		}
 
-		_enemy_array = wave_shuffle_enemy_array(_enemy_array, _random);
-		var _enemy_groups = generate_standard_wave_groups(
-			_config,
-			_wave_number,
-			_enemy_array,
-			_random
-		);
-
-		var _wave_data = new WaveData(
-			_enemy_array,
-			_enemy_groups
-		);
-		_wave_data.threat_budget = _budget;
-		_wave_data.spent_budget = _budget - _remaining_budget;
-		array_push(_generated_waves, _wave_data);
+		_enemy_array = array_shuffle(_enemy_array);
+		var _enemy_groups = generate_standard_wave_groups(_enemy_array);
+		array_push(_generated_waves, _enemy_groups);
 	}
 
-	validate_generated_waves(_config, _generated_waves);
 	return _generated_waves;
 }

@@ -24,14 +24,12 @@ function start_wave(_wave_number)
 
 	_manager.alarm[0] = -1;
 	_manager.wave = _wave_number;
-	_manager.current_wave_struct = _manager.wave_array[_wave_number - 1];
+	_manager.current_wave_groups = _manager.wave_array[_wave_number - 1];
 	_manager.position = 0;
 	_manager.group_enemy_position = 0;
 	_manager.group_lane_indices = [];
 	_manager.intermission_timer = 0;
 	_manager.state = WaveState.SPAWNING;
-	_manager.wave_running = true;
-	_manager.waves_over = false;
 
 	with (_manager)
 	{
@@ -86,8 +84,6 @@ function advance_wave()
 	_manager.alarm[0] = -1;
 	_manager.intermission_timer = 0;
 	_manager.state = WaveState.FINISHED;
-	_manager.wave_running = false;
-	_manager.waves_over = true;
 	instance_destroy(obj_button_wave_skip);
 	return true;
 }

@@ -3,20 +3,18 @@
 // WAVE TIMING SETTINGS (seconds)
 // Child level managers may override these after calling event_inherited().
 // Time between enemies belonging to the same group.
-group_spawn_stagger_seconds = 0.1;
+group_spawn_stagger_min_seconds = 0.2;
+group_spawn_stagger_max_seconds = 0.5;
 
 // Random delay after one group finishes before the next group begins.
 group_delay_min_seconds = 1;
 group_delay_max_seconds = 3;
 
 // Fixed pause after clearing one numbered wave before the next begins.
-inter_wave_delay_seconds = 5;
+inter_wave_delay_seconds = 3;
 
-// This variable tells whether the wave is currently running
-wave_running = false;
-
-// This variable tells whether all the waves have been completed 
-waves_over = false;
+// Each enemy spawns slightly faster or slower than its normal movement speed.
+enemy_speed_variation = 0.10;
 
 // The state machine is the authoritative source for wave lifecycle checks.
 state = WaveState.WAITING;
@@ -27,8 +25,8 @@ wave = 1;
 // This variable stores all the wave struct data
 wave_array = [];
 
-// This variable stores the current wave struct
-current_wave_struct = noone;
+// This variable stores the groups in the current wave.
+current_wave_groups = [];
 
 // Number of living enemies created by this manager, including overlapping waves.
 active_enemy_count = 0;

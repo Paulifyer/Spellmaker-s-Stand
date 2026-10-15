@@ -20,7 +20,6 @@ if (state == WaveState.CLEANUP)
 		if (wave < array_length(wave_array))
 		{
 			state = WaveState.INTERMISSION;
-			wave_running = false;
 			intermission_timer = max(0, round(
 				TARGET_ROOM_SPEED * inter_wave_delay_seconds
 			));

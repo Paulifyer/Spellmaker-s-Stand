@@ -3,7 +3,7 @@
 
 /*
 	This alarm spawns one member of the current group. Group members arrive with
-	a short stagger, followed by the group's longer generated delay.
+	a short stagger, followed by a random delay before the next group.
 */
 
 
@@ -13,10 +13,10 @@ if (state != WaveState.SPAWNING)
 	exit;
 }
 
-if (position < array_length(current_wave_struct.enemy_groups))
+if (position < array_length(current_wave_groups))
 {
-	var _enemy_group = current_wave_struct.enemy_groups[position];
-	var _group_size = array_length(_enemy_group.enemy_array);
+	var _enemy_group = current_wave_groups[position];
+	var _group_size = array_length(_enemy_group);
 	var _lane_count = array_length(level_paths);
 
 	if (group_enemy_position == 0)
@@ -48,11 +48,18 @@ if (position < array_length(current_wave_struct.enemy_groups))
 		x,
 		y,
 		layer,
-		_enemy_group.enemy_array[group_enemy_position]
+		_enemy_group[group_enemy_position]
 	);
 	_enemy.wave_owner = id;
-	_enemy.spawn_wave = wave;
 	active_enemy_count += 1;
+
+	var _speed_multiplier = random_range(
+		1 - enemy_speed_variation,
+		1 + enemy_speed_variation
+	);
+	_enemy.base_speed *= _speed_multiplier;
+	_enemy.my_speed = _enemy.base_speed;
+	_enemy.v_speed *= _speed_multiplier;
 
 	with (_enemy)
 	{
@@ -62,7 +69,10 @@ if (position < array_length(current_wave_struct.enemy_groups))
 	group_enemy_position += 1;
 	if (group_enemy_position < _group_size)
 	{
-		alarm[0] = max(1, round(TARGET_ROOM_SPEED * group_spawn_stagger_seconds));
+		alarm[0] = max(1, round(TARGET_ROOM_SPEED * random_range(
+			group_spawn_stagger_min_seconds,
+			group_spawn_stagger_max_seconds
+		)));
 	}
 	else
 	{
@@ -71,7 +81,7 @@ if (position < array_length(current_wave_struct.enemy_groups))
 		group_lane_indices = [];
 		position += 1;
 
-		if (position < array_length(current_wave_struct.enemy_groups))
+		if (position < array_length(current_wave_groups))
 		{
 			alarm[0] = max(1, round(TARGET_ROOM_SPEED * random_range(
 				group_delay_min_seconds,
