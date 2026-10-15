@@ -2,8 +2,8 @@
 
 
 /*
-	This alarm will spawn the next enemy in the wave and reset itself
-	only if the current position in the wave is less than the length of the enemy_array.
+	This alarm spawns every enemy in the next group at the same time. It resets
+	itself only while another group remains in the current wave.
 */
 
 
@@ -13,28 +13,52 @@ if (state != WaveState.SPAWNING)
 	exit;
 }
 
-// Check if the current position is less than the length of the enemy array in the current wave
-if (position < array_length(current_wave_struct.enemy_array))
-{	
-	var lane_index = irandom(array_length(level_paths) - 1);
+if (position < array_length(current_wave_struct.enemy_groups))
+{
+	var _enemy_group = current_wave_struct.enemy_groups[position];
+	var _group_size = array_length(_enemy_group);
+	var _lane_count = array_length(level_paths);
 
-	// Create the enemy and record which manager owns its lifecycle.
-	var _enemy = instance_create_layer(x, y, layer, current_wave_struct.enemy_array[position]);
-	_enemy.wave_owner = id;
-	_enemy.spawn_wave = wave;
-	active_enemy_count += 1;
-
-	with (_enemy)
+	if (_group_size > _lane_count)
 	{
-		// So that we can start it on the path
-		path_start(other.level_paths[lane_index], my_speed, path_action_stop, true);
-	}	
-	
-	// Increase the position variable so that next time we spawn the next enemy
+		show_error("Spawn group contains more enemies than the wave manager has lanes", true);
+		exit;
+	}
+
+	// Shuffle all lane indices, then consume each index once so enemies in this
+	// group always enter on distinct lanes.
+	var _lane_indices = array_create(_lane_count, 0);
+	for (var i = 0; i < _lane_count; i++)
+	{
+		_lane_indices[i] = i;
+	}
+
+	for (var j = _lane_count - 1; j > 0; j--)
+	{
+		var _swap_index = irandom(j);
+		var _temporary_lane = _lane_indices[j];
+		_lane_indices[j] = _lane_indices[_swap_index];
+		_lane_indices[_swap_index] = _temporary_lane;
+	}
+
+	for (var k = 0; k < _group_size; k++)
+	{
+		var _lane_index = _lane_indices[k];
+		var _enemy = instance_create_layer(x, y, layer, _enemy_group[k]);
+		_enemy.wave_owner = id;
+		_enemy.spawn_wave = wave;
+		active_enemy_count += 1;
+
+		with (_enemy)
+		{
+			path_start(other.level_paths[_lane_index], my_speed, path_action_stop, true);
+		}
+	}
+
 	position += 1;
-	
-	// Schedule another spawn only while entries remain in this queue.
-	if (position < array_length(current_wave_struct.enemy_array))
+
+	// wave_delay now measures time between groups rather than individual enemies.
+	if (position < array_length(current_wave_struct.enemy_groups))
 	{
 		alarm[0] = current_wave_struct.wave_delay;
 	}

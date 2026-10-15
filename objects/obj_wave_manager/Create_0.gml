@@ -22,8 +22,7 @@ current_wave_struct = noone;
 // Number of living enemies created by this manager, including overlapping waves.
 active_enemy_count = 0;
 
-// This variable stores the index to the current wave struct's array of enemies.
-// It is used to spawn the next enemy in the wave.
+// This variable stores the index of the next simultaneous spawn group.
 position = 0;
 
 // This variable is used to animate the wave number displayed in the HUD
