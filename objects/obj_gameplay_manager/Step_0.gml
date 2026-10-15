@@ -32,7 +32,7 @@ if (get_village_hp() <= 0)
 	audio_play_sound(snd_music_lose, 1, false);
 
 } 
-else if ((waves_are_over()) && (!instance_exists(obj_enemy_parent))) 
+else if (waves_are_over())
 {
 	// Use the custom game over function to turn off variables
 	set_game_over();
