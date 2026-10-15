@@ -12,8 +12,11 @@ hp = max_hp;
 // This variable stores the amount of money the player will get when they defeat it
 my_value = 5;
 
-// This variable holds the speed for the enemy
-my_speed = 1.1;
+// This variable holds the base speed for the enemy
+base_speed = 1.1;
+
+// This variable holds the current speed for the enemy
+my_speed = base_speed;
 
 // This variable holds the speed the enemy should move at when moving vertically
 v_speed = my_speed * 0.7;
