@@ -37,9 +37,10 @@ the player slightly more recovery time. The combined adjustment is limited to
 
 After a wave is completely cleared, the wave manager enters an intermission
 before starting the next numbered wave. The `WAVE TIMING SETTINGS` section at
-the top of `objects/obj_wave_manager/Create_0.gml` exposes both timing values as
-plain seconds: `group_spawn_stagger_seconds` controls spacing within groups and
-`inter_wave_delay_seconds` controls the pause between numbered waves.
+the top of `objects/obj_wave_manager/Create_0.gml` exposes its timing values as
+plain seconds. `group_spawn_stagger_seconds` controls spacing within groups;
+`inter_wave_delay_min_seconds` and `inter_wave_delay_max_seconds` define the
+random pause range between numbered waves.
 
 The generated order varies between runs, but budgets, introductions, rarity
 weights, and per-wave limits keep the level's structure comparable. The run seed

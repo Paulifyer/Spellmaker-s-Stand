@@ -5,8 +5,9 @@
 // Time between enemies belonging to the same group.
 group_spawn_stagger_seconds = 0.1;
 
-// Time after clearing one numbered wave before the next begins.
-inter_wave_delay_seconds = 5;
+// Random pause after clearing one numbered wave before the next begins.
+inter_wave_delay_min_seconds = 4;
+inter_wave_delay_max_seconds = 8;
 
 // This variable tells whether the wave is currently running
 wave_running = false;
