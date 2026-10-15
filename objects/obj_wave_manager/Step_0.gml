@@ -12,7 +12,7 @@ if (wave_flash_alpha > 0)
 // Once every scheduled enemy has spawned, wait for the room to be cleared.
 if (state == WaveState.CLEANUP)
 {
-	if (!instance_exists(obj_enemy_parent))
+	if (active_enemy_count <= 0)
 	{
 		wave_flash_alpha = 1;
 		advance_wave();

@@ -69,3 +69,7 @@ stun_immune_timer = 0;
 ready_to_attack = true;
 damage_dealt = 0;
 attack_delay = 0;
+
+// Assigned by a wave manager after this Create event when the enemy is spawned.
+wave_owner = noone;
+spawn_wave = -1;
