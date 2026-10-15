@@ -234,6 +234,7 @@ function set_game_over()
 		wave_running = false;
 		waves_over = false;
 		state = WaveState.WAITING;
+		intermission_timer = 0;
 		alarm[0] = -1;
 	}
 	

@@ -9,6 +9,7 @@ enum WaveState
 	WAITING,
 	SPAWNING,
 	CLEANUP,
+	INTERMISSION,
 	FINISHED
 }
 

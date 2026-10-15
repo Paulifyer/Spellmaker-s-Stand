@@ -28,6 +28,7 @@ function start_wave(_wave_number)
 	_manager.position = 0;
 	_manager.group_enemy_position = 0;
 	_manager.group_lane_indices = [];
+	_manager.intermission_timer = 0;
 	_manager.state = WaveState.SPAWNING;
 	_manager.wave_running = true;
 	_manager.waves_over = false;
@@ -41,7 +42,7 @@ function start_wave(_wave_number)
 	return true;
 }
 
-/// @description Start the first wave or advance from cleanup to the next wave
+/// @description Start the first wave or manually advance to the next wave
 /// @returns {bool}
 function start_next_wave()
 {
@@ -56,7 +57,8 @@ function start_next_wave()
 		return start_wave(_manager.wave);
 	}
 
-	if (_manager.state == WaveState.CLEANUP)
+	if (_manager.state == WaveState.CLEANUP
+	|| _manager.state == WaveState.INTERMISSION)
 	{
 		return start_wave(_manager.wave + 1);
 	}
@@ -64,12 +66,14 @@ function start_next_wave()
 	return false;
 }
 
-/// @description Complete cleanup and either start another wave or finish the level
+/// @description Complete cleanup or intermission and advance the level lifecycle
 /// @returns {bool}
 function advance_wave()
 {
 	var _manager = instance_find(obj_wave_manager, 0);
-	if (!instance_exists(_manager) || _manager.state != WaveState.CLEANUP)
+	if (!instance_exists(_manager)
+	|| (_manager.state != WaveState.CLEANUP
+	&& _manager.state != WaveState.INTERMISSION))
 	{
 		return false;
 	}
@@ -80,6 +84,7 @@ function advance_wave()
 	}
 
 	_manager.alarm[0] = -1;
+	_manager.intermission_timer = 0;
 	_manager.state = WaveState.FINISHED;
 	_manager.wave_running = false;
 	_manager.waves_over = true;

@@ -32,6 +32,11 @@ group_lane_indices = [];
 // Frames between members of the same group (0.1 seconds at 60 FPS).
 group_spawn_stagger = max(1, round(TARGET_ROOM_SPEED * 0.1));
 
+// Pause after a cleared wave before the next wave starts. Child level managers
+// may override this value after calling event_inherited().
+inter_wave_delay = TARGET_ROOM_SPEED * 5;
+intermission_timer = 0;
+
 // This variable is used to animate the wave number displayed in the HUD
 wave_flash_alpha = 0;
 
