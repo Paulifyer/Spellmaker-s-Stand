@@ -62,7 +62,7 @@ if (position < array_length(current_wave_struct.enemy_groups))
 	group_enemy_position += 1;
 	if (group_enemy_position < _group_size)
 	{
-		alarm[0] = group_spawn_stagger;
+		alarm[0] = max(1, round(TARGET_ROOM_SPEED * group_spawn_stagger_seconds));
 	}
 	else
 	{

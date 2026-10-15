@@ -1,5 +1,12 @@
 /// @description Wave Manager
 
+// WAVE TIMING SETTINGS (seconds)
+// Child level managers may override these after calling event_inherited().
+// Time between enemies belonging to the same group.
+group_spawn_stagger_seconds = 0.1;
+
+// Time after clearing one numbered wave before the next begins.
+inter_wave_delay_seconds = 5;
 
 // This variable tells whether the wave is currently running
 wave_running = false;
@@ -29,12 +36,8 @@ group_enemy_position = 0;
 // A group's shuffled lanes are retained while its enemies stagger into play.
 group_lane_indices = [];
 
-// Frames between members of the same group (0.1 seconds at 60 FPS).
-group_spawn_stagger = max(1, round(TARGET_ROOM_SPEED * 0.1));
-
-// Pause after a cleared wave before the next wave starts. Child level managers
-// may override this value after calling event_inherited().
-inter_wave_delay = TARGET_ROOM_SPEED * 5;
+// Tracks the remaining intermission in frames. Timing settings remain in seconds
+// and are converted only when their respective timers are scheduled.
 intermission_timer = 0;
 
 // This variable is used to animate the wave number displayed in the HUD
