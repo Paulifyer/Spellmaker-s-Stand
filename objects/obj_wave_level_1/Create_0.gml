@@ -18,8 +18,6 @@ level_wave_config = new LevelWaveConfig(
 	7,
 	30,
 	1.35,
-	TARGET_ROOM_SPEED * 3,
-	TARGET_ROOM_SPEED * 1.55,
 	_enemy_roster
 );
 

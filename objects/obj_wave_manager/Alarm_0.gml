@@ -73,7 +73,10 @@ if (position < array_length(current_wave_struct.enemy_groups))
 
 		if (position < array_length(current_wave_struct.enemy_groups))
 		{
-			alarm[0] = _enemy_group.delay_after;
+			alarm[0] = max(1, round(TARGET_ROOM_SPEED * random_range(
+				group_delay_min_seconds,
+				group_delay_max_seconds
+			)));
 		}
 		else
 		{

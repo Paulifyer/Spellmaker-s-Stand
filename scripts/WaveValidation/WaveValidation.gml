@@ -34,11 +34,6 @@ function validate_wave_config(_config)
 		return wave_config_error("difficulty_curve must be greater than zero");
 	}
 
-	if (_config.starting_delay < 1 || _config.minimum_delay < 1 || _config.minimum_delay > _config.starting_delay)
-	{
-		return wave_config_error("spawn delays must be positive and minimum_delay cannot exceed starting_delay");
-	}
-
 	var _roster_length = array_length(_config.enemy_roster);
 	if (_roster_length < 1)
 	{
@@ -175,9 +170,7 @@ function validate_generated_waves(_config, _generated_waves)
 		{
 			var _group = _wave_data.enemy_groups[_group_index];
 			if (!is_struct(_group)
-			|| !variable_struct_exists(_group, "enemy_array")
-			|| !variable_struct_exists(_group, "threat")
-			|| !variable_struct_exists(_group, "delay_after"))
+			|| !variable_struct_exists(_group, "enemy_array"))
 			{
 				return wave_config_error("wave " + string(_wave_number)
 					+ " contains invalid spawn group data");
@@ -198,7 +191,6 @@ function validate_generated_waves(_config, _generated_waves)
 			}
 
 			_previous_group_was_singleton = _group_size == 1;
-			var _calculated_group_threat = 0;
 
 			for (var _group_enemy_index = 0; _group_enemy_index < _group_size; _group_enemy_index++)
 			{
@@ -209,38 +201,9 @@ function validate_generated_waves(_config, _generated_waves)
 						+ " spawn groups do not match its generated enemy queue");
 				}
 
-				_calculated_group_threat += wave_enemy_cost(
-					_config,
-					_group.enemy_array[_group_enemy_index]
-				);
 				_flattened_position += 1;
 			}
 
-			if (abs(_group.threat - _calculated_group_threat) > 0.001)
-			{
-				return wave_config_error("wave " + string(_wave_number)
-					+ " contains an incorrect spawn group threat value");
-			}
-
-			var _is_final_group = _group_index == array_length(_wave_data.enemy_groups) - 1;
-			if (_is_final_group && _group.delay_after != 0)
-			{
-				return wave_config_error("wave " + string(_wave_number)
-					+ " final spawn group must have zero delay");
-			}
-
-			if (!_is_final_group)
-			{
-				var _minimum_group_delay = max(1, round(_wave_data.wave_delay * 0.75));
-				var _maximum_group_delay = max(1, round(_wave_data.wave_delay * 1.25));
-
-				if (_group.delay_after < _minimum_group_delay
-				|| _group.delay_after > _maximum_group_delay)
-				{
-					return wave_config_error("wave " + string(_wave_number)
-						+ " contains an out-of-range spawn group delay");
-				}
-			}
 		}
 
 		if (_flattened_position != array_length(_wave_data.enemy_array))

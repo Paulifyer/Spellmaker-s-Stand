@@ -16,29 +16,21 @@ enum WaveState
 /// @description This function is a constructor that creates a struct that contains data for a wave
 /// @param {array} _enemy_array
 /// @param {array} _enemy_groups
-/// @param {real} _wave_delay
 /// @returns {struct}
-function WaveData(_enemy_array, _enemy_groups, _wave_delay) constructor
+function WaveData(_enemy_array, _enemy_groups) constructor
 {
 	// The flat array is retained for validation and systems that inspect the level roster.
 	enemy_array = _enemy_array;
 
-	// Each record describes a tightly staggered enemy group and its delay afterward.
+	// Each record describes one tightly staggered enemy group.
 	enemy_groups = _enemy_groups;
-
-	// wave_delay is the amount of time in frames between enemy groups.
-	wave_delay = _wave_delay;
 }
 
-/// @description Defines one coordinated enemy spawn group and the pause that follows it
+/// @description Defines one coordinated enemy spawn group
 /// @param {array} _enemy_array
-/// @param {real} _threat
-/// @param {real} _delay_after
-function WaveSpawnGroup(_enemy_array, _threat, _delay_after) constructor
+function WaveSpawnGroup(_enemy_array) constructor
 {
 	enemy_array = _enemy_array;
-	threat = _threat;
-	delay_after = _delay_after;
 }
 
 /// @description Defines one enemy type that may be selected by a level's wave generator
@@ -61,16 +53,12 @@ function EnemyWaveDefinition(_enemy_object, _cost, _weight, _intro_wave, _max_pe
 /// @param {real} _starting_budget
 /// @param {real} _ending_budget
 /// @param {real} _difficulty_curve
-/// @param {real} _starting_delay
-/// @param {real} _minimum_delay
 /// @param {array} _enemy_roster
 function LevelWaveConfig(
 	_wave_count,
 	_starting_budget,
 	_ending_budget,
 	_difficulty_curve,
-	_starting_delay,
-	_minimum_delay,
 	_enemy_roster
 ) constructor
 {
@@ -78,7 +66,5 @@ function LevelWaveConfig(
 	starting_budget = _starting_budget;
 	ending_budget = _ending_budget;
 	difficulty_curve = _difficulty_curve;
-	starting_delay = _starting_delay;
-	minimum_delay = _minimum_delay;
 	enemy_roster = _enemy_roster;
 }

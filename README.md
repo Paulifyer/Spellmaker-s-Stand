@@ -18,8 +18,7 @@ An enemy roster entry contains:
 Level 1's configuration lives in
 `objects/obj_wave_level_1/Create_0.gml`. Its starting and ending budgets define
 the difficulty range, while `difficulty_curve` controls how quickly the budget
-ramps up. Spawn delays interpolate from `starting_delay` to `minimum_delay` and
-represent the time between groups rather than the time between enemies.
+ramps up.
 
 Group composition is generated automatically. Early waves target roughly 2.5
 threat per group and late waves target roughly 6, with seeded variation of
@@ -29,18 +28,15 @@ apart, keeping each group visually connected without placing every enemy on the
 same frame. The original flat enemy queue is retained for validation and systems
 such as the spellbook.
 
-The delay after each group is also generated from the run seed. It varies the
-wave's base delay by a small random amount and by the group's total threat:
-lighter groups are followed slightly sooner, while unusually strong groups give
-the player slightly more recovery time. The combined adjustment is limited to
-75–125 percent of the configured base delay.
+The delay between groups is selected randomly from the simple minimum and
+maximum range in the wave manager's `WAVE TIMING SETTINGS`. It does not depend
+on enemy threat, wave budget, or a timing pattern.
 
 After a wave is completely cleared, the wave manager enters an intermission
 before starting the next numbered wave. The `WAVE TIMING SETTINGS` section at
-the top of `objects/obj_wave_manager/Create_0.gml` exposes its timing values as
-plain seconds. `group_spawn_stagger_seconds` controls spacing within groups;
-`inter_wave_delay_min_seconds` and `inter_wave_delay_max_seconds` define the
-random pause range between numbered waves.
+the top of `objects/obj_wave_manager/Create_0.gml` exposes all timing values as
+plain seconds: within-group stagger, the random between-group range, and the
+fixed intermission between numbered waves.
 
 The generated order varies between runs, but budgets, introductions, rarity
 weights, and per-wave limits keep the level's structure comparable. The run seed

@@ -19,25 +19,6 @@ function wave_config_budget(_config, _wave_number)
 	));
 }
 
-/// @description Calculate the spawn delay for a wave number
-/// @param {struct.LevelWaveConfig} _config
-/// @param {real} _wave_number
-/// @returns {real}
-function wave_config_delay(_config, _wave_number)
-{
-	var _progress = 0;
-	if (_config.wave_count > 1)
-	{
-		_progress = (_wave_number - 1) / (_config.wave_count - 1);
-	}
-
-	return max(1, round(lerp(
-		_config.starting_delay,
-		_config.minimum_delay,
-		_progress
-	)));
-}
-
 /// @description Create a seed for one generated level run
 /// @returns {real}
 function create_wave_run_seed()
@@ -161,22 +142,6 @@ function wave_group_target_threat(_config, _wave_number, _random)
 	return max(1, wave_group_base_threat(_config, _wave_number) * _variation);
 }
 
-/// @description Calculate a bounded, threat-aware delay after one spawn group
-/// @param {real} _base_delay
-/// @param {real} _base_group_threat
-/// @param {real} _group_threat
-/// @param {struct} _random
-/// @returns {real}
-function wave_group_delay(_base_delay, _base_group_threat, _group_threat, _random)
-{
-	var _random_factor = lerp(0.85, 1.15, wave_random_next(_random));
-	var _threat_ratio = _group_threat / max(1, _base_group_threat);
-	var _threat_factor = clamp(0.8 + 0.2 * _threat_ratio, 0.9, 1.2);
-	var _combined_factor = clamp(_random_factor * _threat_factor, 0.75, 1.25);
-
-	return max(1, round(_base_delay * _combined_factor));
-}
-
 /// @description Return the configured threat cost of an enemy object
 /// @param {struct.LevelWaveConfig} _config
 /// @param {object_asset} _enemy_object
@@ -197,9 +162,8 @@ function wave_enemy_cost(_config, _enemy_object)
 /// @param {real} _wave_number
 /// @param {array} _enemy_array
 /// @param {struct} _random
-/// @param {real} _base_delay
 /// @returns {array}
-function generate_standard_wave_groups(_config, _wave_number, _enemy_array, _random, _base_delay)
+function generate_standard_wave_groups(_config, _wave_number, _enemy_array, _random)
 {
 	var _groups = [];
 	var _current_group = [];
@@ -257,36 +221,11 @@ function generate_standard_wave_groups(_config, _wave_number, _enemy_array, _ran
 		array_push(_repaired_groups, _group);
 	}
 
-	// Turn the temporary enemy arrays into complete spawn-group records. The
-	// final group has no delay because there is no subsequent group to schedule.
+	// Turn the temporary enemy arrays into complete spawn-group records.
 	var _spawn_groups = [];
-	var _base_group_threat = wave_group_base_threat(_config, _wave_number);
 	for (var k = 0; k < array_length(_repaired_groups); k++)
 	{
-		var _repaired_group = _repaired_groups[k];
-		var _group_threat = 0;
-
-		for (var m = 0; m < array_length(_repaired_group); m++)
-		{
-			_group_threat += wave_enemy_cost(_config, _repaired_group[m]);
-		}
-
-		var _delay_after = 0;
-		if (k < array_length(_repaired_groups) - 1)
-		{
-			_delay_after = wave_group_delay(
-				_base_delay,
-				_base_group_threat,
-				_group_threat,
-				_random
-			);
-		}
-
-		array_push(_spawn_groups, new WaveSpawnGroup(
-			_repaired_group,
-			_group_threat,
-			_delay_after
-		));
+		array_push(_spawn_groups, new WaveSpawnGroup(_repaired_groups[k]));
 	}
 
 	return _spawn_groups;
@@ -347,19 +286,16 @@ function generate_standard_waves(_config, _run_seed)
 		}
 
 		_enemy_array = wave_shuffle_enemy_array(_enemy_array, _random);
-		var _wave_delay = wave_config_delay(_config, _wave_number);
 		var _enemy_groups = generate_standard_wave_groups(
 			_config,
 			_wave_number,
 			_enemy_array,
-			_random,
-			_wave_delay
+			_random
 		);
 
 		var _wave_data = new WaveData(
 			_enemy_array,
-			_enemy_groups,
-			_wave_delay
+			_enemy_groups
 		);
 		_wave_data.threat_budget = _budget;
 		_wave_data.spent_budget = _budget - _remaining_budget;

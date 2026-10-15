@@ -21,19 +21,8 @@ if (state == WaveState.CLEANUP)
 		{
 			state = WaveState.INTERMISSION;
 			wave_running = false;
-			var _minimum_intermission = max(0, min(
-				inter_wave_delay_min_seconds,
-				inter_wave_delay_max_seconds
-			));
-			var _maximum_intermission = max(0, max(
-				inter_wave_delay_min_seconds,
-				inter_wave_delay_max_seconds
-			));
 			intermission_timer = max(0, round(
-				TARGET_ROOM_SPEED * random_range(
-					_minimum_intermission,
-					_maximum_intermission
-				)
+				TARGET_ROOM_SPEED * inter_wave_delay_seconds
 			));
 		}
 		else
