@@ -223,6 +223,171 @@ function validate_wave_config(_config)
 	return true;
 }
 
+/// @description Create a seed for one generated level run
+/// @returns {real}
+function create_wave_run_seed()
+{
+	randomize();
+	return irandom(2147483645) + 1;
+}
+
+/// @description Create the isolated random-number state used by wave generation
+/// @param {real} _seed
+/// @returns {struct}
+function create_wave_random(_seed)
+{
+	var _safe_seed = abs(floor(_seed)) mod 2147483647;
+	if (_safe_seed == 0)
+	{
+		_safe_seed = 1;
+	}
+
+	return { seed: _safe_seed };
+}
+
+/// @description Return a deterministic value in the range [0, 1)
+/// @param {struct} _random
+/// @returns {real}
+function wave_random_next(_random)
+{
+	_random.seed = (_random.seed * 48271) mod 2147483647;
+	return _random.seed / 2147483647;
+}
+
+/// @description Select an affordable enemy definition using its configured weight
+/// @param {struct.LevelWaveConfig} _config
+/// @param {real} _wave_number
+/// @param {real} _remaining_budget
+/// @param {array} _counts
+/// @param {struct} _random
+/// @returns {real}
+function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _counts, _random)
+{
+	var _total_weight = 0;
+	var _roster_length = array_length(_config.enemy_roster);
+
+	for (var i = 0; i < _roster_length; i++)
+	{
+		var _definition = _config.enemy_roster[i];
+		if (_definition.intro_wave <= _wave_number
+		&& _definition.cost <= _remaining_budget
+		&& _counts[i] < _definition.max_per_wave)
+		{
+			_total_weight += _definition.weight;
+		}
+	}
+
+	if (_total_weight <= 0)
+	{
+		return -1;
+	}
+
+	var _selection = wave_random_next(_random) * _total_weight;
+	var _running_weight = 0;
+
+	for (var j = 0; j < _roster_length; j++)
+	{
+		var _enemy = _config.enemy_roster[j];
+		if (_enemy.intro_wave <= _wave_number
+		&& _enemy.cost <= _remaining_budget
+		&& _counts[j] < _enemy.max_per_wave)
+		{
+			_running_weight += _enemy.weight;
+			if (_selection < _running_weight)
+			{
+				return j;
+			}
+		}
+	}
+
+	return -1;
+}
+
+/// @description Shuffle an enemy queue without using GameMaker's global random stream
+/// @param {array} _enemy_array
+/// @param {struct} _random
+/// @returns {array}
+function wave_shuffle_enemy_array(_enemy_array, _random)
+{
+	for (var i = array_length(_enemy_array) - 1; i > 0; i--)
+	{
+		var j = floor(wave_random_next(_random) * (i + 1));
+		var _temporary = _enemy_array[i];
+		_enemy_array[i] = _enemy_array[j];
+		_enemy_array[j] = _temporary;
+	}
+
+	return _enemy_array;
+}
+
+/// @description Generate every standard wave for a level
+/// @param {struct.LevelWaveConfig} _config
+/// @param {real} _run_seed
+/// @returns {array<WaveData>}
+function generate_standard_waves(_config, _run_seed)
+{
+	validate_wave_config(_config);
+
+	var _random = create_wave_random(_run_seed);
+	var _generated_waves = [];
+	var _roster_length = array_length(_config.enemy_roster);
+
+	show_debug_message("Wave generation seed: " + string(_run_seed));
+
+	for (var _wave_number = 1; _wave_number <= _config.wave_count; _wave_number++)
+	{
+		var _budget = wave_config_budget(_config, _wave_number);
+		var _remaining_budget = _budget;
+		var _enemy_array = [];
+		var _counts = array_create(_roster_length, 0);
+
+		// Guaranteed introductions are placed before any random selections.
+		for (var i = 0; i < _roster_length; i++)
+		{
+			var _guaranteed_enemy = _config.enemy_roster[i];
+			if (_guaranteed_enemy.intro_wave == _wave_number)
+			{
+				array_push(_enemy_array, _guaranteed_enemy.enemy_object);
+				_counts[i] += 1;
+				_remaining_budget -= _guaranteed_enemy.cost;
+			}
+		}
+
+		while (_remaining_budget > 0)
+		{
+			var _selected_index = wave_select_enemy_index(
+				_config,
+				_wave_number,
+				_remaining_budget,
+				_counts,
+				_random
+			);
+
+			if (_selected_index < 0)
+			{
+				break;
+			}
+
+			var _selected_enemy = _config.enemy_roster[_selected_index];
+			array_push(_enemy_array, _selected_enemy.enemy_object);
+			_counts[_selected_index] += 1;
+			_remaining_budget -= _selected_enemy.cost;
+		}
+
+		_enemy_array = wave_shuffle_enemy_array(_enemy_array, _random);
+
+		var _wave_data = new WaveData(
+			_enemy_array,
+			wave_config_delay(_config, _wave_number)
+		);
+		_wave_data.threat_budget = _budget;
+		_wave_data.spent_budget = _budget - _remaining_budget;
+		array_push(_generated_waves, _wave_data);
+	}
+
+	return _generated_waves;
+}
+
 /// @description Start the next wave
 function start_next_wave()
 {
