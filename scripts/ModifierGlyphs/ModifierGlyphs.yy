@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ModifierGlyphs",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ModifierGlyphs",
+  "parent":{
+    "name":"GlyphScripts",
+    "path":"folders/Scripts/GlyphScripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
