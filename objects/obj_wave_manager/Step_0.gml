@@ -9,46 +9,38 @@ if (wave_flash_alpha > 0)
 	wave_flash_alpha -= 0.03;
 }
 
-// This checks if the wave is running. If this is false, it means
-// that the game is between waves or the waves have ended.
-if (wave_running) 
+// Once every scheduled enemy has spawned, wait for the room to be cleared.
+if (state == WaveState.CLEANUP)
 {
-	// If position is greater or equal to the length of the enemy_array, 
-	// then we have spawned all the enemies for that wave.
-	if (position >= array_length(current_wave_struct.enemy_array)) 
+	if (active_enemy_count <= 0)
 	{
-		// This checks whether all enemies have been destroyed
-		if (!instance_exists(obj_enemy_parent)) 
+		wave_flash_alpha = 1;
+		instance_destroy(obj_button_wave_skip);
+
+		if (wave < array_length(wave_array))
 		{
-			// Set wave running to false since the wave is over
-			wave_running = false;
-			
-			// Increase the wave number
-			wave += 1;
-			
-			// Set the wave_flash_alpha to 1 so it will animate
-			wave_flash_alpha = 1;
-			
-			// Check if there are any additional waves using wave - 1 because
-			// wave starts at one but arrays start at zero.
-			if ((wave - 1) < array_length(wave_array)) 
-			{		
-				// immediately start the next wave
-				// Destroy the wave skip button if it exists since it is no longer needed
-				start_next_wave(); 
-				instance_destroy(obj_button_wave_skip);
-			}
-			if (wave == array_length(wave_array)) {
-				waves_over = true;
-			}
+			state = WaveState.INTERMISSION;
+			intermission_timer = max(0, round(
+				TARGET_ROOM_SPEED * inter_wave_delay_seconds
+			));
 		}
-		// If the wave is over, there are still more waves left, and there are still enemies left
-		// we spawn the wave skip button so the player can start the next wave immediately if they want to.
-		else if (wave < array_length(wave_array)) && (!instance_exists(obj_button_wave_skip)) 
+		else
 		{
-			// This creates a sequence which creates the wave skip button.
-			layer_sequence_create("Sequences", 0, 0, seq_wave_skip_button);
+			advance_wave();
 		}
+	}
+	// Offer an early start for the next wave while enemies from this wave remain.
+	else if (wave < array_length(wave_array) && !instance_exists(obj_button_wave_skip))
+	{
+		layer_sequence_create("Sequences", 0, 0, seq_wave_skip_button);
+	}
+}
+else if (state == WaveState.INTERMISSION)
+{
+	intermission_timer = max(0, intermission_timer - 1);
+	if (intermission_timer <= 0)
+	{
+		advance_wave();
 	}
 }
 

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"WaveValidation",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"WaveValidation",
+  "parent":{
+    "name":"Waves",
+    "path":"folders/Scripts/Waves.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

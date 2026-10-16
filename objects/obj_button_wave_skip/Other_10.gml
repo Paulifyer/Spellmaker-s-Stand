@@ -1,18 +1,15 @@
 /// @description Wave Skip Button
 
-// Uses with() to access the instance of obj_wave_manager.
-// with() only works if an instance of the object exists.
-with (obj_wave_manager)
+// Wave advancement is owned by the manager's guarded state transition.
+if (!start_next_wave())
 {
-	// Increase the wave number
-	wave += 1;
-	
-	// Set the wave_flash_alpha to 1 so it will animate
-	wave_flash_alpha = 1;
+	exit;
 }
 
-// Start the next wave using our custom function
-start_next_wave();
+with (obj_wave_manager)
+{
+	wave_flash_alpha = 1;
+}
 
 // Destroy this button
 instance_destroy(id);

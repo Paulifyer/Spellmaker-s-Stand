@@ -34,8 +34,17 @@ All events in this project are commented, so you can open any event and read the
 GameplayScripts
 	This script file contains a number of scripts used throughout the game
 
-WaveScripts
-	This script file contains several scripts and one constructor used for creating and managing waves
+WaveTypes
+	Wave state, configuration, and generated-data constructors
+
+WaveValidation
+	Validation for level configuration and generated wave data
+
+WaveGeneration
+	Seeded enemy selection, spawn grouping, timing, and standard-wave generation
+
+WaveRuntime
+	Functions for starting, advancing, and querying the active wave lifecycle
 
 
 # Objects
@@ -105,10 +114,5 @@ WaveScripts
 	
 	
 # Shaders
-	
-	There is one shader that is used for the hitflash when you deal damage to an enemy
 
-	
-	
-	
-	
+	There is one shader that is used for the hitflash when you deal damage to an enemy

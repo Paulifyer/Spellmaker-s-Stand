@@ -1,5 +1,11 @@
 /// @description Enemy Parent
 
+// Always notify the spawning manager, including when this enemy reaches a base.
+if (instance_exists(wave_owner))
+{
+	wave_owner.active_enemy_count = max(0, wave_owner.active_enemy_count - 1);
+	wave_owner = noone;
+}
 
 // Check if hp is greater than zero
 // We only want to run this event if the enemy has

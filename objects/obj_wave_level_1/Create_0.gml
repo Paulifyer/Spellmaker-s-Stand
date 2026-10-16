@@ -1,46 +1,30 @@
-/// @description Wave Manager  Level 1
+/// @description Wave Manager Level 1
 
-
-// Inherit the parent event
+// Inherit the parent event.
 event_inherited();
 
+// Init enemy catalog
+if (!variable_global_exists("EnemyCatalog")) {
+    init_enemy_catalog();
+}
 
+// Define every enemy type that can appear in this level. Staggered introduction
+// waves guarantee every type while adding stronger enemies as difficulty rises.
+var _enemy_roster = [
+	new EnemyWaveDefinition(global.EnemyCatalog.MOOK, 10, 1, 999),
+	new EnemyWaveDefinition(global.EnemyCatalog.RANGER, 4, 2, 5),
+	new EnemyWaveDefinition(global.EnemyCatalog.BRUTE, 1, 3, 10)
+];
 
-// Choose which path to follow
+// Wave budgets replace manually repeated enemy arrays. Enemy selection and
+// order vary each run, while these settings keep the overall curve stable.
+level_wave_config = new LevelWaveConfig(
+	3, // Threat count
+	7, // Starting budget
+	30, // Ending budget
+	1.00, // Difficulty curve
+	_enemy_roster
+);
 
-/*
-	Use the following form to create a new wave: array_push(wave_array, new WaveData(_enemy_array, _wave_delay));
-	
-	We are using the built-in array_push function to add a new wave to our wave_array,
-	and we are calling the WaveData constructor function directly inside of this function
-	and creating the array directly inside of that function.
-	
-	This is the same as doing:
-	
-	var _enemies_in_wave = [obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_zombie, obj_brute];
-	var _new_wave_struct = new WaveData(_enemies_in_wave, 180);
-	array_push(wave_array, _new_wave_struct);
-*/
-
-// Wave 1
-array_push(wave_array, new WaveData(
-	[obj_mook, obj_ranger, obj_mook, obj_mook, obj_mook, obj_mook, obj_brute],
-	(TARGET_ROOM_SPEED * 3)
-));
-
-// Wave 2
-array_push(wave_array, new WaveData(
-	[obj_mook, obj_mook, obj_brute, obj_mook, obj_mook, 
-	obj_mook, obj_mook, obj_brute,	obj_brute, obj_brute],
-	TARGET_ROOM_SPEED * 1.75
-));
-
-// Wave 3
-array_push(wave_array, new WaveData(
-	[obj_mook, obj_mook, obj_brute, obj_mook, obj_mook, 
-	obj_mook, obj_mook, obj_brute,	obj_brute, obj_brute, 
-	obj_mook, obj_mook, obj_mook,	obj_mook, obj_mook, 
-	obj_brute, obj_brute, obj_brute,	obj_brute, obj_brute],
-	(TARGET_ROOM_SPEED  * 1.55)
-));
+wave_array = generate_standard_waves(level_wave_config);
 
