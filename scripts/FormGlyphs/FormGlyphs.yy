@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"GlyphScripts",
+  "%Name":"FormGlyphs",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"GlyphScripts",
+  "name":"FormGlyphs",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"GlyphScripts",
+    "path":"folders/Scripts/GlyphScripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

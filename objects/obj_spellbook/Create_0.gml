@@ -12,7 +12,9 @@ enemy_view = 0;
 column_keys   = ["form", "element", "modifier"];
 column_titles = ["Form", "Effect", "Modifier"];
 glyph_row_y   = [265, 490, 835];     // palette rows, under each heading
-slot_angles   = [90, 330, 210];      // placed glyph positions: top, lower right, lower left
+group_angles   = [90, 210, 330];     // where effect groups sit around the hexagram
+active_group = -1;					 // -1 = form group, 0.. = effect index
+notice = ""; notice_timer = 0;
 craft_cx = 1142; craft_cy = 495;     // centre of the hexagram
 
 // Unique enemies for this level, taken directly from its configured roster.

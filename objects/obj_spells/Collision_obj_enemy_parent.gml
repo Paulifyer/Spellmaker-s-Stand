@@ -6,10 +6,7 @@ if (!array_contains(hit_list, other)) {
 		var _lane = (_t != undefined) ? _t.lane : target_row div ROWS_PER_LANE;
 		spell_hit_area(id, _col - 1, _col + 1, _lane - 1, _lane + 1);
 	} else {
-		form.on_hit(self, other);
-		element.on_hit(self, other);
-		if (modifier.on_hit != undefined) modifier.on_hit(self, other);
-		array_push(hit_list, other);
+		spell_hit(self, other);
 	}
 	if (pierce-- <= 0) {
 		instance_destroy();	

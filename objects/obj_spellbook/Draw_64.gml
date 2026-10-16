@@ -1,9 +1,14 @@
+/// @description Draws UI elements for spellbook
+// Controls selection of spells too
+
 var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
 hover_text = "";
 draw_sprite(spr_spell_crafting_gui, 0, 0, 0);
 draw_set_color(c_black);
 
 var _spell = global.spellbook[sel];
+
+var _has_form = (_spell != undefined && _spell.form != undefined);
 
 // ---- Glyph palette (left page) ----
 for (var c = 0; c < 3; c++) {
@@ -12,42 +17,92 @@ for (var c = 0; c < 3; c++) {
     for (var g = 0; g < array_length(_ids); g++) {
         var _id    = _ids[g];
         var _glyph = global.spell_glyphs[$ _key][$ _id];
-        var _cur   = (_spell != undefined) ? _spell[$ _key] : undefined;
 
-        var _b = gui_circle_button(160 + g * 190, glyph_row_y[c], 60, _glyph.icon, _glyph.name, _cur == _id);
-        if (_b.hover) hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
+        // form always available; the rest need a form, and modifiers must suit it
+        var _enabled = (c == 0) || _has_form;
+        if (c == 2 && _has_form) _enabled = mod_valid_for_form(_id, _spell.form);
+
+        var _current = (c == 0 && _has_form) ? (_spell.form == _id) : false;
+		
+		// Number of Glyphs per row
+		var _per_row = 4;
+		
+		var _px = 140 + (g mod _per_row) * 150;
+		var _py = glyph_row_y[c] + (g div _per_row) *130;
+		
+        var _b = gui_circle_button(_px, _py, 55, _glyph.icon, _glyph.name, _current, _enabled);
+
+        if (_b.hover) {
+            hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
+            if (!_enabled) hover_text += (c == 0 || !_has_form) ? "\n(pick a form first)" : "\n(can't be used with this form)";
+        }
         if (_b.clicked) {
             _spell = spell_ensure(sel);
-            _spell[$ _key] = (_cur == _id) ? undefined : _id;   // click again to remove
+            var _msg = spell_add_glyph(_spell, _key, _id, active_group);
+            if (_msg != "") { notice = _msg; notice_timer = 120; }
+            else if (_key == "form")    active_group = -1;
+            else if (_key == "element") active_group = array_length(_spell.effects) - 1;
             _spell = spell_prune(sel);
+            _has_form = (_spell != undefined && _spell.form != undefined);
         }
     }
 }
 
-// ---- Placed glyphs around the hexagram ----
-for (var c = 0; c < 3; c++) {
-    var _px = craft_cx + lengthdir_x(190, slot_angles[c]);
-    var _py = craft_cy + lengthdir_y(190, slot_angles[c]);
-    var _key = column_keys[c];
-    var _id  = (_spell != undefined) ? _spell[$ _key] : undefined;
+// ---- Crafting circle: form group in the centre ----
+if (_has_form) {
+    var _fg = draw_glyph_group(craft_cx, craft_cy, 45, global.spell_glyphs.form[$ _spell.form],
+                               _spell.form_mods, 90, 120, active_group == -1);
+    if (_fg.hover != "") hover_text = _fg.hover;
+    if (_fg.main.clicked)  active_group = -1;
+    if (_fg.main.rclicked) { spell_clear(_spell); active_group = -1; }   // removing the form clears the spell
+    if (_fg.mod_r >= 0)    array_delete(_spell.form_mods, _fg.mod_r, 1);
+} else {
+    draw_set_alpha(0.4);
+    draw_circle(craft_cx, craft_cy, 45, true);
+    draw_set_halign(fa_center); draw_set_valign(fa_middle);
+    draw_text(craft_cx, craft_cy, "Form");
+    draw_set_halign(fa_left); draw_set_valign(fa_top);
+    draw_set_alpha(1);
+}
 
-    if (_id == undefined) {
+// ---- Effect groups around it ----
+_has_form = (_spell != undefined && _spell.form != undefined);   // may have just been cleared
+var _rm_effect = -1;
+var _count = _has_form ? array_length(_spell.effects) : 0;
+
+for (var e = 0; e < MAX_EFFECTS; e++) {
+    var _ang = group_angles[e];
+    var _gx = craft_cx + lengthdir_x(200, _ang);
+    var _gy = craft_cy + lengthdir_y(200, _ang);
+
+    if (e < _count) {
+        var _fx = _spell.effects[e];
+        var _gr = draw_glyph_group(_gx, _gy, 45, global.spell_glyphs.element[$ _fx.element],
+                                   _fx.mods, _ang, 50, active_group == e);
+        if (_gr.hover != "") hover_text = _gr.hover;
+        if (_gr.main.clicked)  active_group = e;
+        if (_gr.main.rclicked) _rm_effect = e;
+        if (_gr.mod_r >= 0)    array_delete(_fx.mods, _gr.mod_r, 1);
+    } else if (_has_form && e == _count) {
         draw_set_alpha(0.4);
-        draw_circle(_px, _py, 45, true);
+        draw_circle(_gx, _gy, 45, true);
         draw_set_halign(fa_center); draw_set_valign(fa_middle);
-        draw_text(_px, _py, column_titles[c]);
+        draw_text(_gx, _gy, "+ Effect");
         draw_set_halign(fa_left); draw_set_valign(fa_top);
         draw_set_alpha(1);
-    } else {
-        var _glyph = global.spell_glyphs[$ _key][$ _id];
-        var _b = gui_circle_button(_px, _py, 45, _glyph.icon, _glyph.name, false);
-        if (_b.hover) hover_text = _glyph.name + "  (click to remove)\n" + _glyph.desc;
-        if (_b.clicked) {
-            _spell[$ _key] = undefined;
-            _spell = spell_prune(sel);
-        }
     }
 }
+if (_rm_effect >= 0) {
+    array_delete(_spell.effects, _rm_effect, 1);   // its modifiers go with it
+    active_group = -1;
+}
+
+// ---- Clear button ----
+if (_has_form && gui_button(1340, 880, 150, 50, "Clear spell", false)) {
+    spell_clear(_spell);
+    active_group = -1;
+}
+_spell = spell_prune(sel);   // (name-only spells stay; empty ones free the slot)
 
 // ---- Mana / cost ----
 draw_text(960, 97, "Cost: " + string(spell_cost(_spell)));

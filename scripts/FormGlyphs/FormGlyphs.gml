@@ -3,9 +3,10 @@
 	Some are unfinished...
 */
 
-#macro FORM_MANA_COST 20
-#macro ELEM_MANA_COST 10
-#macro MODI_MANA_COST 20
+#macro PROJECTILE_COST	5
+#macro STRIKE_COST		15
+#macro BEAM_COST		5
+#macro RUNE_COST		10
 
 #macro BASE_DAMAGE 100
 
@@ -14,7 +15,6 @@ function FormGlyph(_name, _cost) constructor {
 	cost = _cost;
 	is_channel = false;
 	uses_mask = false;
-	drain_per_sec = 0;
 	sprite = undefined;
 	icon = undefined;
 	desc = "";
@@ -31,33 +31,7 @@ function FormGlyph(_name, _cost) constructor {
 	}
 }
 
-function ElementGlyph(_name, _cost) constructor {
-	name = _name; cost = _cost;
-	icon = undefined;
-	desc = "";
-	drain_per_sec = _cost div 2;
-	on_cast = function(spell) {};
-	on_hit = function(spell, target) {};
-}
-
-function ModifierGlyph(_name, _cost) constructor {
-	name = _name; cost = _cost;
-	icon = undefined;
-	desc = "";
-	drain_per_sec = _cost div 2;
-	on_cast = function(spell) {};
-	on_hit = undefined;
-}
-
-function spell_hit(spell, target) { // For non collision based 
-	if (array_contains(spell.hit_list, target)) return;
-	array_push(spell.hit_list, target);
-	spell.form.on_hit(spell, target);
-	spell.element.on_hit(spell, target); 
-	if (spell.modifier.on_hit != undefined) spell.modifier.on_hit(spell, target); 
-}
-
-function Form_Projectile() : FormGlyph("Projectile", FORM_MANA_COST) constructor {
+function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructor {
 	icon = spr_glyph_projectile;
 	sprite = spr_projectile;
 	uses_mask = true;
@@ -73,16 +47,12 @@ function Form_Projectile() : FormGlyph("Projectile", FORM_MANA_COST) constructor
 		spell.x += lengthdir_x(spell.spd, spell.dir);
 		spell.y += lengthdir_y(spell.spd, spell.dir);
 	};
-	on_hit = function(spell, target) {
-		deal_damage(target, BASE_DAMAGE * spell.dmg_multiplier);
-	}
 }
 
-function Form_Beam() : FormGlyph("Beam", FORM_MANA_COST) constructor {
+function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	icon = spr_glyph_pierce;
 	sprite = spr_beam;
 	is_channel = true;
-	drain_per_sec = 5;
 	on_cast = function(spell) {
 		spell.spd = 0;
 		spell.lifetime = TARGET_ROOM_SPEED * 3;
@@ -107,7 +77,7 @@ function Form_Beam() : FormGlyph("Beam", FORM_MANA_COST) constructor {
 			var _top = global.lane_top[l] + 20;
 			var _end = GRID_X0 + GRID_COLS * TILE_W;
 
-			if (spell.pierce <= 0) {
+			if (spell.pierce-- <= 0) {
 				with (obj_enemy_parent) {
 					if (y >= _top && y < _top + LANE_H && x < _end) _end = x;
 				}
@@ -117,22 +87,18 @@ function Form_Beam() : FormGlyph("Beam", FORM_MANA_COST) constructor {
 			with (obj_enemy_parent) {
 				if (enemy_lane(id) == l && x >= spell.x && x <= _end) spell_hit(spell, id);
 			}
-			
 		}
 	};
-	on_hit = function(spell, target) {
-		deal_damage(target, BASE_DAMAGE * 0.1 * spell.dmg_multiplier);
-	}
 	on_draw = function(spell) {
 		for (var i = 0; i < array_length(spell.beam_lanes); i++) {
 			var _b = spell.beam_lanes[i];
 			draw_sprite_ext(sprite, 0, spell.x, global.lane_top[_b.lane] + TILE_H,
 				_b.len / sprite_get_width(sprite), 0.5, 0, spell.col, 1);
-    }
-	}
+		}
+	};
 }
 
-function Form_Strike() : FormGlyph("Strike", FORM_MANA_COST) constructor {
+function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 	icon = spr_glyph_strike;
 	sprite = spr_strike
 	on_cast = function(spell) {
@@ -172,75 +138,4 @@ function Form_Strike() : FormGlyph("Strike", FORM_MANA_COST) constructor {
 		var scale = 0.5 * _size_multiplier;
 		draw_sprite_ext(sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
 	};
-	on_hit = function(spell, target) {
-		deal_damage(target, 0.35 * BASE_DAMAGE * spell.dmg_multiplier);
-	}
-}
-
-function Elem_Fire() : ElementGlyph("Fire", ELEM_MANA_COST) constructor {
-	icon = spr_glyph_fire;
-	on_cast = function(spell) {
-		spell.col = c_red
-	}
-	on_hit = function(spell, target) {
-		target.burn_dmg = 20 * spell.dmg_multiplier;
-		target.burn_timer = TARGET_ROOM_SPEED * 3  * spell.elem_multiplier;
-	};
-}
-
-function Elem_Ice() : ElementGlyph("Ice", ELEM_MANA_COST) constructor {
-	icon = spr_glyph_frost;
-	on_cast = function(spell) {
-		spell.col = c_teal;
-	};
-	on_hit = function(spell, target) {
-		target.slow_amt = 0.4 * spell.elem_multiplier;
-		target.slow_timer = TARGET_ROOM_SPEED * 3  * spell.elem_multiplier;
-	};
-}
-
-function Elem_Lightning() : ElementGlyph("Lightning", ELEM_MANA_COST) constructor {
-	icon = spr_glyph_pierce
-	on_cast = function(spell) {
-		spell.col = c_yellow;
-	};
-	on_hit = function(spell, target) {
-		target.stun_timer = TARGET_ROOM_SPEED * spell.elem_multiplier;
-	};
-}
-
-function Elem_Harm() : ElementGlyph("Harm", ELEM_MANA_COST) constructor {
-	on_cast = function(spell) {
-		spell.col = c_purple;
-	};
-}
-
-function Elem_None() : ElementGlyph("none", 0) constructor {
-}
-
-function Mod_Area() : ModifierGlyph("Area", MODI_MANA_COST) constructor {
-	icon = spr_glyph_pierce;
-	on_cast = function(spell) {
-		spell.area = true;
-	}
-	on_hit = function(spell, target) {};
-}
-
-function Mod_Amplify() : ModifierGlyph("Amplify", MODI_MANA_COST) constructor {
-	icon = spr_glyph_amplify;
-	on_cast = function(spell) {
-		spell.dmg_multiplier = 3;
-		spell.elem_multiplier = 2;
-	}
-}
-
-function Mod_Pierce() : ModifierGlyph("Pierce", MODI_MANA_COST) constructor {
-	icon = spr_glyph_pierce;
-	on_cast = function(spell) {
-		spell.pierce = 50; // Probably should be a boolean based on how pierce works
-	}
-	on_hit = function(spell, target) {}
-}
-
-function Mod_None() : ElementGlyph("none", 0) constructor {
 }
