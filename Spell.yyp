@@ -57,6 +57,7 @@
     {"$GMFolder":"","%Name":"Towers","folderPath":"folders/Sprites/Towers.yy","name":"Towers","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"UI","folderPath":"folders/Sprites/UI.yy","name":"UI","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Glyphs","folderPath":"folders/Sprites/UI/Glyphs.yy","name":"Glyphs","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder": "", "%Name": "GlyphScripts","folderPath": "folders/Scripts/GlyphScripts.yy","name": "GlyphScripts","resourceType": "GMFolder","resourceVersion": "2.0"},
     {"$GMFolder":"","%Name":"VFX","folderPath":"folders/Sprites/VFX.yy","name":"VFX","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
