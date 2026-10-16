@@ -68,7 +68,7 @@ function spell_add_glyph(_s, _type, _id, _active) {
         _list = _s.effects[_ei].mods;
     }
     if (array_length(_list) >= MAX_MODS) return "Group is full";
-    if (array_contains(_list, _id)) return "Already attached";
+    if (array_contains(_list, _id) && !_m.is_stacks) return "Already attached";
     array_push(_list, _id);
     return "";
 }

@@ -16,6 +16,7 @@ global.spell_glyphs = {
 		area : new Mod_Area(),
 		amplify : new Mod_Amplify(),
 		pierce : new Mod_Pierce(),
+		extend_time : new Mod_Extend_Time(),
 		none : new Mod_None()
 	}
 };
@@ -23,7 +24,7 @@ global.spell_glyphs = {
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike"],
 	element	:	["fire", "ice", "lightning", "harm"],
-	modifier:	["area", "amplify", "pierce"]
+	modifier:	["area", "amplify", "pierce", "extend_time"]
 };
 
 

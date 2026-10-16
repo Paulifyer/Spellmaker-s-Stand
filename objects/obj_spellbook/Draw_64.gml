@@ -148,6 +148,7 @@ if (_n > 0) {
 }
 
 // ---- Description scroll ----
+draw_set_font(-1)
 draw_text_ext(1610, 680, hover_text, 26, 220);
 
 // ---- Start ----

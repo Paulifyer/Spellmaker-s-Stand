@@ -1,7 +1,10 @@
-#macro HARM_COST		10
-#macro FIRE_COST		10
-#macro LIGHTNING_COST	10
-#macro FROST_COST		10
+#macro HARM_COST			10
+#macro FIRE_COST			10
+#macro FIRE_DURATION		3
+#macro LIGHTNING_COST		10
+#macro LIGHTNING_DURATION	1
+#macro FROST_COST			10
+#macro FROST_DURATION		3
 
 function ElementGlyph(_name, _cost) constructor {
 	name = _name; cost = _cost;
@@ -16,8 +19,8 @@ function Elem_Fire() : ElementGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
 	on_hit = function(spell, target, fx) {
-		target.burn_dmg = 20 * spell.dmg_multiplier;
-		target.burn_timer = TARGET_ROOM_SPEED * 3  * spell.elem_multiplier;
+		target.burn_dmg = 20 * fx.effect_multiplier;
+		target.burn_timer = TARGET_ROOM_SPEED * (FIRE_DURATION + fx.duration);
 	};
 }
 
@@ -25,8 +28,9 @@ function Elem_Ice() : ElementGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
 	on_hit = function(spell, target, fx) {
-		target.slow_amt = 0.2 * spell.elem_multiplier;
-		target.slow_timer = TARGET_ROOM_SPEED * 3  * spell.elem_multiplier;
+		target.slow_amt += (0.2);
+		// Hypothetically, frost stacks also will inherit extend time
+		target.slow_timer = TARGET_ROOM_SPEED * (FROST_DURATION + fx.duration); 
 	};
 }
 
@@ -34,7 +38,7 @@ function Elem_Lightning() : ElementGlyph("Lightning", LIGHTNING_COST) constructo
 	icon = spr_glyph_pierce;
 	col = c_yellow;
 	on_hit = function(spell, target, fx) {
-		target.stun_timer = TARGET_ROOM_SPEED * spell.elem_multiplier;
+		target.stun_timer = TARGET_ROOM_SPEED * (LIGHTNING_DURATION + fx.duration);
 	};
 }
 
@@ -42,7 +46,7 @@ function Elem_Harm() : ElementGlyph("Harm", HARM_COST) constructor {
 	icon = spr_glyph_harm;
 	col = c_purple;
 	on_hit = function(spell, target, fx) {
-		deal_damage(target, BASE_DAMAGE);
+		deal_damage(target, BASE_DAMAGE * fx.effect_multiplier);
 	}
 }
 
