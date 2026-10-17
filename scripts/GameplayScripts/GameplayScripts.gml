@@ -1,5 +1,8 @@
 /// Script Functions
 
+// Global Level Management
+global.current_level = 0;
+global.level_array = [rm_level_1, rm_level_2]
 
 /// @description Is used by a sequence to lock the menu
 function menu_lock_on()
@@ -235,6 +238,9 @@ function set_game_over()
 		intermission_timer = 0;
 		alarm[0] = -1;
 	}
+	
+	// Deactivate and pause everything
+	instance_deactivate_all(true);
 	
 	// Set game_over to true
 	game_over = true;

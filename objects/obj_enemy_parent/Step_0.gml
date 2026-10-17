@@ -4,11 +4,11 @@
 sprite_index = walk_side_sprite;
 	
 // Set path speed to normal speed
-path_speed = my_speed;
+path_speed = my_speed
 
 if (burn_timer > 0) { //burn_handler
-	if (burn_timer mod 5 == 0) {
-		deal_damage(self, burn_dmg / (TARGET_ROOM_SPEED / 5))
+	if (burn_timer mod TARGET_ROOM_SPEED == 0) {
+		deal_damage(self, burn_dmg)
 	}
 	burn_timer--;
 }

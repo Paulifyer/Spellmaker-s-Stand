@@ -65,6 +65,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		spell.tick = 0;
 	}
 	on_step = function(spell) {
+		// Handles AOE Modifier
 		var _first = spell.area ? spell.lane - 1 : spell.lane;
 		var _last  = spell.area ? spell.lane + 1 : spell.lane;
 		_first = max(_first, 0);

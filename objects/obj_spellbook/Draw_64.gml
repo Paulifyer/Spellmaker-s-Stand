@@ -5,6 +5,8 @@ var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
 hover_text = "";
 draw_sprite(spr_spell_crafting_gui, 0, 0, 0);
 draw_set_color(c_black);
+draw_set_font(fnt_Arcane);
+
 
 var _spell = global.spellbook[sel];
 
@@ -19,8 +21,9 @@ for (var c = 0; c < 3; c++) {
         var _glyph = global.spell_glyphs[$ _key][$ _id];
 
         // form always available; the rest need a form, and modifiers must suit it
-        var _enabled = (c == 0) || _has_form;
-        if (c == 2 && _has_form) _enabled = mod_valid_for_form(_id, _spell.form);
+        var _status = glyph_status(_key, _id);
+		var _enabled = _status == GLYPH_STATE.owned && ((c == 0) || _has_form);
+        if (c == 2 && _has_form) _enabled = _status == GLYPH_STATE.owned && mod_valid_for_form(_id, _spell.form);
 
         var _current = (c == 0 && _has_form) ? (_spell.form == _id) : false;
 		
@@ -34,6 +37,8 @@ for (var c = 0; c < 3; c++) {
 
         if (_b.hover) {
             hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
+			if (_status == GLYPH_STATE.locked)			hover_text = "???\nNot unlocked yet...";
+			else if (_status == GLYPH_STATE.disabled)	hover_text += "\nSome force has disabled this?";
             if (!_enabled) hover_text += (c == 0 || !_has_form) ? "\n(pick a form first)" : "\n(can't be used with this form)";
         }
         if (_b.clicked) {
@@ -41,7 +46,7 @@ for (var c = 0; c < 3; c++) {
             var _msg = spell_add_glyph(_spell, _key, _id, active_group);
             if (_msg != "") { notice = _msg; notice_timer = 120; }
             else if (_key == "form")    active_group = -1;
-            else if (_key == "element") active_group = array_length(_spell.effects) - 1;
+            else if (_key == "effect") active_group = array_length(_spell.effects) - 1;
             _spell = spell_prune(sel);
             _has_form = (_spell != undefined && _spell.form != undefined);
         }
@@ -77,7 +82,7 @@ for (var e = 0; e < MAX_EFFECTS; e++) {
 
     if (e < _count) {
         var _fx = _spell.effects[e];
-        var _gr = draw_glyph_group(_gx, _gy, 45, global.spell_glyphs.element[$ _fx.element],
+        var _gr = draw_glyph_group(_gx, _gy, 45, global.spell_glyphs.effect[$ _fx.effect],
                                    _fx.mods, _ang, 50, active_group == e);
         if (_gr.hover != "") hover_text = _gr.hover;
         if (_gr.main.clicked)  active_group = e;
@@ -127,6 +132,12 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     var _sp = global.spellbook[i];
     var _ic = (_sp != undefined && _sp.form != undefined) ? global.spell_glyphs.form[$ _sp.form].icon : undefined;
     var _b = gui_circle_button(_slot_x[i], 990, 30, _ic, string(i + 1), i == sel);
+	var _bad_spell = (_sp != undefined && _sp.form != undefined && !is_spell_usable(_sp));
+	if (_bad_spell) {
+		draw_set_colour(c_red);
+		draw_circle(_slot_x[i], 990, 30, true);
+		draw_set_colour(c_white);
+	}
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
     if (_b.clicked) { sel = i; naming = false; }
 }
@@ -148,7 +159,7 @@ if (_n > 0) {
 }
 
 // ---- Description scroll ----
-draw_set_font(-1)
+
 draw_text_ext(1610, 680, hover_text, 26, 220);
 
 // ---- Start ----

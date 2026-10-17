@@ -1,7 +1,6 @@
 //obj_spell Create
 
 spd = 4; dmg = 1; lifetime = 60; pierce = 0; dir = 0;
-dmg_multiplier = 1; elem_multiplier = 1;
 col = c_white
 landed = false;
 lane = 0;
@@ -19,17 +18,16 @@ beam_lanes = [];
 // This stores the struct and modifiers for the effects {effect, mods[], power, duration}
 //effects = [];
 
-show_debug_message(variable_struct_get_names(form))
 
 form.on_cast(self);
 for (var i = 0; i < array_length(form_mods); i++) form_mods[i].on_cast(self, undefined);
 for (var e = 0; e < array_length(effects); e++) {
 	var _fx = effects[e];
-	_fx.element.on_cast(self, _fx);
+	_fx.effect.on_cast(self, _fx);
 	for (var i = 0; i < array_length(_fx.mods); i++) _fx.mods[i].on_cast(self, _fx);
 }
 
-col = (array_length(effects) > 0) ? effects[0].element.col : c_white;
+col = (array_length(effects) > 0) ? effects[0].effect.col : c_white;
 
 if (form.uses_mask && form.sprite != undefined) {
 	mask_index = form.sprite;

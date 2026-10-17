@@ -22,7 +22,7 @@ if (mana >= MAX_MANA) {
 for (var k = 0; k < 3; k++) {
 	if (keyboard_check_pressed(ord("1") + k) || keyboard_check(vk_numpad1 + k)) {
 		var _l = spell_ensure(k);
-		if (_l != undefined && _l.form != undefined) spell_selected = (spell_selected == k) ? -1 : k;
+		if (_l != undefined && is_spell_usable(_l)) spell_selected = (spell_selected == k) ? -1 : k;
 	}
 }
 
@@ -31,7 +31,6 @@ for (var k = 0; k < 3; k++) {
 if (mouse_check_button_pressed(vk_space) || keyboard_check_pressed(ord(" "))) spell_selected = -1;
 
 // Cast
-var _cost = 0;
 if (!is_spell_on_cd && mouse_check_button(mb_left) && spell_selected != -1 && channel == noone) {
 	var _t = world_to_grid(mouse_x, mouse_y);
 	if (_t != undefined) {
@@ -40,7 +39,7 @@ if (!is_spell_on_cd && mouse_check_button(mb_left) && spell_selected != -1 && ch
 		if (_s.spell != noone) {
 			if (_s.spell.form.is_channel) {
 				channel = _s.spell; // Stores the channeled spell
-				_cost = _s.cost;
+				cost = _s.cost;
 			} else {
 				is_spell_on_cd = true;
 				alarm[0] = 0.8 * TARGET_ROOM_SPEED;
@@ -55,7 +54,7 @@ if (channel != noone) {
 	
 	if (!_release) {
 		// Draining mana while held
-		var _drain = _cost / TARGET_ROOM_SPEED;
+		var _drain = cost / TARGET_ROOM_SPEED;
 		if (mana >= _drain) {
 			mana -= _drain;
 			if (mana <= 0) {
@@ -74,6 +73,7 @@ if (channel != noone) {
 		if (instance_exists(channel)) instance_destroy(channel);
 		channel = noone;
 		is_spell_on_cd = true;
+		cost = 0;
 		alarm[0] = 0.8 * TARGET_ROOM_SPEED;
 	}
 }

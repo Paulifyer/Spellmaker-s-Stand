@@ -34,6 +34,7 @@ if (get_village_hp() <= 0)
 } 
 else if (waves_are_over())
 {
+	
 	// Use the custom game over function to turn off variables
 	set_game_over();
 	

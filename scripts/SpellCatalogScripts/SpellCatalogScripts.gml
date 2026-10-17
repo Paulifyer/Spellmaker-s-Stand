@@ -5,7 +5,7 @@ global.spell_glyphs = {
 		beam : new Form_Beam(),
 		strike: new Form_Strike() 
 	},
-	element : {
+	effect : {
 		fire : new Elem_Fire(),
 		ice : new Elem_Ice(),
 		lightning : new Elem_Lightning(),
@@ -23,7 +23,7 @@ global.spell_glyphs = {
 
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike"],
-	element	:	["fire", "ice", "lightning", "harm"],
+	effect	:	["fire", "ice", "lightning", "harm"],
 	modifier:	["area", "amplify", "pierce", "extend_time"]
 };
 
@@ -35,7 +35,7 @@ function spell_hit(spell, target) { // For non collision based
 	spell.form.on_hit(spell, target);
 	for (var e = 0; e < array_length(spell.effects); e++) {
 		var _fx = spell.effects[e];
-		_fx.element.on_hit(spell, target, _fx);
+		_fx.effect.on_hit(spell, target, _fx);
 		for (var i = 0; i < array_length(spell.effects[e].mods); i++) {
 			var _mod = spell.effects[e].mods[i];
 			if (_mod.on_hit != undefined) _mod.on_hit(spell, target);	
@@ -58,7 +58,7 @@ function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
 }
 
 function cast_spell(_caster, _loadout, _col, _row) {
-	if (_caster.mana_exhausted) return { spell: noone, cost: 0 };
+	if (_caster.mana_exhausted || !is_spell_usable(_loadout)) return { spell: noone, cost: 0 };
 	
 	var _g = global.spell_glyphs;
 	var _f = _g.form[$ _loadout.form];
@@ -77,22 +77,32 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	
 	var _effects = [];
 	for (var e = 0; e < array_length(_loadout.effects); e++) {
-		var _el = _g.element[$ _loadout.effects[e].element];
+		var _el = _g.effect[$ _loadout.effects[e].effect];
 		if (!is_struct(_el)) return { spell: noone, cost: 0 };
 		_cost += _el.cost;
 		
 		var _mods = [];
 		for (var i = 0; i < array_length(_loadout.effects[e].mods); i++) {
+			var _amp_count = 0;
 			var _m = _g.modifier[$ _loadout.effects[e].mods[i]];
 			if (!is_struct(_m)) return { spell: noone, cost: 0 };
 			array_push(_mods, _m);
 			_cost += _m.cost;
+			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
+				_cost += (_amp_count * 5);
+				_amp_count++;
+			}
 		}
 		
-		array_push(_effects, {element: _el, mods: _mods, effect_multiplier: 1, duration: 1});
+		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1});
 	}
 	
-	if (!is_instanceof(_f, Form_Beam)) _caster.mana = max(0, _caster.mana - _cost);
+	if (!is_instanceof(_f, Form_Beam)) {
+		if (_caster.mana < _cost) {
+			return { spell: noone, cost: 0 };
+		}
+		_caster.mana = max(0, _caster.mana - _cost);
+	} 
 	if (_caster.mana <= 0) {
 		_caster.mana = 0;
 		_caster.mana_exhausted = true;

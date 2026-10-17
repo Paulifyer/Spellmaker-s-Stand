@@ -12,16 +12,16 @@ if (!variable_global_exists("EnemyCatalog")) {
 // waves guarantee every type while adding stronger enemies as difficulty rises.
 var _enemy_roster = [
 	new EnemyWaveDefinition(global.EnemyCatalog.MOOK, 10, 1, 999),
-	new EnemyWaveDefinition(global.EnemyCatalog.RANGER, 4, 2, 5),
-	new EnemyWaveDefinition(global.EnemyCatalog.BRUTE, 1, 3, 10)
+	//new EnemyWaveDefinition(global.EnemyCatalog.RANGER, 4, 2, 5),
+	//new EnemyWaveDefinition(global.EnemyCatalog.BRUTE, 1, 3, 10)
 ];
 
 // Wave budgets replace manually repeated enemy arrays. Enemy selection and
 // order vary each run, while these settings keep the overall curve stable.
 level_wave_config = new LevelWaveConfig(
-	3, // Threat count
-	7, // Starting budget
-	30, // Ending budget
+	1, // Wave count
+	5, // Starting budget
+	15, // Ending budget
 	1.00, // Difficulty curve
 	_enemy_roster
 );

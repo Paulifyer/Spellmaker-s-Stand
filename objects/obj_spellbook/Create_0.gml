@@ -9,7 +9,7 @@ close_requested = false;
 hover_text = "";
 enemy_view = 0;
 
-column_keys   = ["form", "element", "modifier"];
+column_keys   = ["form", "effect", "modifier"];
 column_titles = ["Form", "Effect", "Modifier"];
 glyph_row_y   = [265, 490, 835];     // palette rows, under each heading
 group_angles   = [90, 210, 330];     // where effect groups sit around the hexagram

@@ -6,7 +6,7 @@
 #macro FROST_COST			10
 #macro FROST_DURATION		3
 
-function ElementGlyph(_name, _cost) constructor {
+function EffectGlyph(_name, _cost) constructor {
 	name = _name; cost = _cost;
 	icon = undefined;
 	col = c_white
@@ -15,7 +15,7 @@ function ElementGlyph(_name, _cost) constructor {
 	on_hit = function(spell, target, fx) {};
 }
 
-function Elem_Fire() : ElementGlyph("Fire", FIRE_COST) constructor {
+function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
 	on_hit = function(spell, target, fx) {
@@ -24,7 +24,7 @@ function Elem_Fire() : ElementGlyph("Fire", FIRE_COST) constructor {
 	};
 }
 
-function Elem_Ice() : ElementGlyph("Ice", FROST_COST) constructor {
+function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
 	on_hit = function(spell, target, fx) {
@@ -34,7 +34,7 @@ function Elem_Ice() : ElementGlyph("Ice", FROST_COST) constructor {
 	};
 }
 
-function Elem_Lightning() : ElementGlyph("Lightning", LIGHTNING_COST) constructor {
+function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor {
 	icon = spr_glyph_pierce;
 	col = c_yellow;
 	on_hit = function(spell, target, fx) {
@@ -42,13 +42,17 @@ function Elem_Lightning() : ElementGlyph("Lightning", LIGHTNING_COST) constructo
 	};
 }
 
-function Elem_Harm() : ElementGlyph("Harm", HARM_COST) constructor {
+function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 	icon = spr_glyph_harm;
 	col = c_purple;
 	on_hit = function(spell, target, fx) {
-		deal_damage(target, BASE_DAMAGE * fx.effect_multiplier);
+		var _dmg = BASE_DAMAGE * fx.effect_multiplier;
+		if (spell.form.is_channel) {
+			_dmg /= TARGET_ROOM_SPEED;
+		}
+		deal_damage(target, _dmg);
 	}
 }
 
-function Elem_None() : ElementGlyph("none", 0) constructor {
+function Elem_None() : EffectGlyph("none", 0) constructor {
 }
