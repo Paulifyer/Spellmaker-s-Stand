@@ -68,3 +68,14 @@ function is_spell_usable(_s) {
 	return true;
 }
 
+function sanitize_owned() {
+    var _types = ["form", "element", "modifier"];
+    for (var t = 0; t < 3; t++) {
+        if (!variable_struct_exists(global.owned, _types[t])) global.owned[$ _types[t]] = [];
+        var _list = global.owned[$ _types[t]];
+        for (var i = array_length(_list) - 1; i >= 0; i--)
+            if (!variable_struct_exists(global.spell_glyphs[$ _types[t]], _list[i]))
+                array_delete(_list, i, 1);
+    }
+}
+

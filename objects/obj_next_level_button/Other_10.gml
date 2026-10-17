@@ -1,5 +1,7 @@
 ///@description Next Level Button
 
+var _save = json_stringify({ owned: global.owned, spellbook: global.spellbook });
+
 // Increment Level selector to pick next level
 global.current_level++;
 

@@ -26,4 +26,6 @@ with (obj_wave_manager) {
     }
 }
 
+sanitize_owned(); // Validate the spellbook and owned glyphs
+
 global.menu_lock = true;

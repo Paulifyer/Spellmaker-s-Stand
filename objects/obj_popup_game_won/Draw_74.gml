@@ -11,18 +11,8 @@ draw_self();
 
 global.menu_lock = true;
 
-// Draw the win image 
-//draw_sprite_ext(spr_win_image, 0, x, y - 13, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
-
-//Draw the unlocked glyph!
-if (global.current_level == 0) {
-	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
-	draw_set_font(fnt_Arcane);
-	var _sx_offs = string_width("Unlocked new Glyphs!:") / 2;
-	draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
-	draw_sprite_ext(spr_glyph_fire, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
-	draw_sprite_ext(spr_glyph_pierce, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
-}
+// Handle glyph unlocks, drawing unlocked glyphs
+handle_next_level_glyphs();
 
 // Set the Font horizontal alignment
 draw_set_halign(fa_center);

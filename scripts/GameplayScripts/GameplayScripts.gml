@@ -318,6 +318,28 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 	return (((_value - _current_lower_bound) / (_current_upper_bound - _current_lower_bound)) * (_desired_upper_bound - _desired_lowered_bound)) + _desired_lowered_bound;
 }
 
+function handle_next_level_glyphs() {
+//Draw the unlocked glyphs!
 
+var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
+var _sx_offs = string_width("Unlocked new Glyphs!:") / 2;
 
-
+	switch(global.current_level) {
+	case 0:
+		draw_set_font(fnt_Arcane);
+		draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
+		draw_sprite_ext(spr_glyph_fire, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		draw_sprite_ext(spr_glyph_pierce, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		unlock_glyph("effect", "fire");
+		unlock_glyph("modifier", "pierce");
+		break;
+	case 1:
+		draw_set_font(fnt_Arcane);
+		draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
+		draw_sprite_ext(spr_glyph_frost, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		draw_sprite_ext(spr_glyph_amplify, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		unlock_glyph("effect", "ice");
+		unlock_glyph("modifier", "amplify")
+		break;
+	}
+}
