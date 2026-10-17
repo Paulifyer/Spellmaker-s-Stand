@@ -2,7 +2,23 @@
 
 // Global Level Management
 global.current_level = 0;
-global.level_array = [rm_level_1, rm_level_2]
+global.level_array = fetch_all_level_rooms();
+
+function fetch_all_level_rooms() {
+	matching_rooms = [];
+	var _all_rooms = asset_get_ids(asset_room);
+	
+	var _target_format = "rm_level_";
+	
+	for (var i = 0; i < array_length(_all_rooms); i++) {
+		var _room_handle = _all_rooms[i];
+		var _room_name = room_get_name(_room_handle);
+		if (string_starts_with(_room_name, _target_format)) {
+			array_push(matching_rooms, _room_handle);
+		}
+	}
+	return matching_rooms;
+}
 
 /// @description Is used by a sequence to lock the menu
 function menu_lock_on()
@@ -318,26 +334,26 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 	return (((_value - _current_lower_bound) / (_current_upper_bound - _current_lower_bound)) * (_desired_upper_bound - _desired_lowered_bound)) + _desired_lowered_bound;
 }
 
+function draw_unlocked_glyphs(_glyph1, _glyph2) {
+	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
+	var _sx_offs = string_width("Unlocked new Glyphs!:") / 2;
+	
+	draw_set_font(fnt_Arcane);
+	draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
+	draw_sprite_ext(_glyph1, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+	draw_sprite_ext(_glyph2, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+}
+
 function handle_next_level_glyphs() {
 //Draw the unlocked glyphs!
-
-var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
-var _sx_offs = string_width("Unlocked new Glyphs!:") / 2;
-
 	switch(global.current_level) {
 	case 0:
-		draw_set_font(fnt_Arcane);
-		draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
-		draw_sprite_ext(spr_glyph_fire, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
-		draw_sprite_ext(spr_glyph_pierce, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		draw_unlocked_glyphs(spr_glyph_fire, spr_glyph_pierce);
 		unlock_glyph("effect", "fire");
 		unlock_glyph("modifier", "pierce");
 		break;
 	case 1:
-		draw_set_font(fnt_Arcane);
-		draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
-		draw_sprite_ext(spr_glyph_frost, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
-		draw_sprite_ext(spr_glyph_amplify, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		draw_unlocked_glyphs(spr_glyph_frost, spr_glyph_amplify);
 		unlock_glyph("effect", "ice");
 		unlock_glyph("modifier", "amplify")
 		break;
