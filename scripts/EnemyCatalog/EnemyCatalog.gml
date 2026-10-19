@@ -12,7 +12,7 @@ function init_enemy_catalog() {
 
         BRUTE: {
             object: obj_brute,
-            cost: 5,
+            cost: 4,
         }
     };
 }
