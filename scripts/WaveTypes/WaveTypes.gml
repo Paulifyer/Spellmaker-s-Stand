@@ -14,11 +14,10 @@ enum WaveState
 }
 
 /// @description Defines one enemy type that may be selected by a level's wave generator 
-/// @param {Asset.GMObject} enemy_object The object index of the enemy
-/// @param {real} cost The spawn cost point value of this enemy
-/// @param {real|array} weight_setting Relative selection weight after minimums are added
-/// @param {real|array} min_setting Minimum amount required in each wave
-/// @param {real|array} max_setting Maximum amount allowed in each wave
+/// @param {struct} _enemy EnemyCatalog entry containing the object and threat cost
+/// @param {real|array} _weight_setting Relative selection weight after minimums are added
+/// @param {real|array} _min_setting Minimum amount required in each wave
+/// @param {real|array} _max_setting Maximum amount allowed in each wave
 function EnemyWaveDefinition(_enemy, _weight_setting, _min_setting, _max_setting) constructor
 {
 	enemy_object = _enemy.object;
