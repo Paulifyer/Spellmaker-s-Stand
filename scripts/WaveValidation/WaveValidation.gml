@@ -9,6 +9,48 @@ function wave_config_error(_message)
 	return false;
 }
 
+/// @description Validate one scalar-or-per-wave enemy setting
+/// @param {real|array} _setting
+/// @param {real} _wave_count
+/// @param {string} _setting_name
+/// @param {string} _enemy_name
+/// @returns {bool}
+function validate_wave_setting(_setting, _wave_count, _setting_name, _enemy_name)
+{
+	if (is_array(_setting))
+	{
+		if (array_length(_setting) != _wave_count)
+		{
+			return wave_config_error(
+				_enemy_name + " " + _setting_name
+				+ " array must contain exactly " + string(_wave_count) + " entries"
+			);
+		}
+
+		for (var i = 0; i < _wave_count; i++)
+		{
+			if (!is_real(_setting[i]))
+			{
+				return wave_config_error(
+					_enemy_name + " " + _setting_name
+					+ " contains a non-numeric value for wave " + string(i + 1)
+				);
+			}
+		}
+
+		return true;
+	}
+
+	if (!is_real(_setting))
+	{
+		return wave_config_error(
+			_enemy_name + " " + _setting_name + " must be a number or array"
+		);
+	}
+
+	return true;
+}
+
 /// @description Validate a level's standard-wave generation settings
 /// @param {struct.LevelWaveConfig} _config
 /// @returns {bool}
@@ -54,21 +96,41 @@ function validate_wave_config(_config)
 			return wave_config_error("enemy roster entry " + string(i) + " does not reference an object");
 		}
 
-		if (_definition.cost <= 0 || _definition.weight <= 0)
+		var _enemy_name = object_get_name(_definition.enemy_object);
+
+		if (_definition.cost <= 0)
 		{
-			return wave_config_error(object_get_name(_definition.enemy_object) + " must have positive cost and weight");
+			return wave_config_error(_enemy_name + " must have a positive cost");
 		}
 
-		if (_definition.intro_wave < 1
-		|| _definition.intro_wave > _config.wave_count
-		|| floor(_definition.intro_wave) != _definition.intro_wave)
+		if (!validate_wave_setting(
+			_definition.weight_setting,
+			_config.wave_count,
+			"weight",
+			_enemy_name
+		))
 		{
-			return wave_config_error(object_get_name(_definition.enemy_object) + " has an invalid intro_wave");
+			return false;
 		}
 
-		if (_definition.max_per_wave < 1 || floor(_definition.max_per_wave) != _definition.max_per_wave)
+		if (!validate_wave_setting(
+			_definition.min_setting,
+			_config.wave_count,
+			"minimum",
+			_enemy_name
+		))
 		{
-			return wave_config_error(object_get_name(_definition.enemy_object) + " must have a positive integer max_per_wave");
+			return false;
+		}
+
+		if (!validate_wave_setting(
+			_definition.max_setting,
+			_config.wave_count,
+			"maximum",
+			_enemy_name
+		))
+		{
+			return false;
 		}
 
 		for (var j = i + 1; j < _roster_length; j++)
@@ -83,32 +145,86 @@ function validate_wave_config(_config)
 	for (var _wave_number = 1; _wave_number <= _config.wave_count; _wave_number++)
 	{
 		var _budget = wave_config_budget(_config, _wave_number);
-		var _guaranteed_cost = 0;
-		var _has_affordable_enemy = false;
+		var _minimum_cost = 0;
+		var _minimum_count = 0;
 
 		for (var k = 0; k < _roster_length; k++)
 		{
 			var _enemy = _config.enemy_roster[k];
+			var _enemy_name = object_get_name(_enemy.enemy_object);
+			var _weight = wave_enemy_weight(_enemy, _wave_number);
+			var _minimum = wave_enemy_min(_enemy, _wave_number);
+			var _maximum = wave_enemy_max(_enemy, _wave_number);
 
-			if (_enemy.intro_wave == _wave_number)
+			if (_weight < 0)
 			{
-				_guaranteed_cost += _enemy.cost;
+				return wave_config_error(
+					_enemy_name + " has a negative weight for wave " + string(_wave_number)
+				);
 			}
 
-			if (_enemy.intro_wave <= _wave_number && _enemy.cost <= _budget)
+			if (_minimum < 0 || floor(_minimum) != _minimum)
 			{
-				_has_affordable_enemy = true;
+				return wave_config_error(
+					_enemy_name + " minimum must be a non-negative integer for wave "
+					+ string(_wave_number)
+				);
+			}
+
+			if (_maximum < 0 || floor(_maximum) != _maximum)
+			{
+				return wave_config_error(
+					_enemy_name + " maximum must be a non-negative integer for wave "
+					+ string(_wave_number)
+				);
+			}
+
+			if (_minimum > _maximum)
+			{
+				return wave_config_error(
+					_enemy_name + " minimum exceeds its maximum for wave "
+					+ string(_wave_number)
+				);
+			}
+
+			if (_maximum == 0 && _weight > 0)
+			{
+				return wave_config_error(
+					_enemy_name + " has positive weight but a zero maximum for wave "
+					+ string(_wave_number)
+				);
+			}
+
+			_minimum_cost += _minimum * _enemy.cost;
+			_minimum_count += _minimum;
+		}
+
+		if (_minimum_cost > _budget)
+		{
+			return wave_config_error(
+				"minimum enemies exceed the budget for wave " + string(_wave_number)
+			);
+		}
+
+		var _remaining_budget = _budget - _minimum_cost;
+		var _has_selectable_enemy = false;
+		for (var m = 0; m < _roster_length; m++)
+		{
+			var _selectable = _config.enemy_roster[m];
+			if (wave_enemy_weight(_selectable, _wave_number) > 0
+			&& wave_enemy_min(_selectable, _wave_number) < wave_enemy_max(_selectable, _wave_number)
+			&& _selectable.cost <= _remaining_budget)
+			{
+				_has_selectable_enemy = true;
+				break;
 			}
 		}
 
-		if (_guaranteed_cost > _budget)
+		if (_minimum_count <= 0 && !_has_selectable_enemy)
 		{
-			return wave_config_error("guaranteed enemies exceed the budget for wave " + string(_wave_number));
-		}
-
-		if (!_has_affordable_enemy)
-		{
-			return wave_config_error("wave " + string(_wave_number) + " has no affordable eligible enemy");
+			return wave_config_error(
+				"wave " + string(_wave_number) + " cannot generate any enemies"
+			);
 		}
 	}
 

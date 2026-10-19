@@ -11,9 +11,15 @@ An enemy roster entry contains:
 
 - `enemy_object`: the GameMaker enemy object to spawn.
 - `cost`: how much of a wave's threat budget it consumes.
-- `weight`: its relative selection frequency after its introduction.
-- `intro_wave`: the wave where one copy is guaranteed to appear.
-- `max_per_wave`: an upper bound for that enemy in one wave.
+- `weight_setting`: its relative selection frequency after required minimums.
+- `min_setting`: the required number of copies in a wave.
+- `max_setting`: the total upper bound, including required copies.
+
+Weight, minimum, and maximum settings accept either a scalar, which applies to
+every wave in that level, or an array with exactly one entry per wave. A zero
+weight prevents random additions but does not suppress a configured minimum.
+Setting weight, minimum, and maximum to zero makes an enemy unavailable for a
+wave.
 
 Level 1's configuration lives in
 `objects/obj_wave_level_1/Create_0.gml`. Its starting and ending budgets define
@@ -38,8 +44,9 @@ the top of `objects/obj_wave_manager/Create_0.gml` exposes all timing values as
 plain seconds: within-group stagger, the random between-group range, and the
 fixed intermission between numbered waves.
 
-The generated order varies between runs, but budgets, introductions, rarity
-weights, and per-wave limits keep the level's structure comparable. The run seed
+The generated order varies between runs. Minimums establish the required
+composition, weights distribute the remaining budget, and maxima prevent extreme
+random outcomes. The run seed
 is printed to the debug log and can be passed back to
 `generate_standard_waves()` to reproduce a generation.
 
@@ -48,8 +55,8 @@ To add an enemy to a level:
 1. Make the enemy inherit from `obj_enemy_parent`.
 2. Configure both `base_speed` and `my_speed` in its Create event.
 3. Add an `EnemyWaveDefinition` to the level roster.
-4. Choose a cost, weight, introduction wave, and per-wave limit.
-5. Ensure its introduction wave has enough budget for every guaranteed enemy.
+4. Choose scalar or per-wave weight, minimum, and maximum settings.
+5. Ensure every wave can afford the combined cost of its configured minimums.
 
 Invalid configurations and generated queues are checked at startup and report a
 descriptive GameMaker error.

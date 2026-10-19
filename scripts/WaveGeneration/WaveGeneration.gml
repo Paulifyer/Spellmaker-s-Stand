@@ -33,11 +33,13 @@ function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _coun
 	for (var i = 0; i < _roster_length; i++)
 	{
 		var _definition = _config.enemy_roster[i];
-		if (_definition.intro_wave <= _wave_number
+		var _weight = wave_enemy_weight(_definition, _wave_number);
+		var _maximum = wave_enemy_max(_definition, _wave_number);
+		if (_weight > 0
 		&& _definition.cost <= _remaining_budget
-		&& _counts[i] < _definition.max_per_wave)
+		&& _counts[i] < _maximum)
 		{
-			_total_weight += _definition.weight;
+			_total_weight += _weight;
 		}
 	}
 
@@ -52,11 +54,13 @@ function wave_select_enemy_index(_config, _wave_number, _remaining_budget, _coun
 	for (var j = 0; j < _roster_length; j++)
 	{
 		var _enemy = _config.enemy_roster[j];
-		if (_enemy.intro_wave <= _wave_number
+		var _enemy_weight = wave_enemy_weight(_enemy, _wave_number);
+		var _enemy_maximum = wave_enemy_max(_enemy, _wave_number);
+		if (_enemy_weight > 0
 		&& _enemy.cost <= _remaining_budget
-		&& _counts[j] < _enemy.max_per_wave)
+		&& _counts[j] < _enemy_maximum)
 		{
-			_running_weight += _enemy.weight;
+			_running_weight += _enemy_weight;
 			if (_selection < _running_weight)
 			{
 				return j;
@@ -121,15 +125,17 @@ function generate_standard_waves(_config)
 		var _enemy_array = [];
 		var _counts = array_create(_roster_length, 0);
 
-		// Guaranteed introductions are placed before any random selections.
+		// Required minimums are placed before any weighted random selections.
 		for (var i = 0; i < _roster_length; i++)
 		{
-			var _guaranteed_enemy = _config.enemy_roster[i];
-			if (_guaranteed_enemy.intro_wave == _wave_number)
+			var _required_enemy = _config.enemy_roster[i];
+			var _minimum = wave_enemy_min(_required_enemy, _wave_number);
+
+			for (var _copy = 0; _copy < _minimum; _copy++)
 			{
-				array_push(_enemy_array, _guaranteed_enemy.enemy_object);
+				array_push(_enemy_array, _required_enemy.enemy_object);
 				_counts[i] += 1;
-				_remaining_budget -= _guaranteed_enemy.cost;
+				_remaining_budget -= _required_enemy.cost;
 			}
 		}
 
@@ -151,6 +157,15 @@ function generate_standard_waves(_config)
 			array_push(_enemy_array, _selected_enemy.enemy_object);
 			_counts[_selected_index] += 1;
 			_remaining_budget -= _selected_enemy.cost;
+		}
+
+		if (_remaining_budget > 0)
+		{
+			show_debug_message(
+				"Wave " + string(_wave_number)
+				+ " left " + string(_remaining_budget)
+				+ " threat unspent"
+			);
 		}
 
 		_enemy_array = array_shuffle(_enemy_array);

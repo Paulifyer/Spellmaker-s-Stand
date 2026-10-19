@@ -16,16 +16,48 @@ enum WaveState
 /// @description Defines one enemy type that may be selected by a level's wave generator 
 /// @param {Asset.GMObject} enemy_object The object index of the enemy
 /// @param {real} cost The spawn cost point value of this enemy
-/// @param {real} weight The selection weight/chance for the generator
-/// @param {real} intro_wave The earliest wave number this enemy can appear in
-/// @param {real} max_per_wave The maximum amount of this enemy allowed per wave
-function EnemyWaveDefinition(_enemy, _enemy_weight, _intro_wave, _max_per_wave) constructor
+/// @param {real|array} weight_setting Relative selection weight after minimums are added
+/// @param {real|array} min_setting Minimum amount required in each wave
+/// @param {real|array} max_setting Maximum amount allowed in each wave
+function EnemyWaveDefinition(_enemy, _weight_setting, _min_setting, _max_setting) constructor
 {
 	enemy_object = _enemy.object;
 	cost = _enemy.cost;
-	weight = _enemy_weight;
-	intro_wave = _intro_wave;
-	max_per_wave = _max_per_wave;
+	weight_setting = _weight_setting;
+	min_setting = _min_setting;
+	max_setting = _max_setting;
+}
+
+/// @description Resolve a scalar setting or one entry from a per-wave array
+/// @param {real|array} _setting
+/// @param {real} _wave_number One-based wave number
+/// @returns {real}
+function wave_setting_value(_setting, _wave_number)
+{
+	if (is_array(_setting))
+	{
+		return _setting[_wave_number - 1];
+	}
+
+	return _setting;
+}
+
+/// @description Return an enemy's selection weight for one wave
+function wave_enemy_weight(_definition, _wave_number)
+{
+	return wave_setting_value(_definition.weight_setting, _wave_number);
+}
+
+/// @description Return an enemy's required minimum for one wave
+function wave_enemy_min(_definition, _wave_number)
+{
+	return wave_setting_value(_definition.min_setting, _wave_number);
+}
+
+/// @description Return an enemy's maximum for one wave
+function wave_enemy_max(_definition, _wave_number)
+{
+	return wave_setting_value(_definition.max_setting, _wave_number);
 }
 
 /// @description Defines the standard-wave generation settings for one level
