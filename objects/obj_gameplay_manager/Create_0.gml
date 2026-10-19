@@ -1,5 +1,7 @@
 /// @description Gameplay Manager
 
+// This validates the glyphs in the global spell glyphs array
+validate_glyphs();
 
 // This variable stores the amount of money currently available to spend
 money = 150;

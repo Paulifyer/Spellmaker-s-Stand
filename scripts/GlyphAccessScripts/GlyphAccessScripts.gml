@@ -3,7 +3,7 @@
 global.owned = {
 	form:	["projectile", "strike"],
 	effect: ["harm"],
-	modifier: []
+	modifier: ["area", "amplify"]
 };
 
 enum GLYPH_STATE {

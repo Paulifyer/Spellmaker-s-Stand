@@ -27,6 +27,23 @@ global.glyph_order = {
 	modifier:	["area", "amplify", "pierce", "extend_time"]
 };
 
+function validate_glyphs() {
+    var _need = {
+        form:     ["name", "cost", "icon", "desc", "on_cast", "on_step", "on_hit", "on_draw"],
+        effect:  ["name", "cost", "icon", "desc", "col", "on_cast", "on_hit"],
+        modifier: ["name", "cost", "icon", "desc", "scope", "on_cast"]
+    };
+    var _types = ["form", "effect", "modifier"];
+    for (var t = 0; t < 3; t++) {
+        var _ids = variable_struct_get_names(global.spell_glyphs[$ _types[t]]);
+        for (var i = 0; i < array_length(_ids); i++) {
+            var _g = global.spell_glyphs[$ _types[t]][$ _ids[i]];
+            for (var k = 0; k < array_length(_need[$ _types[t]]); k++)
+                if (!variable_struct_exists(_g, _need[$ _types[t]][k]))
+                    show_error(_types[t] + " '" + _ids[i] + "' is missing " + _need[$ _types[t]][k], false);
+        }
+    }
+}
 
 function spell_hit(spell, target) { // For non collision based 
 	if (!instance_exists(target)) return false;

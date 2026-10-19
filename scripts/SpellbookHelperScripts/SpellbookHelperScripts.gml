@@ -1,7 +1,7 @@
 #macro SPELL_SLOTS 3
 
-#macro MAX_EFFECTS 3
-#macro MAX_MODS 3
+#macro MAX_EFFECTS 5
+#macro MAX_MODS 5
 
 
 // The spellbook used by the player when casting spells
@@ -81,11 +81,12 @@ function spell_cost(_s) {
     for (var i = 0; i < array_length(_s.form_mods); i++) _c += _g.modifier[$ _s.form_mods[i]].cost;
     for (var e = 0; e < array_length(_s.effects); e++) {
         _c += _g.effect[$ _s.effects[e].effect].cost;
+		var _amp_count = 0;
         for (var i = 0; i < array_length(_s.effects[e].mods); i++) {
 			var _m = _g.modifier[$ _s.effects[e].mods[i]];
             _c += _m.cost;
 			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				_cost += (_amp_count * 5);
+				_c += (_amp_count * 5);
 				_amp_count++;
 			}
 		}
