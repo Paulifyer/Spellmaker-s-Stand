@@ -22,9 +22,12 @@ enemies_in_level = [];
 with (obj_wave_manager) {
     var _roster = level_wave_config.enemy_roster;
     for (var i = 0; i < array_length(_roster); i++) {
-        array_push(other.enemies_in_level, _roster[i].enemy_object);
+        array_push(other.enemies_in_level, { enemy: _roster[i].enemy_object, mutation: _roster[i].mutation});
     }
 }
+array_foreach(enemies_in_level, function(_val, _index) {
+	show_debug_message($"Value: {_val}, Index {_index}");
+})
 
 sanitize_owned(); // Validate the spellbook and owned glyphs
 

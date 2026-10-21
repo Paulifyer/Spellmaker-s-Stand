@@ -21,7 +21,7 @@ if (hp <= 0)
 	// We do this here, rather than in the destroy event, because we don't want
 	// to give any money anytime the enemy is destroyed, only when the enemy is killed.
 	adjust_money(my_value);
-	
+	if (mutation != undefined) mutation.on_death(self);
 	// Destroy this enemy
 	instance_destroy(id);
 }

@@ -5,30 +5,42 @@ if (mana <= 0) {
 	mana_exhausted = true;
 }
 
-if (mana < MAX_MANA && channel == noone) {
+if (mana < max_mana && channel == noone) {
 	if (mana_ticks == 0) {
 		var _regen_multiplier = mana_exhausted ? mana_exhausted_regen_multiplier : 1;
-		mana = min(MAX_MANA, mana + mana_regen_rate * _regen_multiplier);
+		mana = min(max_mana, mana + mana_regen_rate * _regen_multiplier);
 		mana_ticks = 6;
 	}
 	mana_ticks--
 }
 
-if (mana >= MAX_MANA) {
-	mana = MAX_MANA;
+if (mana >= max_mana) {
+	mana = max_mana;
 	mana_exhausted = false;
 }
 
 for (var k = 0; k < 3; k++) {
 	if (keyboard_check_pressed(ord("1") + k) || keyboard_check(vk_numpad1 + k)) {
 		var _l = spell_ensure(k);
+		show_debug_message(_l);
 		if (_l != undefined && is_spell_usable(_l)) spell_selected = (spell_selected == k) ? -1 : k;
 	}
 }
 
 
-// Space button resets selected spell
-if (mouse_check_button_pressed(vk_space) || keyboard_check_pressed(ord(" "))) spell_selected = -1;
+// Spacebar sets mana_exhausted to trigger mana recovery mode
+if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord(" "))) {
+	var _json_string = json_stringify(global.spellbook, true);
+	show_debug_message(_json_string);
+	mana_exhausted = true;
+}
+
+// Backspace button resets selected spell
+if (keyboard_check_pressed(vk_backspace)) {
+	spell_selected = -1;
+}
+
+
 
 // Cast
 if (!is_spell_on_cd && mouse_check_button(mb_left) && spell_selected != -1 && channel == noone) {
@@ -74,6 +86,6 @@ if (channel != noone) {
 		channel = noone;
 		is_spell_on_cd = true;
 		cost = 0;
-		alarm[0] = 0.8 * TARGET_ROOM_SPEED;
+		alarm[0] = tune_player("player", "spell_cd", SPELL_CD) * TARGET_ROOM_SPEED;
 	}
 }

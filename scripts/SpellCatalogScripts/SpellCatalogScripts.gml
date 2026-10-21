@@ -1,4 +1,7 @@
 
+// This function call ensures that tuning data is loaded before starting
+load_tuning();
+
 global.spell_glyphs = {
 	form : {
 		projectile : new Form_Projectile(),
@@ -106,7 +109,8 @@ function cast_spell(_caster, _loadout, _col, _row) {
 			array_push(_mods, _m);
 			_cost += _m.cost;
 			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				_cost += (_amp_count * 5);
+				var _amp_cost = tune_glyph("modifiers", "amplify", "cost_increase_per_stack", 5);
+				_cost += (_amp_count * _amp_cost);
 				_amp_count++;
 			}
 		}

@@ -1,7 +1,7 @@
 
 //Describes the player's owned glyphs, default values in GlyphAccessScripts
 global.owned = {
-	form:	["projectile", "strike"],
+	form:	["projectile", "beam", "strike"],
 	effect: ["harm"],
 	modifier: ["area", "amplify"]
 };
@@ -16,7 +16,7 @@ enum GLYPH_STATE {
 /// @param {string} _name name of the spell
 /// @param {string} _form name of the glyph
 /// @param {array<string>} _form_mods array holding the names of the form mods
-/// @param {array} _effects holds the effects and the mods on the effects
+/// @param {array<struct>} _effects holds the effects and the mods on the effects
 function loadout(_name, _form, _form_mods, _effects) constructor {
 	self.name = _name;
 	self.form = _form;
@@ -28,8 +28,8 @@ function loadout(_name, _form, _form_mods, _effects) constructor {
 ///@param {real} _state GLYPH_STATE
 ///@returns {real} string equivalent of GLYPH_STATE
 function glyph_state_to_string(_state) {
-	glyph_state_str = ["disabled", "locked", "owned"];
-	return glyph_state_str[_state];
+	var _glyph_state_str = ["disabled", "locked", "owned"];
+	return _glyph_state_str[_state];
 }
 
 ///@description Checks availability of glyph
@@ -41,8 +41,13 @@ function glyph_status(_type, _id) {
 	return GLYPH_STATE.owned;
 }
 
+///@description Checks if glyph is owned
+///@param {string} _type	string representing the type of glyph
+///@param {string} _id		string representing the glyph to be checked
+///@return {bool}
 function is_glyph_available(_type, _id) {
-	return glyph_status(_type, _id) == GLYPH_STATE.owned;
+	if (glyph_status(_type, _id) == GLYPH_STATE.locked) show_debug_message($"LOCKED, {_type}, {_id}");
+	return (glyph_status(_type, _id) == GLYPH_STATE.owned);
 }
 
 ///@description Unlocks glyphs for the player
@@ -63,7 +68,7 @@ function is_spell_usable(_s) {
 	for (var e = 0; e < array_length(_s.effects); e++) {
 		if (!is_glyph_available("effect", _s.effects[e].effect)) return false;
 		for (var i = 0; i < array_length(_s.effects[e].mods); i++)
-			if (!is_glyph_available("modifier", _s.effects[e].mods)) return false;
+			if (!is_glyph_available("modifier", _s.effects[e].mods[i])) return false;
 	}
 	return true;
 }

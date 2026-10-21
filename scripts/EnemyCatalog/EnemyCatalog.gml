@@ -16,3 +16,11 @@ function init_enemy_catalog() {
         }
     };
 }
+
+function init_enemy_info() {
+	global.enemy_info = {
+		obj_mook : { name: "Mook", icon: spr_enemy_mook, notes: "Weakling" },
+		obj_brute : { name: "Brute", icon: spr_enemy_brute, notes: "Brutish undead, seems to be harder to kill" },
+		obj_ranger : { name: "Ranger", icon: spr_enemy_ranger, notes: "Pesky and annoying, will hit you from afar" }
+	};
+}

@@ -86,7 +86,8 @@ function spell_cost(_s) {
 			var _m = _g.modifier[$ _s.effects[e].mods[i]];
             _c += _m.cost;
 			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				_c += (_amp_count * 5);
+				var _amp_cost = tune_glyph("modifiers", "amplify", "cost_increase_per_stack", 5);
+				_c += (_amp_count * _amp_cost);
 				_amp_count++;
 			}
 		}

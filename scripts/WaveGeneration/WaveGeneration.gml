@@ -133,7 +133,7 @@ function generate_standard_waves(_config)
 
 			for (var _copy = 0; _copy < _minimum; _copy++)
 			{
-				array_push(_enemy_array, _required_enemy.enemy_object);
+				array_push(_enemy_array, { enemy: _required_enemy.enemy_object, mutation: _required_enemy.mutation });
 				_counts[i] += 1;
 				_remaining_budget -= _required_enemy.cost;
 			}
@@ -154,7 +154,7 @@ function generate_standard_waves(_config)
 			}
 
 			var _selected_enemy = _config.enemy_roster[_selected_index];
-			array_push(_enemy_array, _selected_enemy.enemy_object);
+			array_push(_enemy_array, { enemy: _selected_enemy.enemy_object, mutation: _selected_enemy.mutation });
 			_counts[_selected_index] += 1;
 			_remaining_budget -= _selected_enemy.cost;
 		}

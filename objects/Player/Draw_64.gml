@@ -1,7 +1,7 @@
 
 // Draws the selected tile
 var _t = world_to_grid(mouse_x, mouse_y);
-if (_t != undefined && array_length(input_glyphs) > 0) {
+if (_t != undefined && 3 > 0) {
 	var _x1 = GRID_X0 + _t.col * TILE_W;
 	var _y1 = global.lane_top[_t.lane] ;//+ ((_t.row mod ROWS_PER_LANE) * TILE_H);
 	draw_set_alpha(0.3);

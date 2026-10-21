@@ -44,11 +44,12 @@ if (position < array_length(current_wave_groups))
 	}
 
 	var _lane_index = group_lane_indices[group_enemy_position];
+	var _entry = _enemy_group[group_enemy_position];
 	var _enemy = instance_create_layer(
 		x,
 		y,
 		layer,
-		_enemy_group[group_enemy_position]
+		_entry.enemy
 	);
 	_enemy.wave_owner = id;
 	active_enemy_count += 1;
@@ -60,6 +61,14 @@ if (position < array_length(current_wave_groups))
 	_enemy.base_speed *= _speed_multiplier;
 	_enemy.my_speed = _enemy.base_speed;
 	_enemy.v_speed *= _speed_multiplier;
+	
+	_enemy.mutation = undefined;
+	if (_entry.mutation != undefined) {
+		var _mutation = global.mutations[$ _entry.mutation];
+		_enemy.mutation = _mutation;
+		_mutation.on_spawn(_enemy);
+		_enemy.image_blend = _mutation.tint;
+	}
 
 	with (_enemy)
 	{

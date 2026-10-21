@@ -336,7 +336,7 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 
 function draw_unlocked_glyphs(_glyph1, _glyph2) {
 	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
-	var _sx_offs = string_width("Unlocked new Glyphs!:") / 2;
+	var _sx_offs = string_width("Unlocked new Glyphs!:");
 	
 	draw_set_font(fnt_Arcane);
 	draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");

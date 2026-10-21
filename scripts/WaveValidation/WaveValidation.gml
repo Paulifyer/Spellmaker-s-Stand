@@ -85,7 +85,7 @@ function validate_wave_config(_config)
 	for (var i = 0; i < _roster_length; i++)
 	{
 		var _definition = _config.enemy_roster[i];
-
+		
 		if (!is_struct(_definition))
 		{
 			return wave_config_error("enemy roster entry " + string(i) + " must be a struct");
@@ -102,6 +102,9 @@ function validate_wave_config(_config)
 		{
 			return wave_config_error(_enemy_name + " must have a positive cost");
 		}
+		
+		if (_definition.mutation != undefined && !variable_struct_exists(global.mutations, _definition.mutation))
+			return wave_config_error("Roster entry " + string(i) + " uses unknown mutation '" + string(_definition.mutation) + "'");
 
 		if (!validate_wave_setting(
 			_definition.weight_setting,
@@ -133,13 +136,14 @@ function validate_wave_config(_config)
 			return false;
 		}
 
-		for (var j = i + 1; j < _roster_length; j++)
-		{
-			if (_config.enemy_roster[j].enemy_object == _definition.enemy_object)
-			{
-				return wave_config_error(object_get_name(_definition.enemy_object) + " appears more than once in enemy_roster");
-			}
-		}
+		//for (var j = i + 1; j < _roster_length; j++)
+		//{
+		//	if (_config.enemy_roster[j].enemy_object == _definition.enemy_object)
+		//	{
+		//		wave_config_error(object_get_name(_definition.enemy_object) + " appears more than once in enemy_roster");
+		//		return true;
+		//	}
+		//}
 	}
 
 	for (var _wave_number = 1; _wave_number <= _config.wave_count; _wave_number++)

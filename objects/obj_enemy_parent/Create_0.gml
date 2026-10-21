@@ -72,3 +72,11 @@ attack_delay = 0;
 
 // Assigned by a wave manager after this Create event when the enemy is spawned.
 wave_owner = noone;
+
+// Description for Crystal Ball
+notes = "";
+
+//mutation_key
+mutation = undefined;
+
+

@@ -4,6 +4,7 @@
 */
 
 #macro PROJECTILE_COST	5
+#macro PROJECTILE_SPD 15
 #macro STRIKE_COST		15
 #macro BEAM_COST		5
 #macro RUNE_COST		10
@@ -35,8 +36,9 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 	icon = spr_glyph_projectile;
 	sprite = spr_projectile;
 	uses_mask = true;
+	cost = tune_glyph("forms", "projectile", "cost", PROJECTILE_COST);
 	on_cast = function(spell) {
-		spell.spd = 15; 
+		spell.spd = tune_glyph("forms", "projectile", "spd", PROJECTILE_SPD);
 		spell.lifetime = TARGET_ROOM_SPEED * 5;
 		var _lane = spell.target_row div ROWS_PER_LANE;
 		spell.x = GRID_X0;
@@ -52,6 +54,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	icon = spr_glyph_pierce;
 	sprite = spr_beam;
+	cost = tune_glyph("forms", "beam", "cost", BEAM_COST);
 	is_channel = true;
 	on_cast = function(spell) {
 		spell.spd = 0;
@@ -74,11 +77,11 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		if (++spell.tick mod (TARGET_ROOM_SPEED * 0.25) == 0) spell.hit_list = [];
 
 		spell.beam_lanes = [];
-		for (var l = _first; l <= _last; l++) {
-			var _top = global.lane_top[l] + 20;
-			var _end = GRID_X0 + GRID_COLS * TILE_W;
-
-			if (spell.pierce-- <= 0) {
+		for (var l = _first; l <= _last; l++) { // iterate from 1st lane to last lane
+			var _top = global.lane_top[l] + 20; // Middle-ish of lane
+			var _end = GRID_X0 + GRID_COLS * TILE_W; // End of Lane
+			var _pierce = spell.pierce;
+			if (_pierce <= 0) {
 				with (obj_enemy_parent) {
 					if (y >= _top && y < _top + LANE_H && x < _end) _end = x;
 				}
@@ -102,6 +105,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 	icon = spr_glyph_strike;
 	sprite = spr_strike
+	cost = tune_glyph("forms", "strike", "cost", STRIKE_COST);
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
 		spell.target_x = _p.x;

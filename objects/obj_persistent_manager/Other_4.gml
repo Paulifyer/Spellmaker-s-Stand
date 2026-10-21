@@ -16,5 +16,5 @@ else
 	audio_stop_sound(snd_music_menu);
 	
 	// Play the level's music
-	audio_play_sound(snd_music_level, 1, true);
+	//audio_play_sound(snd_music_level, 1, true);
 }
