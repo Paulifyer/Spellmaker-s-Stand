@@ -1,9 +1,9 @@
 
 //Describes the player's owned glyphs, default values in GlyphAccessScripts
 global.owned = {
-	form:	["projectile", "beam", "strike"],
+	form:	["projectile", "strike"],
 	effect: ["harm"],
-	modifier: ["area", "amplify"]
+	modifier: []
 };
 
 enum GLYPH_STATE {

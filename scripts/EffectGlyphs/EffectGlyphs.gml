@@ -43,7 +43,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 }
 
 function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor {
-	icon = spr_glyph_pierce;
+	icon = spr_glyph_lightning;
 	col = c_yellow;
 	cost = tune_glyph("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {

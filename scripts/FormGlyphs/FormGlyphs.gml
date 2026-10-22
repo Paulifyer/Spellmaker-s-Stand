@@ -52,7 +52,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 }
 
 function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
-	icon = spr_glyph_pierce;
+	icon = spr_glyph_beam;
 	sprite = spr_beam;
 	cost = tune_glyph("forms", "beam", "cost", BEAM_COST);
 	is_channel = true;

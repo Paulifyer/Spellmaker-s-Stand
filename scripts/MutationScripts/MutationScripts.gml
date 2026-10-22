@@ -40,6 +40,8 @@ function WardedMut() : EnemyMutation("warded", "Warded", WARDED_COST) constructo
 	on_step = function(enemy) {
 		if (enemy.slow_amt > 0) { // This currently only works for frost/ice
 			enemy.dmg_reduction = 0;
+		} else {
+			enemy.dmg_reduction = 0.5;
 		}
 	};
 }

@@ -19,7 +19,7 @@ function ModifierGlyph(_name, _cost) constructor {
 }
 
 function Mod_Area() : ModifierGlyph("Area", AREA_COST) constructor {
-	icon = spr_glyph_pierce;
+	icon = spr_glyph_aoe;
 	scope = "spell";
 	cost = tune_glyph("modifiers", "area", "cost", AREA_COST);
 	on_cast = function(spell, fx) {
@@ -50,7 +50,7 @@ function Mod_Pierce() : ModifierGlyph("Pierce", PIERCE_COST) constructor {
 }
 
 function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constructor {
-	icon = spr_placeholder_extendtime;
+	icon = spr_glyph_extendtime;
 	cost = tune_glyph("modifiers", "extend_time", "cost", EXTEND_TIME_COST);
 	is_stacks = true;
 	scope = "effect";

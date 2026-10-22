@@ -1,9 +1,7 @@
 /// @description Enemy Parent
 
 var _is_dead = hp <= 0;
-var _is_skeletal = _is_dead
-	&& is_struct(mutation)
-	&& is_method(mutation.on_death);
+var _is_skeletal = is_instanceof(mutation, SkeletalMut);
 
 // Always notify the spawning manager, including when this enemy reaches a base.
 // Skeletal deaths are excluded because their replacement is still active.
@@ -13,15 +11,6 @@ if (!_is_skeletal && instance_exists(wave_owner))
 	wave_owner = noone;
 }
 
-// A skeletal enemy keeps its wave slot while its replacement is pending.
-if (_is_skeletal)
-{
-	mutation.on_death(self);
-}
-
-// Enemies destroyed for another reason (such as reaching the base) do not
-// create a death animation or mutation effect.
-if (!_is_dead) exit;
 
 // Check if the enemy is walking sideways
 if (sprite_index == walk_side_sprite) 

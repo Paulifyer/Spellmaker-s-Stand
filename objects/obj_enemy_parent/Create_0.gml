@@ -44,12 +44,6 @@ v_speed = my_speed * 0.6;
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = spr_zombie_walk_side;
 
-// This variable holds the sprite to use when the enemy is moving up
-walk_up_sprite = spr_zombie_walk_up;
-
-// This variable holds the sprite to use when the enemy is moving down
-walk_down_sprite = spr_zombie_walk_down;
-
 // The defeated enemy to spawn if the enemy is moving sideways
 defeat_side_object = obj_zombie_defeat_side;
 
@@ -70,6 +64,10 @@ ready_to_attack = true;
 damage_dealt = 0;
 attack_delay = 0;
 
+//damage reduction percentage from mutations
+dmg_reduction = 0;
+
+
 // Assigned by a wave manager after this Create event when the enemy is spawned.
 wave_owner = noone;
 
@@ -78,5 +76,7 @@ notes = "";
 
 //mutation_key
 mutation = undefined;
+
+
 
 

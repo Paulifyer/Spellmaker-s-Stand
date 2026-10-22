@@ -7,8 +7,6 @@
 // The spellbook used by the player when casting spells
 global.spellbook = array_create(SPELL_SLOTS, undefined);
 
-global.enemy_info = ds_map_create();   // or a struct keyed by object_get_name(obj)
-
 function spell_ensure(_i) {
     if (global.spellbook[_i] == undefined)
         global.spellbook[_i] = { name: "", form: undefined, form_mods: [], effects: [] };
@@ -66,6 +64,7 @@ function spell_add_glyph(_s, _type, _id, _active) {
     } else {
         if (array_length(_s.effects) == 0) return "Add an effect first";
         var _ei = (_active >= 0) ? _active : array_length(_s.effects) - 1;
+		show_debug_message($"{array_length(_s.effects)}, {_active}")
         _list = _s.effects[_ei].mods;
     }
     if (array_length(_list) >= MAX_MODS) return "Group is full";

@@ -126,7 +126,7 @@ function reduce_village_hp(_amount)
 function deal_damage(_id, _amount)
 {
 	// Reduce the enemies hp by the amount that was passed in
-	_id.hp -= _amount;
+	_id.hp -= (_amount * (1 - _id.dmg_reduction));
 	
 	// Set the enemy flash_alpha to 1 so that the hit flash will activate
 	_id.flash_alpha = 1;
@@ -350,12 +350,13 @@ function handle_next_level_glyphs() {
 	case 0:
 		draw_unlocked_glyphs(spr_glyph_fire, spr_glyph_pierce);
 		unlock_glyph("effect", "fire");
+		unlock_glyph("effect", "ice");
 		unlock_glyph("modifier", "pierce");
+		unlock_glyph("modifier", "amplify");
 		break;
 	case 1:
-		draw_unlocked_glyphs(spr_glyph_frost, spr_glyph_amplify);
-		unlock_glyph("effect", "ice");
-		unlock_glyph("modifier", "amplify")
+		draw_unlocked_glyphs(spr_glyph_extendtime, spr_glyph_amplify);
+		unlock_glyph("modifier", "extend_time")
 		break;
 	}
 }

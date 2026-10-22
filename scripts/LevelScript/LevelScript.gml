@@ -13,6 +13,9 @@ function parse_level_wave_config(_level_data)
 		
 	if (!variable_global_exists("mutations"))
 		init_mutations();
+	
+	if (!variable_global_exists("enemy_info"))
+		init_enemy_info();
 
 	var _json_roster = _level_data[$ "enemy_roster"];
 	var _json_config = _level_data[$ "level_wave_config"];
