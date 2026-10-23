@@ -3,7 +3,7 @@ global.level_config = load_level_wave_configs("level.json");
 /// @description Parse one level's wave configuration from a decoded level.json struct
 /// @param {struct} _level_data A level entry containing enemy_roster and level_wave_config
 /// @returns {struct.LevelWaveConfig}
-function parse_level_wave_config(_level_data)
+function parse_level_data(_level_data)
 {
 	if (!is_struct(_level_data))
 		throw "Level wave data must be a struct";
@@ -19,6 +19,7 @@ function parse_level_wave_config(_level_data)
 
 	var _json_roster = _level_data[$ "enemy_roster"];
 	var _json_config = _level_data[$ "level_wave_config"];
+	var _json_glyphs = _level_data[$ "unlocked_glyphs"];
 	var _roster = [];
 	
 	for (var i = 0; i < array_length(_json_roster); i++)
@@ -44,13 +45,16 @@ function parse_level_wave_config(_level_data)
 		);
 	}
 
-	return new LevelWaveConfig(
-		_json_config[$ "wave_count"],
-		_json_config[$ "starting_budget"],
-		_json_config[$ "ending_budget"],
-		_json_config[$ "difficulty_curve"],
-		_roster
-	);
+	return {
+		level_wave_config:	new LevelWaveConfig (
+									_json_config[$ "wave_count"],
+									_json_config[$ "starting_budget"],
+									_json_config[$ "ending_budget"],
+									_json_config[$ "difficulty_curve"],
+									_roster
+							),
+		unlocked_glyphs:	_json_glyphs
+	};
 }
 
 /// @description Load every level wave configuration from an included JSON file
@@ -78,7 +82,7 @@ function load_level_wave_configs(_path = "level.json")
 		if (_level_name == "_readme")
 			continue;
 
-		_configs[$ _level_name] = parse_level_wave_config(_data[$ _level_name]);
+		_configs[$ _level_name] = parse_level_data(_data[$ _level_name]);
 	}
 
 	return _configs;

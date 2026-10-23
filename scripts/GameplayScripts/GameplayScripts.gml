@@ -334,29 +334,34 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 	return (((_value - _current_lower_bound) / (_current_upper_bound - _current_lower_bound)) * (_desired_upper_bound - _desired_lowered_bound)) + _desired_lowered_bound;
 }
 
-function draw_unlocked_glyphs(_glyph1, _glyph2) {
+/// @description helper function to draw glpyhs to be unlocked
+/// @param {Array<Asset.GMSprite>} glyph_icon_array, array holding icons of glyphs to be drawn
+function draw_unlocked_glyphs(glyph_icon_array) {
 	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
-	var _sx_offs = string_width("Unlocked new Glyphs!:");
-	
+	var _sx_offs = string_width("Unlocked new Glyphs!:") / 64;
 	draw_set_font(fnt_Arcane);
 	draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
-	draw_sprite_ext(_glyph1, 0, x + 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
-	draw_sprite_ext(_glyph2, 0, x - 70, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+	var _num_glyphs = array_length(glyph_icon_array);
+	for (var i = 0; i < _num_glyphs; i++) {
+		var _offs = ((_num_glyphs - 1) * -70) + (i * 140);
+		draw_sprite_ext(glyph_icon_array[i], 0, x + _offs, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+	}
+	
 }
 
+/// @description Uses the unlocked_glyphs struct in the json to unlock glyphs to the owned global struct
+/// @returns {Array<Asset.GMSprite>}
 function handle_next_level_glyphs() {
-//Draw the unlocked glyphs!
-	switch(global.current_level) {
-	case 0:
-		draw_unlocked_glyphs(spr_glyph_fire, spr_glyph_pierce);
-		unlock_glyph("effect", "fire");
-		unlock_glyph("effect", "ice");
-		unlock_glyph("modifier", "pierce");
-		unlock_glyph("modifier", "amplify");
-		break;
-	case 1:
-		draw_unlocked_glyphs(spr_glyph_extendtime, spr_glyph_amplify);
-		unlock_glyph("modifier", "extend_time")
-		break;
+	var _unlocked_glyphs = global.level_config[$ room_get_name(room)].unlocked_glyphs
+	var glyph_icon_array = []
+	for (var i = 0; i < array_length(_unlocked_glyphs); i++) {
+		var _glyph = _unlocked_glyphs[i];
+		var _type = _glyph[$ "type"];
+		var _name = _glyph[$ "id"];
+		show_debug_message($"{_type}, {_name}");
+		unlock_glyph(_type, _name);
+		var _glyph_icon = global.spell_glyphs[$ _type][$ _name].icon;
+		array_push(glyph_icon_array, _glyph_icon);
 	}
+	return glyph_icon_array;
 }

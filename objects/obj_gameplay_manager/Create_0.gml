@@ -1,5 +1,9 @@
 /// @description Gameplay Manager
 
+// This handles the glyphs to be unlocked for the first level
+if (room == rm_level_1)
+	handle_next_level_glyphs();
+
 // This validates the glyphs in the global spell glyphs array
 validate_glyphs();
 

@@ -8,7 +8,7 @@ if (!variable_global_exists("EnemyCatalog")) {
     init_enemy_catalog();
 }
 
-level_wave_config = global.level_config[$ room_get_name(room)];
+level_wave_config = global.level_config[$ room_get_name(room)].level_wave_config;
 
 // A scalar applies to every wave. An array provides one value per wave.
 // Arguments after the catalog entry are weight, minimum, and maximum.
