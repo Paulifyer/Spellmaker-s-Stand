@@ -12,11 +12,14 @@ global.menu_lock = false;
 // This variable stores the current screenshot id if one exists. Otherwise, it will store -1.
 global.screen_shot_id = -1;
 
-// Turn off drawing the default cursor
 window_set_cursor(cr_none);
-
-// Give the cursor a sprite
 cursor_sprite = spr_cursor;
+
+perf_capture = false;
+perf_elapsed_us = 0;
+perf_frames = 0;
+perf_worst_us = 0;
+perf_stalls = 0;
 
 
 

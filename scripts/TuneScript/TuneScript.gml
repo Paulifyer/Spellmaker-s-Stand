@@ -52,7 +52,6 @@ function tune_enemy(_id, _key, _default) {
 	var _e = _g[$ _id];
 	if (!is_struct(_e)) return _default;
 	var _v = _e[$ _key];
-	show_debug_message($"{_v}, {_key}");
 	return is_real(_v) ? _v : _default;
 }
 

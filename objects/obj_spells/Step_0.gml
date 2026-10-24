@@ -1,6 +1,9 @@
 // Step
 
 if (!form.is_channel) {
-	if (--lifetime <= 0 && is_instanceof(form, Form_Rune)) instance_destroy();
+	if (--lifetime <= 0) {
+		instance_destroy();
+		exit;
+	}
 }
 form.on_step(self);
