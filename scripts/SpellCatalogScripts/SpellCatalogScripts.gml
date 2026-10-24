@@ -1,6 +1,5 @@
 
 // This function call ensures that tuning data is loaded before starting
-load_tuning();
 
 global.spell_glyphs = {
 	form : {
@@ -48,7 +47,7 @@ function validate_glyphs() {
     }
 }
 
-function spell_hit(spell, target) { // For non collision based 
+function spell_hit(spell, target) {
 	if (!instance_exists(target)) return false;
 	if (array_contains(spell.hit_list, target)) return false;
 	array_push(spell.hit_list, target);
@@ -109,7 +108,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 			array_push(_mods, _m);
 			_cost += _m.cost;
 			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				var _amp_cost = tune_glyph("modifiers", "amplify", "cost_increase_per_stack", 5);
+				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
 				_cost += (_amp_count * _amp_cost);
 				_amp_count++;
 			}

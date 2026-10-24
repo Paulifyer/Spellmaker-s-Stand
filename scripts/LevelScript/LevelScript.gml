@@ -16,6 +16,9 @@ function parse_level_data(_level_data)
 	
 	if (!variable_global_exists("enemy_info"))
 		init_enemy_info();
+	
+	if (!variable_global_exists("tuning"))
+		load_tuning();
 
 	var _json_roster = _level_data[$ "enemy_roster"];
 	var _json_config = _level_data[$ "level_wave_config"];

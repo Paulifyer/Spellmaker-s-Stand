@@ -3,8 +3,12 @@
 // Inherit the parent event
 event_inherited();
 
+// This variable stores the name of the enemy as a string for tune
+name = "mook";
+
 // This variable stores the enemies max health and is used to scale the health bar
-max_hp = 150;
+var hp_mult = tune_enemy(name, "hp_mult", 1);
+max_hp = max_hp * hp_mult;
 
 // Set the enemies hp to its max hp
 hp = max_hp;
@@ -13,7 +17,8 @@ hp = max_hp;
 my_value = 3;
 
 // This variable holds the base speed for the enemy
-base_speed = 1.3;
+var spd_mult = tune_enemy(name, "spd_mult", 1.3);
+base_speed = base_speed * spd_mult;
 
 // This variable holds the current speed for the enemy
 my_speed = base_speed;
@@ -43,8 +48,8 @@ health_offset_y = -170;
 ready_to_attack = true;
 
 // This variable is the damage this enemy does each attack
-damage_dealt = 1;
+damage_dealt = tune_enemy(name, "attack_dmg", 1);
 
 // This variable is the delay in seconds between this enemy's attacks
-attack_delay = 1;
+attack_delay = tune_enemy(name, "attack_delay", 1);
 

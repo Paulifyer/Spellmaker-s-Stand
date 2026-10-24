@@ -1,4 +1,3 @@
-global.tuning = {};
 
 ///@description This function tries to fetch the tuning data, ensure it is called before game starts in scripts
 function load_tuning() {
@@ -23,7 +22,7 @@ function load_tuning() {
 ///@param {string} _id
 ///@param {string} _key
 ///@param {Real} _default
-function tune_glyph(_group, _id, _key, _default) {
+function tune_params(_group, _id, _key, _default) {
 	var _g = global.tuning[$ _group];
 	if (!is_struct(_g)) return _default;
 	var _e = _g[$ _id];
@@ -36,9 +35,20 @@ function tune_glyph(_group, _id, _key, _default) {
 ///@param {string} _group
 ///@param {string} _id
 ///@param {Real} _default
-function tune_player(_group, _key, _default) {
+function tune_value(_group, _key, _default) {
 	var _g = global.tuning[$ _group];
 	if (!is_struct(_g)) return _default;
 	var _v = _g[$ _key];
 	return is_real(_v) ? _v : _default;
 }
+
+function tune_enemy(_id, _key, _default) {
+	var _g = global.tuning[$ "enemies"];
+	if (!is_struct(_g)) return _default;
+	var _e = _g[$ _id];
+	if (!is_struct(_e)) return _default;
+	var _v = _e[$ _key];
+	show_debug_message($"{_v}, {_key}");
+	return is_real(_v) ? _v : _default;
+}
+

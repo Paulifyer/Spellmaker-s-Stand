@@ -1,6 +1,6 @@
 event_inherited();
 
-max_hp = 50; //idk
+max_hp = 15; //idk
 
 hp = max_hp;
 

@@ -22,7 +22,6 @@ if (mana >= max_mana) {
 for (var k = 0; k < 3; k++) {
 	if (keyboard_check_pressed(ord("1") + k) || keyboard_check(vk_numpad1 + k)) {
 		var _l = spell_ensure(k);
-		show_debug_message(_l);
 		if (_l != undefined && is_spell_usable(_l)) spell_selected = (spell_selected == k) ? -1 : k;
 	}
 }
@@ -30,8 +29,6 @@ for (var k = 0; k < 3; k++) {
 
 // Spacebar sets mana_exhausted to trigger mana recovery mode
 if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord(" "))) {
-	var _json_string = json_stringify(global.spellbook, true);
-	show_debug_message(_json_string);
 	mana_exhausted = true;
 }
 
@@ -86,6 +83,6 @@ if (channel != noone) {
 		channel = noone;
 		is_spell_on_cd = true;
 		cost = 0;
-		alarm[0] = tune_player("player", "spell_cd", SPELL_CD) * TARGET_ROOM_SPEED;
+		alarm[0] = tune_value("player", "spell_cd", SPELL_CD) * TARGET_ROOM_SPEED;
 	}
 }

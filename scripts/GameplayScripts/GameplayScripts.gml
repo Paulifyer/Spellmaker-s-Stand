@@ -358,7 +358,6 @@ function handle_next_level_glyphs() {
 		var _glyph = _unlocked_glyphs[i];
 		var _type = _glyph[$ "type"];
 		var _name = _glyph[$ "id"];
-		show_debug_message($"{_type}, {_name}");
 		unlock_glyph(_type, _name);
 		var _glyph_icon = global.spell_glyphs[$ _type][$ _name].icon;
 		array_push(glyph_icon_array, _glyph_icon);

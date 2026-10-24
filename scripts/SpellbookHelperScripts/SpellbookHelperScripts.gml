@@ -27,6 +27,16 @@ function mod_valid_for_form(_mod_id, _form_id) {
     return _m.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
 }
 
+function mod_valid_for_effect(_mod_id, _effect_id) {
+	var _m = global.spell_glyphs.modifier[$ _mod_id];
+    return _m.allowed_forms == undefined || array_contains(_m.allowed_forms, _effect_id);
+}
+
+function effect_valid_for_form(_effect_id, _form_id) {
+	var _e = global.spell_glyphs.effect[$ _effect_id];
+    return _e.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
+}
+
 function spell_clear(_s) {
     _s.form = undefined; _s.form_mods = []; _s.effects = [];
 }
@@ -64,7 +74,6 @@ function spell_add_glyph(_s, _type, _id, _active) {
     } else {
         if (array_length(_s.effects) == 0) return "Add an effect first";
         var _ei = (_active >= 0) ? _active : array_length(_s.effects) - 1;
-		show_debug_message($"{array_length(_s.effects)}, {_active}")
         _list = _s.effects[_ei].mods;
     }
     if (array_length(_list) >= MAX_MODS) return "Group is full";
@@ -85,7 +94,7 @@ function spell_cost(_s) {
 			var _m = _g.modifier[$ _s.effects[e].mods[i]];
             _c += _m.cost;
 			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				var _amp_cost = tune_glyph("modifiers", "amplify", "cost_increase_per_stack", 5);
+				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
 				_c += (_amp_count * _amp_cost);
 				_amp_count++;
 			}

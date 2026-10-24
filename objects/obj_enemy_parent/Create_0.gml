@@ -5,8 +5,11 @@
 	but many of them will be overridden in the child's create event.
 */
 
+#macro BASE_HP 150
+#macro BASE_SPEED 1
+
 // This variable stores the enemies max health and is used to scale the health bar
-max_hp = 150;
+max_hp = tune_value("enemies", "base_hp", BASE_HP);
 
 // Set the enemies hp to its max hp
 hp = max_hp;
@@ -22,7 +25,7 @@ health_offset_y = 0;
 my_value = 2;
 
 // This variable holds the base speed of an enemy
-base_speed = 1;
+base_speed = tune_value("enemies", "base_speed", BASE_SPEED);
 
 // This variable holds the speed for the enemy
 my_speed = base_speed;
@@ -53,11 +56,22 @@ defeat_down_object = obj_zombie_defeat_down;
 image_xscale = 0.6;
 image_yscale = 0.6;
 
+// how much dmg 1 tick of burn does
 burn_dmg = 0;
+
+// how long burn status lasts
 burn_timer = 0;
+
+// how slowed they are (usually from frost)
 slow_amt = 0;
+
+// how long they are slowed for
 slow_timer = 0;
+
+// how long they are stunned for
 stun_timer = 0;
+
+// how long the stun_immue_timer is
 stun_immune_timer = 0;
 
 ready_to_attack = true;

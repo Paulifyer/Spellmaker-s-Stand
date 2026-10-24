@@ -20,11 +20,11 @@ function EffectGlyph(_name, _cost) constructor {
 function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
-	cost = tune_glyph("effects", "fire", "cost", FIRE_COST);
+	cost = tune_params("effects", "fire", "cost", FIRE_COST);
 	on_hit = function(spell, target, fx) {
-		var _base_dmg = tune_player("combat", "base_dmg", BASE_DAMAGE);
-		var _fire_dmg_mult = tune_glyph("effects", "fire", "fire_dmg_mult", FIRE_MULT);
-		var _duration = tune_glyph("effects", "fire", "duration", FIRE_DURATION);
+		var _base_dmg = tune_value("combat", "base_dmg", BASE_DAMAGE);
+		var _fire_dmg_mult = tune_params("effects", "fire", "fire_dmg_mult", FIRE_MULT);
+		var _duration = tune_params("effects", "fire", "duration", FIRE_DURATION);
 		target.burn_dmg = _base_dmg * _fire_dmg_mult * fx.effect_multiplier;
 		target.burn_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
 	};
@@ -33,10 +33,10 @@ function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
-	cost = tune_glyph("effects", "ice", "cost", FROST_COST);
+	cost = tune_params("effects", "ice", "cost", FROST_COST);
 	on_hit = function(spell, target, fx) {
-		var _duration = tune_glyph("effects", "ice", "duration", FROST_DURATION);
-		target.slow_amt += tune_glyph("effects", "ice", "slow_amt_per_stack", FROST_SLOW);
+		var _duration = tune_params("effects", "ice", "duration", FROST_DURATION);
+		target.slow_amt += tune_params("effects", "ice", "slow_amt_per_stack", FROST_SLOW);
 		// Hypothetically, older frost stacks also will inherit extend time
 		target.slow_timer = TARGET_ROOM_SPEED * (_duration + fx.duration); 
 	};
@@ -45,19 +45,20 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor {
 	icon = spr_glyph_lightning;
 	col = c_yellow;
-	cost = tune_glyph("effects", "lightning", "cost", LIGHTNING_COST);
+	cost = tune_params("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {
-		var _duration = tune_glyph("effects", "lightning", "duration", LIGHTNING_DURATION);
-		target.stun_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
+		var _duration = tune_params("effects", "lightning", "duration", LIGHTNING_DURATION);
+		if (target.stun_immune_timer <= 0 && target.stun_timer > 0)
+			target.stun_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
 	};
 }
 
 function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 	icon = spr_glyph_harm;
 	col = c_purple;
-	cost = tune_glyph("effects", "harm", "cost", HARM_COST);
+	cost = tune_params("effects", "harm", "cost", HARM_COST);
 	on_hit = function(spell, target, fx) {
-		var _dmg = tune_player("combat", "base_dmg", BASE_DAMAGE) * fx.effect_multiplier;
+		var _dmg = tune_value("combat", "base_dmg", BASE_DAMAGE) * fx.effect_multiplier;
 		if (spell.form.is_channel) {
 			var _tmp = _dmg;
 			_dmg = _tmp / 4; // Enemies are hit 4 times every second see Form_Beam for details

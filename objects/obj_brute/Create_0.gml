@@ -3,8 +3,11 @@
 // Inherit the parent event
 event_inherited();
 
+// This variable stores the name of the enemy as a string for tune
+name = "brute";
+
 // This variable stores the enemies max health and is used to scale the health bar
-max_hp = 450;
+max_hp = max_hp * tune_enemy(name, "hp_mult", 4);
 
 // Set the enemies hp to its max hp
 hp = max_hp;
@@ -13,7 +16,7 @@ hp = max_hp;
 my_value = 5;
 
 // This variable holds the base speed for the enemy
-base_speed = 1.1;
+base_speed = base_speed * tune_enemy(name, "spd_mult", 1.1);
 
 // This variable holds the current speed for the enemy
 my_speed = base_speed;
@@ -44,10 +47,13 @@ health_offset_y = -190;
 ready_to_attack = true;
 
 // This variable is the damage this enemy does each attack
-damage_dealt = 3;
+damage_dealt = tune_enemy(name, "attack_dmg", 3);
 
 // This variable is the delay in seconds between this enemy's attacks
-max_attack_delay = 2;
+max_attack_delay = tune_enemy(name, "attack_delay", 3);
 attack_delay = max_attack_delay;
+
+// This variable holds the multiplier parameter for enrage
+enrage_mult = tune_enemy(name, "enrange_mult", 2);
 
 

@@ -36,9 +36,9 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 	icon = spr_glyph_projectile;
 	sprite = spr_projectile;
 	uses_mask = true;
-	cost = tune_glyph("forms", "projectile", "cost", PROJECTILE_COST);
+	cost = tune_params("forms", "projectile", "cost", PROJECTILE_COST);
 	on_cast = function(spell) {
-		spell.spd = tune_glyph("forms", "projectile", "spd", PROJECTILE_SPD);
+		spell.spd = tune_params("forms", "projectile", "spd", PROJECTILE_SPD);
 		spell.lifetime = TARGET_ROOM_SPEED * 5;
 		var _lane = spell.target_row div ROWS_PER_LANE;
 		spell.x = GRID_X0;
@@ -54,7 +54,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	icon = spr_glyph_beam;
 	sprite = spr_beam;
-	cost = tune_glyph("forms", "beam", "cost", BEAM_COST);
+	cost = tune_params("forms", "beam", "cost", BEAM_COST);
 	is_channel = true;
 	on_cast = function(spell) {
 		spell.spd = 0;
@@ -105,14 +105,14 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 	icon = spr_glyph_strike;
 	sprite = spr_strike
-	cost = tune_glyph("forms", "strike", "cost", STRIKE_COST);
+	cost = tune_params("forms", "strike", "cost", STRIKE_COST);
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
 		spell.target_x = _p.x;
 		spell.target_y = _p.y;
 		spell.x = _p.x;
 		spell.y = _p.y - 400;
-		spell.spd = 14;
+		spell.spd = 30;
 		spell.dir = 270; // straight down
 		spell.landed = false;
 		spell.lifetime = TARGET_ROOM_SPEED * 2;
@@ -133,7 +133,6 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 	on_draw = function(spell) {
 		var _size_multiplier = 1;
 		if (spell.area) _size_multiplier = 3;
-		else _size_multiplier = 1;
 		if (!spell.landed) { // Draws target indicator
 			var _x_offs = 40 * _size_multiplier; var _y_offs = 15 * _size_multiplier;
 			draw_set_alpha(0.3);
