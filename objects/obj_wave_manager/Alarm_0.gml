@@ -45,34 +45,38 @@ if (position < array_length(current_wave_groups))
 
 	var _lane_index = group_lane_indices[group_enemy_position];
 	var _entry = _enemy_group[group_enemy_position];
-	var _enemy = instance_create_layer(
-		x,
-		y,
-		layer,
-		_entry.enemy
-	);
-	_enemy.wave_owner = id;
-	active_enemy_count += 1;
+	var _pack_count = 1;
+	if (_entry.enemy == obj_swarmer)_pack_count = 3;
+	for (var i = 0; i < _pack_count; i++) {
+		var _enemy = instance_create_layer(
+			x,
+			y,
+			layer,
+			_entry.enemy
+		);
+		_enemy.wave_owner = id;
+		active_enemy_count += 1;
 
-	var _speed_multiplier = random_range(
-		1 - enemy_speed_variation,
-		1 + enemy_speed_variation
-	);
-	_enemy.base_speed *= _speed_multiplier;
-	_enemy.my_speed = _enemy.base_speed;
-	_enemy.v_speed *= _speed_multiplier;
+		var _speed_multiplier = random_range(
+			1 - enemy_speed_variation,
+			1 + enemy_speed_variation
+		);
+		_enemy.base_speed *= _speed_multiplier;
+		_enemy.my_speed = _enemy.base_speed;
+		_enemy.v_speed *= _speed_multiplier;
 	
-	_enemy.mutation = undefined;
-	if (_entry.mutation != undefined) {
-		var _mutation = global.mutations[$ _entry.mutation];
-		_enemy.mutation = _mutation;
-		_mutation.on_spawn(_enemy);
-		_enemy.image_blend = _mutation.tint;
-	}
+		_enemy.mutation = undefined;
+		if (_entry.mutation != undefined) {
+			var _mutation = global.mutations[$ _entry.mutation];
+			_enemy.mutation = _mutation;
+			_mutation.on_spawn(_enemy);
+			_enemy.image_blend = _mutation.tint;
+		}
 
-	with (_enemy)
-	{
-		path_start(other.level_paths[_lane_index], my_speed, path_action_stop, true);
+		with (_enemy)
+		{
+			path_start(other.level_paths[_lane_index], my_speed, path_action_stop, true);
+		}
 	}
 
 	group_enemy_position += 1;

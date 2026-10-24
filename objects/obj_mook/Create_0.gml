@@ -45,7 +45,7 @@ defeat_down_object = obj_zombie_defeat_down;
 health_offset_y = -170;
 
 // This variable shows that the enemy is ready to attack
-ready_to_attack = true;
+ready_to_attack = false;
 
 // This variable is the damage this enemy does each attack
 damage_dealt = tune_enemy(name, "attack_dmg", 1);

@@ -4,10 +4,10 @@
 */
 
 #macro PROJECTILE_COST	5
-#macro PROJECTILE_SPD 15
+#macro PROJECTILE_SPD	15
 #macro STRIKE_COST		15
 #macro BEAM_COST		5
-#macro RUNE_COST		10
+#macro RUNE_COST		15
 
 #macro BASE_DAMAGE 100
 
@@ -143,3 +143,45 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 		draw_sprite_ext(sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
 	};
 }
+
+function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
+	icon = spr_glyph_rune;
+	sprite = spr_vfx_rune_complete;
+	cost = tune_params("forms", "rune", "cost", RUNE_COST);
+	on_cast = function(spell) {
+		var _p = grid_to_world_center(spell.target_col, spell.target_row);
+		spell.target_x = _p.x;
+		spell.target_y = _p.y;
+		spell.x = _p.x;
+		spell.y = _p.y - 400;
+		spell.spd = 0;
+		spell.dir = 270; // straight down
+		spell.lifetime = TARGET_ROOM_SPEED * 60;
+	};
+	on_hit = function(spell) {
+		spell.y = min(spell.y + spell.spd, spell.target_y);
+		if (spell.y >= spell.target_y) {
+			spell.landed = true;
+			spell.lifetime = TARGET_ROOM_SPEED * 0.3; //Impact frames
+			
+			var _c = spell.target_col;
+			var _l = spell.target_row div ROWS_PER_LANE;
+			if (spell.area) spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
+			else			spell_hit_area(spell, _c, _c, _l, _l);
+		}	
+	};
+	on_draw = function(spell) {
+		var _size_multiplier = 1;
+		if (spell.area) _size_multiplier = 3;
+		if (!spell.landed) { // Draws target indicator
+			var _x_offs = 40 * _size_multiplier; var _y_offs = 15 * _size_multiplier;
+			draw_set_alpha(0.3);
+			draw_ellipse(spell.target_x - _x_offs, spell.target_y - _y_offs, spell.target_x + _x_offs, spell.target_y + _y_offs, false);
+			draw_set_alpha(1); draw_set_color(c_red);
+		}
+		var scale = 0.5 * _size_multiplier;
+		draw_sprite_ext(sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
+	};
+}
+
+

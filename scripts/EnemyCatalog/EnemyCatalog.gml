@@ -13,14 +13,23 @@ function init_enemy_catalog() {
         BRUTE: {
             object: obj_brute,
             cost: 4,
-        }
+        },
+		SWARMER: {
+			object: obj_swarmer,
+			cost: 4
+		},
+		SIEGE_BEAST: {
+			object: obj_siege_beast,
+			cost: 10
+		}
     };
 }
 
 function init_enemy_info() {
 	global.enemy_info = {
 		obj_mook : { name: "Mook", icon: spr_enemy_mook, notes: "Weakling" },
-		obj_brute : { name: "Brute", icon: spr_enemy_brute, notes: "Brutish undead, seems to be harder to kill" },
-		obj_ranger : { name: "Ranger", icon: spr_enemy_ranger, notes: "Pesky and annoying, will hit you from afar" }
+		obj_brute : { name: "Brute", icon: spr_enemy_brute, notes: "Brutish undead, beefier and becomes faster when its in danger" },
+		obj_ranger : { name: "Ranger", icon: spr_enemy_ranger, notes: "Pesky and annoying, will hit you from afar" },
+		obj_siege_beast : { name: "Siege_Beast", icon: spr_enemy_siegebeast, notes: "Will charge at you unless stunned by lightning"}
 	};
 }

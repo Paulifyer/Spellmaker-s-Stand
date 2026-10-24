@@ -42,6 +42,10 @@ function tune_value(_group, _key, _default) {
 	return is_real(_v) ? _v : _default;
 }
 
+///@description This function fetches enemy json values
+///@param {string} _id enemy name
+///@param {string} _key parameter
+///@param {Real} _default default value
 function tune_enemy(_id, _key, _default) {
 	var _g = global.tuning[$ "enemies"];
 	if (!is_struct(_g)) return _default;

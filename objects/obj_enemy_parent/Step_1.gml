@@ -7,7 +7,6 @@ if (path_position >= 1)
 	if (ready_to_attack && stun_timer <= 0) {
 		reduce_village_hp(damage_dealt);
 		ready_to_attack = false;
-		alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
 		switch (object_index) {
 			case obj_mook:
 				audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false);
@@ -18,5 +17,8 @@ if (path_position >= 1)
 			default:
 				break;
 		}
+	}
+	if (!ready_to_attack && stun_timer <= 0) {
+		alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
 	}
 }

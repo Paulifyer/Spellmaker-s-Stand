@@ -14,7 +14,7 @@ mana_display = lerp(mana_display, mana, 0.15);
 
 var _x = 20, _y = 120;
 var _w = 24, _h = 300;
-var _pct = clamp(mana_display / MAX_MANA, 0, 1);
+var _pct = clamp(mana_display / max_mana, 0, 1);
 
 // Background of the Bar
 draw_set_colour(c_black);
