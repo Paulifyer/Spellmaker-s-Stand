@@ -110,6 +110,7 @@
     {"id":{"name":"obj_button_tower_sell","path":"objects/obj_button_tower_sell/obj_button_tower_sell.yy",},},
     {"id":{"name":"obj_button_upgrade","path":"objects/obj_button_upgrade/obj_button_upgrade.yy",},},
     {"id":{"name":"obj_button_wave_skip","path":"objects/obj_button_wave_skip/obj_button_wave_skip.yy",},},
+    {"id":{"name":"obj_carrion","path":"objects/obj_carrion/obj_carrion.yy",},},
     {"id":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},},
     {"id":{"name":"obj_environment_parent","path":"objects/obj_environment_parent/obj_environment_parent.yy",},},
     {"id":{"name":"obj_frankenstein_defeat_down","path":"objects/obj_frankenstein_defeat_down/obj_frankenstein_defeat_down.yy",},},

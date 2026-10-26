@@ -21,7 +21,7 @@
         "swarmer": { "hp_mult": 0.1, "spd_mult": 3, "attack_delay": 1, "attack_dmg": 0.5 },
         "siege_beast": { "hp_mult": 5, "spd_mult": 0.6, "attack_delay": 4, "attack_dmg": 5, "charge_spd_mult": 4 },
         "mole": { "hp_mult": 1, "spd_mult": 1.6, "attack_delay": 3, "attack_dmg": 3 },
-        "carrion": { "hp_mult": 3, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "enrange_mult": 3 }
+        "carrion": { "hp_mult": 3, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "enrage_hp_mult": 0.2, "enrage_spd_mult": 0.1 }
     },
     "forms": {
         "projectile": { "cost": 5, "spd": 15 },
