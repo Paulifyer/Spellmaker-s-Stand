@@ -60,7 +60,7 @@ function FireWardedMut() : EnemyMutation("fire-warded", "Fire-Warded", WARDED_CO
 	};
 }
 
-function FrostWardedMut() : EnemyMutation("lightning-warded", "Lightning-Warded", WARDED_COST) constructor {
+function LightningWardedMut() : EnemyMutation("lightning-warded", "Lightning-Warded", WARDED_COST) constructor {
 	tint = c_purple;
 	on_spawn = function(enemy) {
 		enemy.dmg_reduction = 0.5;	
