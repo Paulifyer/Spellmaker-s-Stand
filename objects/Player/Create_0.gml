@@ -5,6 +5,8 @@
 #macro SPELL_CD				0.8
 
 channel = noone // Holds the spell being channeled
+channel_key = -1; // Exact number-row or numpad key holding the channel
+channel_slot = -1;
 cost = 0 // Holds the drain cost of the spell casted for channels
 max_mana = tune_value("player", "max_mana", MAX_MANA);
 var _mana_increases = global.tuning.player[$ "max_mana_increase_by_level"];
@@ -22,5 +24,3 @@ mana_regen_rate = tune_value("player", "mana_regen_rate", MANA_REGEN_RATE); // m
 mana_exhausted_regen_multiplier = tune_value("player", "mana_exhaust_regen_mult", MANA_EXHAUST_MULT);
 is_spell_on_cd = false;
 mana_exhausted = false; // Locks spellcasting and boosts regeneration until mana is full
-spell_selected = -1;
-input_slot = 0;

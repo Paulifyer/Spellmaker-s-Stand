@@ -1,7 +1,7 @@
 
-// Draws the selected tile
+// Draws the hovered target tile
 var _t = world_to_grid(mouse_x, mouse_y);
-if (_t != undefined && 3 > 0) {
+if (_t != undefined) {
 	var _x1 = GRID_X0 + _t.col * TILE_W;
 	var _y1 = global.lane_top[_t.lane] ;//+ ((_t.row mod ROWS_PER_LANE) * TILE_H);
 	draw_set_alpha(0.3);
@@ -39,7 +39,7 @@ draw_set_halign(fa_left);
 for (var i = 0; i < SPELL_SLOTS; i++) {
     var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 180;
     var _l = global.spellbook[i];
-    draw_set_color(i == spell_selected ? c_aqua : c_white);
+    draw_set_color(i == channel_slot ? c_aqua : c_white);
     draw_rectangle(_x2, _y2, _x2 + 70, _y2 + 70, true);
     draw_set_color(c_white);
     if (_l != undefined && _l.form != undefined) {
@@ -49,3 +49,6 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
         // swap for glyph icons later
     }
 }
+
+draw_set_font(-1);
+draw_text(300, display_get_gui_height() - 95, "Hover a tile + press 1/2/3 to cast. Hold for channels.");
