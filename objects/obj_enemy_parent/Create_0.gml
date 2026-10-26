@@ -98,6 +98,10 @@ pending_effects = [];
 hit_x = 0;
 hit_w = 0;
 
+// Pull Status
+pull = undefined;
+is_pull_immune = false;
+
 
 
 

@@ -13,6 +13,7 @@ global.spell_glyphs = {
 		ice : new Elem_Ice(),
 		lightning : new Elem_Lightning(),
 		harm: new Elem_Harm(),
+		pull: new Elem_Pull(),
 		none : new Elem_None()
 	},
 	modifier : {
@@ -27,7 +28,7 @@ global.spell_glyphs = {
 
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike", "rune"],
-	effect	:	["fire", "ice", "lightning", "harm"],
+	effect	:	["fire", "ice", "lightning", "harm", "pull"],
 	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
 };
 
@@ -88,7 +89,6 @@ function spell_hit(spell, target) {
 	if (!instance_exists(target)) return false;
 	if (array_contains(spell.hit_list, target)) return false;
 	array_push(spell.hit_list, target);
-	spell.form.on_hit(spell, target);
 	for (var e = 0; e < array_length(spell.effects); e++) {
 		var _fx = spell.effects[e];
 		if (_fx.delay > 0) {
@@ -98,6 +98,13 @@ function spell_hit(spell, target) {
 		}
 	}
 	return true;
+}
+
+function spell_impact(spell, col, lane) {
+	for (var e = 0; e < array_length(spell.effects); e++) {
+		var _fx = spell.effects[e];
+		_fx.effect.on_impact(spell, _fx, col, lane);
+	}
 }
 
 function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {

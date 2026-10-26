@@ -12,7 +12,7 @@ function grid_to_world_center(_col, _row) {
 	var _lane = _row div ROWS_PER_LANE;
 	return {
 		x : GRID_X0 + _col * TILE_W + TILE_W / 2,
-		y : global.lane_top[_lane] + (_row mod ROWS_PER_LANE) * TILE_H + TILE_H / 2,
+		y : global.lane_top[_lane] + LANE_H / 2,
 	};
 }
 
@@ -50,4 +50,14 @@ function enemy_overlaps_region(_e, _c1, _c2, _l1, _l2) {
 	if (_l < _l1 || _l > _l2) return false;
 	var _r = enemy_col_range(_e);
 	return _r.c1 <= _c2 && _r.c2 >= _c1;
+}
+
+function enemies_in_region_list(c1, c2, l1, l2) {
+	c1 = max(c1, 0); c2 = min(c2, GRID_COLS - 1);
+	l1 = max(l1, 0); l2 = min(l2, LANE_COUNT - 1);
+	var out = []
+	with (obj_enemy_parent) {
+		if (enemy_overlaps_region(id, c1, c2, l1, l2)) array_push(out, id);
+	}
+	return out;
 }

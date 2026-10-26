@@ -7,6 +7,7 @@
 #macro FROST_COST			10
 #macro FROST_SLOW			0.2
 #macro FROST_DURATION		3
+#macro PULL_COST			25
 
 function EffectGlyph(_name, _cost) constructor {
 	name = _name; cost = _cost;
@@ -15,6 +16,7 @@ function EffectGlyph(_name, _cost) constructor {
 	desc = "";
 	on_cast = function(spell, fx) {};
 	on_hit = function(spell, target, fx) {};
+	on_impact = function(spell, fx, col, lane) {};
 }
 
 function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
@@ -37,7 +39,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "ice", "duration", FROST_DURATION);
 		var slow_amt = tune_params("effects", "ice", "slow_amt_per_stack", FROST_SLOW);
-		target.slow_amt += max(0.8, target.slow_amt + slow_amt); // ensures slow_amt is maximally 0.8
+		target.slow_amt += min(0.8, target.slow_amt + slow_amt); // ensures slow_amt is maximally 0.8
 		// Hypothetically, older frost stacks also will inherit extend time
 		target.slow_timer = TARGET_ROOM_SPEED * (_duration + fx.duration); 
 	};
@@ -66,6 +68,28 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 		}
 		deal_damage(target, _dmg);
 	}
+}
+
+function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
+	icon = spr_glyph_pull;
+	col = c_ltgray;
+	pull_sec = tune_params("effects", "pull", "pull_sec", 0.4); // travel time
+	hold_sec = tune_params("effects", "pull", "hold_sec", 1.0); // time held
+	
+	on_impact = function(spell, fx, col, lane) {
+		show_debug_message(lane);
+		var _tx = GRID_X0 + col * TILE_W + TILE_W / 2;
+        var _ty = global.lane_top[lane] + LANE_H / 2;          // the enemy path
+        var _list = enemies_in_region_list(col - 1, col + 1, lane - 1, lane + 1);
+		
+		 for (var i = 0; i < array_length(_list); i++) {
+            // small random offset so pulled enemies don't stack on one pixel
+            var _a = random(360), _r = random(28);
+            enemy_begin_pull(_list[i], _tx + lengthdir_x(_r, _a), _ty + lengthdir_y(_r, _a),
+                             lane, round(pull_sec * TARGET_ROOM_SPEED),
+                             round(hold_sec * TARGET_ROOM_SPEED * fx.duration));
+        }
+	} 
 }
 
 function Elem_None() : EffectGlyph("none", 0) constructor {

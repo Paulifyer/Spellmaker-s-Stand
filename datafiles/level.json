@@ -26,8 +26,7 @@
         "unlocked_glyphs": [
             { "type": "form", "id": "projectile" },
             { "type": "form", "id": "strike" },
-            { "type": "effect", "id": "harm" },
-            { "type": "form", "id": "rune" }
+            { "type": "effect", "id": "harm" }
         ]
     },
     "rm_level_2": {

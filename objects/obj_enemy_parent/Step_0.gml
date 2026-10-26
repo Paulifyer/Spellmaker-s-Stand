@@ -4,7 +4,10 @@
 sprite_index = walk_side_sprite;
 	
 // Set path speed to normal speed
-path_speed = (--stun_timer > 0) ? 0 : my_speed;
+path_speed = (stun_timer > 0) ? 0 : my_speed;
+
+// Ensures pull is set correctly
+if (pull != undefined) enemy_update_pull(id);
 
 // Burn Handler
 if (--burn_timer > 0 && burn_timer mod TARGET_ROOM_SPEED == 0) { //burn_handler
@@ -26,6 +29,8 @@ if (stun_timer == 0) {
 	my_speed = base_speed;
 	stun_immune_timer = TARGET_ROOM_SPEED * 3;
 }
+
+if (stun_timer > 0) stun_timer--;
 
 if (stun_immune_timer > 0) stun_immune_timer--;
 

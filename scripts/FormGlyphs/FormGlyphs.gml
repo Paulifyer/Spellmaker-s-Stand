@@ -46,13 +46,15 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		spell.dir = 0;		
 	};
 	on_hit = function(spell, target) {
+		var _col = (target.x - GRID_X0) div TILE_W;
 		if (!array_contains(spell.hit_list, target)) {
 			if (spell.area) {
-				var _col = (target.x - GRID_X0) div TILE_W;
 				var _t = world_to_grid(target.x, target.y);
 				var _lane = (_t != undefined) ? _t.lane : target_row div ROWS_PER_LANE;
+				spell_impact(spell, _col, _lane);
 				spell_hit_area(spell, _col - 1, _col + 1, _lane - 1, _lane + 1);
 			} else {
+				spell_impact(spell, _col, enemy_lane(target));
 				spell_hit(spell, target);
 			}
 		}
@@ -141,8 +143,14 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 			
 			var _c = spell.target_col;
 			var _l = spell.target_row div ROWS_PER_LANE;
-			if (spell.area) spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
-			else			spell_hit_area(spell, _c, _c, _l, _l);
+			if (spell.area) {
+				spell_impact(spell, spell.target_col, _l)
+				spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
+			}
+			else {
+				spell_impact(spell, spell.target_col, _l)
+				spell_hit_area(spell, _c, _c, _l, _l);
+			}
 		}	
 	};
 	on_draw = function(spell) {
@@ -178,7 +186,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		spell.trigger_cd = 0;
 		spell.image_xscale = 0.5
 	};
-	on_step = function(spell, target) {
+	on_step = function(spell) {
 		if (!spell.armed && --spell.arm_timer <= 0) {
 			spell.armed = true;
 			sprite = spr_vfx_rune_complete;
@@ -191,8 +199,14 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		var _c = spell.target_col;
 		var _l = spell.lane;
 		show_debug_message($"{_c}, {_l}, {enemy_lane(target)}");
-		if (spell.area) spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
-		else			spell_hit_area(spell, _c, _c, _l, _l);
+		if (spell.area) {
+			spell_impact(spell, _c, _l);
+			spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
+		}
+		else {
+			spell_impact(spell, _c, _l);
+			spell_hit_area(spell, _c, _c, _l, _l);
+		}
 		if (array_length(spell.hit_list) > 0)
 			spell.charges--;
 		spell.hit_list = [];
