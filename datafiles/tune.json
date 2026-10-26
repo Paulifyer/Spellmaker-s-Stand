@@ -27,7 +27,7 @@
         "projectile": { "cost": 5, "spd": 15 },
         "beam": { "cost": 5 },
         "strike": { "cost": 15 },
-        "rune": { "cost": 15 }
+        "rune": { "cost": 15, "max_placed": 6 }
     },
     "effects": {
         "harm": {"cost": 10},

@@ -55,7 +55,7 @@ function validate_glyphs() {
 /// @param {Struct} _fx effects being passed
 function apply_effect_group(_spell, _target, _fx) {
 	_fx.effect.on_hit(_spell, _target, _fx);
-	for (var i = 0; i < array_length(_fx.mods); i++) 
+	for (var i = 0; i < array_length(_fx.mods); i++)
 		if (_fx.mods[i].on_hit != undefined) _fx.mods[i].on_hit(_spell, _target, _fx);
 }
 
@@ -103,7 +103,7 @@ function spell_hit(spell, target) {
 function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
 	_col1 = max(_col1, 0); _col2  = min(_col2, GRID_COLS - 1);
 	_lane1 = max(_lane1, 0); _lane2 = min(_lane2, LANE_COUNT - 1);
-	
+
 	with (obj_enemy_parent) {
 		var _l = enemy_lane(id);
 		var _c = (x - GRID_X0) div TILE_W;
@@ -115,28 +115,28 @@ function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
 
 function cast_spell(_caster, _loadout, _col, _row) {
 	if (_caster.mana_exhausted || !is_spell_usable(_loadout)) return { spell: noone, cost: 0 };
-	
+
 	var _g = global.spell_glyphs;
 	var _f = _g.form[$ _loadout.form];
 	if (!is_struct(_f)) return { spell: noone, cost: 0 };
-	
+
 	var _cost = _f.cost;
-	
+
 	var _fmods = [];
-	
+
 	for (var i = 0; i < array_length(_loadout.form_mods); i++) {
 		var _m = _g.modifier[$ _loadout.form_mods[i]];
 		if (!is_struct(_m)) return { spell: noone, cost: 0 };
 		array_push(_fmods, _m);
 		_cost += _m.cost;
 	}
-	
+
 	var _effects = [];
 	for (var e = 0; e < array_length(_loadout.effects); e++) {
 		var _el = _g.effect[$ _loadout.effects[e].effect];
 		if (!is_struct(_el)) return { spell: noone, cost: 0 };
 		_cost += _el.cost;
-		
+
 		var _mods = [];
 		for (var i = 0; i < array_length(_loadout.effects[e].mods); i++) {
 			var _amp_count = 0;
@@ -150,30 +150,65 @@ function cast_spell(_caster, _loadout, _col, _row) {
 				_amp_count++;
 			}
 		}
-		
+
 		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0});
 	}
-	
+
 	if (!is_instanceof(_f, Form_Beam)) {
 		if (_caster.mana < _cost) {
 			return { spell: noone, cost: 0 };
 		}
 		_caster.mana = max(0, _caster.mana - _cost);
-	} 
+	}
 	if (_caster.mana <= 0) {
 		_caster.mana = 0;
 		_caster.mana_exhausted = true;
 	}
-	
-	return {
-	spell: instance_create_layer(_caster.x, _caster.y, "Instances", obj_spells, {
+
+	// Track rune casts by their configured spell
+	var _rune_spell_key = undefined;
+	var _rune_creation_order = -1;
+	if (_f.name == "Rune") {
+		_rune_spell_key = json_stringify({
+			form: _loadout.form,
+			form_mods: _loadout.form_mods,
+			effects: _loadout.effects
+		});
+		if (!variable_global_exists("rune_creation_order")) global.rune_creation_order = 0;
+		_rune_creation_order = global.rune_creation_order++;
+	}
+
+	var _spell = instance_create_layer(_caster.x, _caster.y, "Instances", obj_spells, {
 			caster		: _caster,
 			form		: _f,
 			form_mods	: _fmods,
 			effects		: _effects,
 			target_col	: _col,
-			target_row	: _row
-		}),
+			target_row	: _row,
+			rune_spell_key: _rune_spell_key,
+			rune_creation_order: _rune_creation_order
+		});
+
+	// Keep at most the max no. of live runes for this exact configured rune spell.
+	if (_rune_spell_key != undefined) {
+		var _rune_count = 0;
+		var _oldest_rune = noone;
+		var _oldest_order = _rune_creation_order;
+		for (var i = 0; i < instance_number(obj_spells); i++) {
+			var _existing = instance_find(obj_spells, i);
+			if (_existing.form.name != "Rune" || _existing.rune_spell_key != _rune_spell_key) continue;
+			_rune_count++;
+			if (_existing.rune_creation_order < _oldest_order) {
+				_oldest_order = _existing.rune_creation_order;
+				_oldest_rune = _existing;
+			}
+		}
+		var _max_placed = tune_params("forms", "rune", "max_placed", 6);
+		if (_rune_count > 6 && _oldest_rune != noone) instance_destroy(_oldest_rune);
+	}
+
+	return {
+	spell: _spell,
 	cost: _cost
 	};
 }

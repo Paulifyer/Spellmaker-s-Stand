@@ -1,5 +1,5 @@
 
-// Brief feedback only follows successful casts, never rejected key presses.
+// Brief feedback only follows successful casts.
 if (cast_flash_ticks > 0) cast_flash_ticks--;
 for (var _slot = 0; _slot < SPELL_SLOTS; _slot++) {
 	spell_cooldowns[_slot] = max(0, spell_cooldowns[_slot] - 1);
