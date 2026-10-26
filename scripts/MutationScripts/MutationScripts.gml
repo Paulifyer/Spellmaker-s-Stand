@@ -32,13 +32,41 @@ function EnemyMutation(_key, _name, _cost) constructor {
 	on_death = function(enemy) {};
 }
 
-function WardedMut() : EnemyMutation("warded", "Warded", WARDED_COST) constructor {
+function FrostWardedMut() : EnemyMutation("frost-warded", "Frost-Warded", WARDED_COST) constructor {
 	tint = c_purple;
 	on_spawn = function(enemy) {
 		enemy.dmg_reduction = 0.5;	
 	};
 	on_step = function(enemy) {
-		if (enemy.slow_amt > 0) { // This currently only works for frost/ice
+		if (enemy.slow_amt > 0) {
+			enemy.dmg_reduction = 0;
+		} else {
+			enemy.dmg_reduction = 0.5;
+		}
+	};
+}
+
+function FireWardedMut() : EnemyMutation("fire-warded", "Fire-Warded", WARDED_COST) constructor {
+	tint = c_purple;
+	on_spawn = function(enemy) {
+		enemy.dmg_reduction = 0.5;	
+	};
+	on_step = function(enemy) {
+		if (enemy.burn_timer > 0) {
+			enemy.dmg_reduction = 0;
+		} else {
+			enemy.dmg_reduction = 0.5;
+		}
+	};
+}
+
+function FrostWardedMut() : EnemyMutation("lightning-warded", "Lightning-Warded", WARDED_COST) constructor {
+	tint = c_purple;
+	on_spawn = function(enemy) {
+		enemy.dmg_reduction = 0.5;	
+	};
+	on_step = function(enemy) {
+		if (enemy.stun_timer > 0) {
 			enemy.dmg_reduction = 0;
 		} else {
 			enemy.dmg_reduction = 0.5;
