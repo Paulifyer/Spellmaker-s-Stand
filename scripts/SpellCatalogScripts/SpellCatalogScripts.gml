@@ -161,6 +161,26 @@ function cast_spell(_caster, _loadout, _col, _row) {
 
 		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0});
 	}
+	
+	if (_f.name == "Rune") {
+		var _rune_count = 0;
+		var _lane = _row div ROWS_PER_LANE;
+		var _max_placed = tune_params("forms", "rune", "max_placed", 6);
+		
+		for (var i = 0; i < instance_number(obj_spells); i++) {
+			var _existing = instance_find(obj_spells, i);
+			if (_existing.form.name != "Rune") continue;
+			
+			if (_existing.target_col == _col && _existing.lane = _lane) {
+				return { spell: noone, cost: 0 }
+			}
+			
+			_rune_count++;
+		}
+		if (_rune_count >= _max_placed) {
+			return { spell: noone, cost: 0 };
+		}
+	}
 
 	if (!is_instanceof(_f, Form_Beam)) {
 		if (_caster.mana < _cost) {

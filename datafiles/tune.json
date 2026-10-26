@@ -34,7 +34,7 @@
         "fire": {"cost": 10, "fire_dmg_mult": 0.4,"duration": 3},
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 3},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 3},
-        "pull": { "cost": 25, "pull_sec": 0.2, "hold_sec": 0.5 }
+        "pull": { "cost": 25, "pull_sec": 0.4, "hold_sec": 0.2 }
     },
     "modifiers": {
         "area": { "cost": 25},
