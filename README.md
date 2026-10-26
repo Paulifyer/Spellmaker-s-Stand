@@ -1,5 +1,29 @@
 # Spellmaker's Stand
 
+## Spell controls
+
+Hover a battlefield tile and press **1**, **2**, or **3** to cast the spell in
+that slot immediately. Numpad **1–3** work too. Ordinary spells cast once per
+press; holding the key does not repeat them. Mouse clicks still operate buttons
+and menus.
+
+For a channeled spell, hold the key that started it and release that same key to
+stop. The channel stays aimed at its original lane when the cursor moves. Other
+spell keys are ignored during a channel. Running out of mana also ends it.
+
+Spell slots briefly flash cyan after a successful cast and stay cyan while
+channeling. Invalid targets, unusable spells, insufficient mana, exhaustion, and
+the shared cooldown reject casts without queuing them. The cooldown duration is
+configured by `player.spell_cd` in `datafiles/tune.json`.
+
+Menus block casting; opening the spellbook or losing window focus ends an active
+channel. Pausing freezes gameplay. If the channel key is released while paused,
+the channel ends on the first resumed frame. **Space** still starts mana recovery.
+
+In GameMaker, check all three slots with both keyboard sections, tile targeting,
+tap versus hold behavior, channel release and exhaustion, pause/resume, spellbook
+naming, mouse-operated buttons, and the slot highlights and control hint.
+
 ## Standard wave generation
 
 Levels define a threat curve and an enemy roster instead of manually repeating

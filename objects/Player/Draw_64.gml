@@ -39,7 +39,8 @@ draw_set_halign(fa_left);
 for (var i = 0; i < SPELL_SLOTS; i++) {
     var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 180;
     var _l = global.spellbook[i];
-    draw_set_color(i == channel_slot ? c_aqua : c_white);
+    var _active = i == channel_slot || (i == cast_flash_slot && cast_flash_ticks > 0);
+    draw_set_color(_active ? c_aqua : c_white);
     draw_rectangle(_x2, _y2, _x2 + 70, _y2 + 70, true);
     draw_set_color(c_white);
     if (_l != undefined && _l.form != undefined) {

@@ -1,4 +1,7 @@
 
+// Brief feedback only follows successful casts, never rejected key presses.
+if (cast_flash_ticks > 0) cast_flash_ticks--;
+
 // Mana Regen
 if (mana <= 0) {
 	mana = 0;
@@ -42,6 +45,8 @@ if (_input_enabled && !is_spell_on_cd && channel == noone) {
 			if (_loadout == undefined || !is_spell_usable(_loadout)) continue;
 			var _s = cast_spell(id, _loadout, _t.col, _t.row);
 			if (_s.spell != noone) {
+				cast_flash_slot = k;
+				cast_flash_ticks = max(1, round(0.15 * TARGET_ROOM_SPEED));
 				if (_s.spell.form.is_channel) {
 					channel = _s.spell;
 					channel_key = _key;
