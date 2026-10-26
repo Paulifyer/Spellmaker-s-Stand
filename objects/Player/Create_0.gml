@@ -24,5 +24,6 @@ mana_display = mana;
 mana_ticks = 6;
 mana_regen_rate = tune_value("player", "mana_regen_rate", MANA_REGEN_RATE); // mana regen per sec
 mana_exhausted_regen_multiplier = tune_value("player", "mana_exhaust_regen_mult", MANA_EXHAUST_MULT);
-is_spell_on_cd = false;
+spell_cooldowns = array_create(SPELL_SLOTS, 0);
+spell_cooldown_max = array_create(SPELL_SLOTS, 0);
 mana_exhausted = false; // Locks spellcasting and boosts regeneration until mana is full

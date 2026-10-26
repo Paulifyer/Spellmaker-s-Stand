@@ -1,3 +1,3 @@
 /// @description Spell CD Alarm
 
-is_spell_on_cd = false; // Sets spell off cd
+// Slot cooldowns are independent and tick in the Player Step event.

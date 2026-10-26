@@ -12,9 +12,13 @@ stop. The channel stays aimed at its original lane when the cursor moves. Other
 spell keys are ignored during a channel. Running out of mana also ends it.
 
 Spell slots briefly flash cyan after a successful cast and stay cyan while
-channeling. Invalid targets, unusable spells, insufficient mana, exhaustion, and
-the shared cooldown reject casts without queuing them. The cooldown duration is
-configured by `player.spell_cd` in `datafiles/tune.json`.
+channeling. Each slot has its own cooldown, shown by the progress bar beneath it;
+using one spell does not put the other slots on cooldown. Invalid targets,
+unusable spells, insufficient mana, exhaustion, and that slot's cooldown reject
+casts without queuing them. Configure slot durations in seconds with
+`player.spell_cd_by_slot` in `datafiles/tune.json`; `player.spell_cd` is the
+fallback when a slot has no configured value. A channel starts its slot cooldown
+when the channel ends.
 
 Menus block casting; opening the spellbook or losing window focus ends an active
 channel. Pausing freezes gameplay. If the channel key is released while paused,

@@ -6,7 +6,8 @@
         "max_mana_increase_by_level": [0, 25, 25, 25, 25, 25, 25, 25 ,25],
         "mana_regen_rate": 10, 
         "mana_exhaust_regen_mult": 3,
-        "spell_cd": 0.8
+        "spell_cd": 0.8,
+        "spell_cd_by_slot": [0.4, 0.4, 0.4]
     },
     "combat": { 
         "base_dmg": 100

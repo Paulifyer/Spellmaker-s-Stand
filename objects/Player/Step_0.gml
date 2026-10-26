@@ -1,6 +1,9 @@
 
 // Brief feedback only follows successful casts, never rejected key presses.
 if (cast_flash_ticks > 0) cast_flash_ticks--;
+for (var _slot = 0; _slot < SPELL_SLOTS; _slot++) {
+	spell_cooldowns[_slot] = max(0, spell_cooldowns[_slot] - 1);
+}
 
 // Mana Regen
 if (mana <= 0) {
@@ -32,7 +35,7 @@ if (_input_enabled && keyboard_check_pressed(vk_space)) {
 }
 
 // A fresh slot-key press casts once at the hovered tile; presses are not queued.
-if (_input_enabled && !is_spell_on_cd && channel == noone) {
+if (_input_enabled && channel == noone) {
 	var _t = world_to_grid(mouse_x, mouse_y);
 	if (_t != undefined) {
 		for (var k = 0; k < SPELL_SLOTS; k++) {
@@ -40,6 +43,7 @@ if (_input_enabled && !is_spell_on_cd && channel == noone) {
 			if (keyboard_check_pressed(ord("1") + k)) _key = ord("1") + k;
 			else if (keyboard_check_pressed(vk_numpad1 + k)) _key = vk_numpad1 + k;
 			if (_key == -1) continue;
+			if (spell_cooldowns[k] > 0) continue;
 
 			var _loadout = spell_ensure(k);
 			if (_loadout == undefined || !is_spell_usable(_loadout)) continue;
@@ -53,8 +57,13 @@ if (_input_enabled && !is_spell_on_cd && channel == noone) {
 					channel_slot = k;
 					cost = _s.cost;
 				} else {
-					is_spell_on_cd = true;
-					alarm[0] = tune_value("player", "spell_cd", SPELL_CD) * TARGET_ROOM_SPEED;
+					var _cooldown_seconds = tune_value("player", "spell_cd", SPELL_CD);
+					var _slot_cooldowns = global.tuning.player[$ "spell_cd_by_slot"];
+					if (is_array(_slot_cooldowns) && k < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[k])) {
+						_cooldown_seconds = _slot_cooldowns[k];
+					}
+					spell_cooldowns[k] = max(0, _cooldown_seconds) * TARGET_ROOM_SPEED;
+					spell_cooldown_max[k] = spell_cooldowns[k];
 				}
 				// At most one successful cast per frame, even for simultaneous presses.
 				break;
@@ -85,12 +94,20 @@ if (channel != noone) {
 		}
 	}
 	if  (_release || !instance_exists(channel)) {
+		var _finished_channel_slot = channel_slot;
 		if (instance_exists(channel)) instance_destroy(channel);
 		channel = noone;
 		channel_key = -1;
 		channel_slot = -1;
-		is_spell_on_cd = true;
 		cost = 0;
-		alarm[0] = tune_value("player", "spell_cd", SPELL_CD) * TARGET_ROOM_SPEED;
+		if (_finished_channel_slot >= 0) {
+			var _cooldown_seconds = tune_value("player", "spell_cd", SPELL_CD);
+			var _slot_cooldowns = global.tuning.player[$ "spell_cd_by_slot"];
+			if (is_array(_slot_cooldowns) && _finished_channel_slot < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[_finished_channel_slot])) {
+				_cooldown_seconds = _slot_cooldowns[_finished_channel_slot];
+			}
+			spell_cooldowns[_finished_channel_slot] = max(0, _cooldown_seconds) * TARGET_ROOM_SPEED;
+			spell_cooldown_max[_finished_channel_slot] = spell_cooldowns[_finished_channel_slot];
+		}
 	}
 }

@@ -49,7 +49,14 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
         draw_text(_x2 + 4, _y2 + 40, string(spell_cost(_l)));
         // swap for glyph icons later
     }
+	if (spell_cooldowns[i] > 0 && spell_cooldown_max[i] > 0) {
+		var _progress = 1 - spell_cooldowns[i] / spell_cooldown_max[i];
+		draw_set_color(c_gray);
+		draw_rectangle(_x2 + 4, _y2 + 62, _x2 + 66, _y2 + 66, false);
+		draw_set_color(c_aqua);
+		draw_rectangle(_x2 + 4, _y2 + 62, _x2 + 4 + 62 * _progress, _y2 + 66, false);
+	}
 }
 
 draw_set_font(-1);
-draw_text(300, display_get_gui_height() - 95, "Hover a tile + press 1/2/3 to cast. Hold for channels.");
+draw_text(300, display_get_gui_height() - 95, "Hover a tile + press 1/2/3 to cast");
