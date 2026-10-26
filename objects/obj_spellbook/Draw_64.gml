@@ -26,6 +26,9 @@ for (var c = 0; c < 3; c++) {
         if (c == 2 && _has_form) _enabled = _status == GLYPH_STATE.owned && mod_valid_for_form(_id, _spell.form);
 
         var _current = (c == 0 && _has_form) ? (_spell.form == _id) : false;
+		var _locked = _status == GLYPH_STATE.locked;
+		var _display_icon = _locked ? undefined : _glyph.icon;
+		var _display_label = _locked ? "?" : _glyph.name;
 		
 		// Number of Glyphs per row
 		var _per_row = 4;
@@ -33,13 +36,16 @@ for (var c = 0; c < 3; c++) {
 		var _px = 140 + (g mod _per_row) * 150;
 		var _py = glyph_row_y[c] + (g div _per_row) *130;
 		
-        var _b = gui_circle_button(_px, _py, 55, _glyph.icon, _glyph.name, _current, _enabled);
+        var _b = gui_circle_button(_px, _py, 55, _display_icon, _display_label, _current, _enabled);
 
         if (_b.hover) {
-            hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
-			if (_status == GLYPH_STATE.locked)			hover_text = "???\nNot unlocked yet...";
-			else if (_status == GLYPH_STATE.disabled)	hover_text += "\nSome force has disabled this?";
-            if (!_enabled) hover_text += (c == 0 || !_has_form) ? "\n(pick a form first)" : "\n(can't be used with this form)";
+			if (_locked) {
+				hover_text = "???\nNot unlocked yet...";
+			} else {
+				hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
+				if (_status == GLYPH_STATE.disabled) hover_text += "\nSome force has disabled this?";
+				if (!_enabled) hover_text += (c == 0 || !_has_form) ? "\n(pick a form first)" : "\n(can't be used with this form)";
+			}
         }
         if (_b.clicked) {
             _spell = spell_ensure(sel);
