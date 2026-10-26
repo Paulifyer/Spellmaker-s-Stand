@@ -88,6 +88,7 @@ function spell_snapshot(_spell) {
 function spell_hit(spell, target) {
 	if (!instance_exists(target)) return false;
 	if (array_contains(spell.hit_list, target)) return false;
+	if (!target.is_targetable) return false;
 	array_push(spell.hit_list, target);
 	for (var e = 0; e < array_length(spell.effects); e++) {
 		var _fx = spell.effects[e];

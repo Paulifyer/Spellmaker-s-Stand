@@ -43,7 +43,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		var _lane = spell.target_row div ROWS_PER_LANE;
 		spell.x = GRID_X0;
 		spell.y = global.lane_top[_lane];
-		spell.dir = 0;		
+		spell.dir = 0;
 	};
 	on_hit = function(spell, target) {
 		var _col = (target.x - GRID_X0) div TILE_W;
@@ -100,6 +100,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 			var _pierce = spell.pierce;
 			if (_pierce <= 0) {
 				with (obj_enemy_parent) {
+					if (!is_targetable) continue;
 					if (y >= _top && y < _top + LANE_H && x < _end) _end = x;
 				}
 			}

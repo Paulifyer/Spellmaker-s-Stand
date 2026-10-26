@@ -4,7 +4,6 @@ function init_enemy_catalog() {
             object: obj_mook,
             cost: 1,
         },
-
         RANGER: {
             object: obj_ranger,
             cost: 2,
@@ -16,11 +15,15 @@ function init_enemy_catalog() {
         },
 		SWARMER: {
 			object: obj_swarmer,
-			cost: 4
+			cost: 2
 		},
 		SIEGE_BEAST: {
 			object: obj_siege_beast,
 			cost: 10
+		},
+		MOLE: {
+			object: obj_mole,
+			cost: 3
 		}
     };
 }

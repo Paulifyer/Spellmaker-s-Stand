@@ -102,6 +102,9 @@ hit_w = 0;
 pull = undefined;
 is_pull_immune = false;
 
+// Check targetable (For MOLE)
+is_targetable = true;
+
 
 
 
