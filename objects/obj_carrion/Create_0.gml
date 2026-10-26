@@ -16,6 +16,8 @@ base_hp = tune_value("enemies", "base_hp", BASE_HP);
 // This variable stores the amount of money the player will get when they defeat it
 my_value = 5;
 
+hit_w = 48
+
 // This variable holds the base speed for the enemy
 base_speed = base_speed * tune_enemy(name, "spd_mult", 1.1);
 base_speed_original = base_speed;
@@ -61,5 +63,6 @@ enrage_spd_mult = tune_enemy(name, "enrange_spd_mult", 0.1);
 
 // Nearby Enemy list will be filled and emptied
 nearby_list = [];
+nearby_enemy_xys = [];
 
 
