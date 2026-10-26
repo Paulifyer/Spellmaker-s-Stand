@@ -18,7 +18,7 @@ if (path_position >= 1)
 				break;
 		}
 	}
-	if (!ready_to_attack && stun_timer <= 0) {
+	if (!ready_to_attack && stun_timer <= 0 && alarm[0] <= 0) {
 		alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
 	}
 }

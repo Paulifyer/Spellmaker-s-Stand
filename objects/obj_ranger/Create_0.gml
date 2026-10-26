@@ -6,6 +6,8 @@ event_inherited();
 // This variable stores the name of the enemy as a string for tune
 name = "ranger";
 
+hit_w = 72;
+
 // This variable stores the enemies max health and is used to scale the health bar
 var hp_mult = tune_enemy(name, "hp_mult", 1);
 max_hp = max_hp * hp_mult;

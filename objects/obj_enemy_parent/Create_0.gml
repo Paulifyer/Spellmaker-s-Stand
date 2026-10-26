@@ -91,6 +91,13 @@ notes = "";
 //mutation_key
 mutation = undefined;
 
+// Delayed Effects
+pending_effects = [];
+
+// offsets for overlapping tiles
+hit_x = 0;
+hit_w = 0;
+
 
 
 

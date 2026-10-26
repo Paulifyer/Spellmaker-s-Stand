@@ -37,6 +37,7 @@
         "area": { "cost": 25},
         "pierce": { "cost": 15, "pierce_amt": 2 },
         "amplify": { "cost": 15, "dmg_multplier": 1, "cost_increase_per_stack": 5 },
-        "extend_time": { "cost": 5, "duration_increase": 5 }
+        "extend_time": { "cost": 5, "duration_increase": 5 },
+        "delay": { "cost": 5, "delay_increase": 1 }
     }
 }

@@ -321,11 +321,11 @@ function pause_or_unpause_game()
 }
 
 /// @description Re-maps a number from one range to another 
-/// @param {num} _value
-/// @param {num} _current_lower_bound
-/// @param {num} _current_upper_bound
-/// @param {num} _desired_lowered_bound
-/// @param {num} _desired_upper_bound
+/// @param {Real} _value
+/// @param {Real} _current_lower_bound
+/// @param {Real} _current_upper_bound
+/// @param {Real} _desired_lowered_bound
+/// @param {Real} _desired_upper_bound
 /// @returns {real}
 function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_lowered_bound, _desired_upper_bound) 
 {
@@ -350,9 +350,10 @@ function draw_unlocked_glyphs(glyph_icon_array) {
 }
 
 /// @description Uses the unlocked_glyphs struct in the json to unlock glyphs to the owned global struct
+/// @param {Asset.GMRoom} _room Room Unlocked Glyphs
 /// @returns {Array<Asset.GMSprite>}
-function handle_next_level_glyphs() {
-	var _unlocked_glyphs = global.level_config[$ room_get_name(room)].unlocked_glyphs
+function handle_next_level_glyphs(_room) {
+	var _unlocked_glyphs = global.level_config[$ room_get_name(_room)].unlocked_glyphs
 	var glyph_icon_array = []
 	for (var i = 0; i < array_length(_unlocked_glyphs); i++) {
 		var _glyph = _unlocked_glyphs[i];

@@ -5,7 +5,8 @@ global.spell_glyphs = {
 	form : {
 		projectile : new Form_Projectile(),
 		beam : new Form_Beam(),
-		strike: new Form_Strike() 
+		strike: new Form_Strike(),
+		rune: new Form_Rune(),
 	},
 	effect : {
 		fire : new Elem_Fire(),
@@ -19,14 +20,15 @@ global.spell_glyphs = {
 		amplify : new Mod_Amplify(),
 		pierce : new Mod_Pierce(),
 		extend_time : new Mod_Extend_Time(),
+		delay: new Mod_Delay(),
 		none : new Mod_None()
 	}
 };
 
 global.glyph_order = {
-	form	:	["projectile", "beam", "strike"],
+	form	:	["projectile", "beam", "strike", "rune"],
 	effect	:	["fire", "ice", "lightning", "harm"],
-	modifier:	["area", "amplify", "pierce", "extend_time"]
+	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
 };
 
 function validate_glyphs() {
@@ -47,6 +49,41 @@ function validate_glyphs() {
     }
 }
 
+/// @description Applies an effect on an enemy
+/// @param {Struct|Asset.GMObject} _spell A snapshot of a spell
+/// @param {Asset.GMObject} _target Enemy targetted
+/// @param {Struct} _fx effects being passed
+function apply_effect_group(_spell, _target, _fx) {
+	_fx.effect.on_hit(_spell, _target, _fx);
+	for (var i = 0; i < array_length(_fx.mods); i++) 
+		if (_fx.mods[i].on_hit != undefined) _fx.mods[i].on_hit(_spell, _target, _fx);
+}
+
+/// @description Applies a scheduled effect on an enemy
+/// @param {Struct} _spell A snapshot of a spell
+/// @param {Asset.GMObject} _target Enemy targetted
+/// @param {Struct} _fx effects being passed
+function schedule_effect(_spell, _target, _fx) {
+	for (var i = 0; i < array_length(_target.pending_effects); i++)
+		if (_target.pending_effects[i].fx == _fx) return;
+	array_push(_target.pending_effects, {
+		timer: max(1, round(_fx.delay * TARGET_ROOM_SPEED)),
+		fx: _fx,
+		spell: _spell
+	})
+}
+
+/// @description Creates a spell snapshot struct
+function spell_snapshot(_spell) {
+	return {
+		caster: _spell.caster,
+		form: { is_channel: _spell.form.is_channel },
+		col: _spell.col,
+		x: _spell.x, y: _spell.y,
+		target_col: _spell.target_col, target_row: _spell.target_row
+	}
+}
+
 function spell_hit(spell, target) {
 	if (!instance_exists(target)) return false;
 	if (array_contains(spell.hit_list, target)) return false;
@@ -54,23 +91,23 @@ function spell_hit(spell, target) {
 	spell.form.on_hit(spell, target);
 	for (var e = 0; e < array_length(spell.effects); e++) {
 		var _fx = spell.effects[e];
-		_fx.effect.on_hit(spell, target, _fx);
-		for (var i = 0; i < array_length(spell.effects[e].mods); i++) {
-			var _mod = spell.effects[e].mods[i];
-			if (_mod.on_hit != undefined) _mod.on_hit(spell, target);	
+		if (_fx.delay > 0) {
+			schedule_effect(spell_snapshot(spell), target, _fx);
+		} else {
+			apply_effect_group(spell, target, _fx);
 		}
 	}
 	return true;
 }
 
 function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
-	_col1 = max(_col1, 0); _col  = min(_col2, GRID_COLS - 1);
+	_col1 = max(_col1, 0); _col2  = min(_col2, GRID_COLS - 1);
 	_lane1 = max(_lane1, 0); _lane2 = min(_lane2, LANE_COUNT - 1);
 	
 	with (obj_enemy_parent) {
 		var _l = enemy_lane(id);
 		var _c = (x - GRID_X0) div TILE_W;
-		if (_l >= _lane1 && _l <= _lane2 && _c >= _col1 && _c <= _col2) {
+		if (enemy_overlaps_region(id, _col1, _col2, _lane1, _lane2)) {
 			spell_hit(_spell, id);
 		}
 	}
@@ -114,7 +151,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 			}
 		}
 		
-		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1});
+		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0});
 	}
 	
 	if (!is_instanceof(_f, Form_Beam)) {

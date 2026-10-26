@@ -35,3 +35,19 @@ function enemy_lane(_e) {
 	var _t = world_to_grid(_e.x, _e.y);
 	return (_t != undefined) ? _t.lane : -1;
 }
+
+function enemy_col_range(_e) {
+	var _half = _e.hit_w / 2;
+	var _cx = _e.x + _e.hit_x - GRID_X0;
+	return {
+		c1: floor((_cx - _half) / TILE_W),
+		c2: floor((_cx + _half - 0.01) / TILE_W)
+	};
+}
+
+function enemy_overlaps_region(_e, _c1, _c2, _l1, _l2) {
+	var _l = enemy_lane(_e);
+	if (_l < _l1 || _l > _l2) return false;
+	var _r = enemy_col_range(_e);
+	return _r.c1 <= _c2 && _r.c2 >= _c1;
+}

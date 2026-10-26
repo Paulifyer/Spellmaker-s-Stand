@@ -45,6 +45,21 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		spell.y = global.lane_top[_lane];
 		spell.dir = 0;		
 	};
+	on_hit = function(spell, target) {
+		if (!array_contains(spell.hit_list, target)) {
+			if (spell.area) {
+				var _col = (target.x - GRID_X0) div TILE_W;
+				var _t = world_to_grid(target.x, target.y);
+				var _lane = (_t != undefined) ? _t.lane : target_row div ROWS_PER_LANE;
+				spell_hit_area(spell, _col - 1, _col + 1, _lane - 1, _lane + 1);
+			} else {
+				spell_hit(spell, target);
+			}
+		}
+		if (spell.pierce-- <= 0) {
+			instance_destroy(spell);
+		}
+	}
 	on_step = function(spell) { 
 		spell.x += lengthdir_x(spell.spd, spell.dir);
 		spell.y += lengthdir_y(spell.spd, spell.dir);
@@ -146,41 +161,48 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 
 function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	icon = spr_glyph_rune;
-	sprite = spr_vfx_rune_complete;
+	sprite = spr_vfx_rune_arming;
 	cost = tune_params("forms", "rune", "cost", RUNE_COST);
+	arming_time = 3 * TARGET_ROOM_SPEED;
+	max_charges = 1;
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
-		spell.target_x = _p.x;
-		spell.target_y = _p.y;
-		spell.x = _p.x;
-		spell.y = _p.y - 400;
-		spell.spd = 0;
-		spell.dir = 270; // straight down
-		spell.lifetime = TARGET_ROOM_SPEED * 60;
+		var _lane = spell.target_row div ROWS_PER_LANE;
+		spell.lane = _lane;
+		spell.x = GRID_X0 + spell.target_col * TILE_W + TILE_W / 2;
+		spell.y = global.lane_top[_lane] + LANE_H / 2;
+		spell.lifetime = TARGET_ROOM_SPEED * 120;
+		spell.arm_timer = arming_time;
+		spell.armed = false;
+		spell.charges = max_charges
+		spell.trigger_cd = 0;
+		spell.image_xscale = 0.5
 	};
-	on_hit = function(spell) {
-		spell.y = min(spell.y + spell.spd, spell.target_y);
-		if (spell.y >= spell.target_y) {
-			spell.landed = true;
-			spell.lifetime = TARGET_ROOM_SPEED * 0.3; //Impact frames
-			
-			var _c = spell.target_col;
-			var _l = spell.target_row div ROWS_PER_LANE;
-			if (spell.area) spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
-			else			spell_hit_area(spell, _c, _c, _l, _l);
-		}	
+	on_step = function(spell, target) {
+		if (!spell.armed && --spell.arm_timer <= 0) {
+			spell.armed = true;
+			sprite = spr_vfx_rune_complete;
+			spell.mask_index = spr_vfx_rune_complete;
+		}
+	};
+	on_hit = function(spell, target) {
+		if (!spell.armed) return;
+		if (enemy_lane(target) != spell.lane) return; //ignore sprites poking from neighbouring lanes
+		var _c = spell.target_col;
+		var _l = spell.lane;
+		show_debug_message($"{_c}, {_l}, {enemy_lane(target)}");
+		if (spell.area) spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
+		else			spell_hit_area(spell, _c, _c, _l, _l);
+		if (array_length(spell.hit_list) > 0)
+			spell.charges--;
+		spell.hit_list = [];
+		if (spell.charges <= 0) instance_destroy(spell);
 	};
 	on_draw = function(spell) {
+		var _sprite = spell.armed ? spr_vfx_rune_complete : spr_vfx_rune_arming;
 		var _size_multiplier = 1;
-		if (spell.area) _size_multiplier = 3;
-		if (!spell.landed) { // Draws target indicator
-			var _x_offs = 40 * _size_multiplier; var _y_offs = 15 * _size_multiplier;
-			draw_set_alpha(0.3);
-			draw_ellipse(spell.target_x - _x_offs, spell.target_y - _y_offs, spell.target_x + _x_offs, spell.target_y + _y_offs, false);
-			draw_set_alpha(1); draw_set_color(c_red);
-		}
 		var scale = 0.5 * _size_multiplier;
-		draw_sprite_ext(sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
+		draw_sprite_ext(_sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
 	};
 }
 

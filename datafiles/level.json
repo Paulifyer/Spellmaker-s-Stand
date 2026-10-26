@@ -26,7 +26,8 @@
         "unlocked_glyphs": [
             { "type": "form", "id": "projectile" },
             { "type": "form", "id": "strike" },
-            { "type": "effect", "id": "harm" }
+            { "type": "effect", "id": "harm" },
+            { "type": "form", "id": "rune" }
         ]
     },
     "rm_level_2": {
@@ -61,7 +62,7 @@
         },
         "unlocked_glyphs": [
             { "type": "effect", "id": "fire" },
-            { "type": "effect", "id": "frost" },
+            { "type": "effect", "id": "ice" },
             { "type": "modifier", "id": "pierce" },
             { "type": "modifier", "id": "amplify" }
         ]

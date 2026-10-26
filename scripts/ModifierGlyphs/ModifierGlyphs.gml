@@ -5,7 +5,9 @@
 #macro CHAIN_COST		20
 #macro AREA_COST		25
 #macro EXTEND_TIME_COST	5
-#macro EXTEND_TIME_ADD 5
+#macro EXTEND_TIME_ADD	5
+#macro DELAY_COST		5
+#macro DELAY_AMT		1
 
 function ModifierGlyph(_name, _cost) constructor {
 	name = _name; cost = _cost;
@@ -57,7 +59,16 @@ function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constr
 	on_cast = function(spell, fx) {
 		fx.duration += tune_params("modifiers", "extend_time", "duration_increase", EXTEND_TIME_ADD); // Uses fixed amount atm
 	}
-	
+}
+
+function Mod_Delay(): ModifierGlyph("Delay", DELAY_COST) constructor {
+	icon = spr_glyph_delay;
+	cost = tune_params("modifiers", "delay", "cost", DELAY_COST);
+	is_stacks = true;
+	scope = "effect";
+	on_cast = function(spell, fx) {
+		fx.delay += tune_params("modifiers", "delay", "delay_increase", DELAY_AMT);
+	}
 }
 
 function Mod_None() : ModifierGlyph("none", 0) constructor {

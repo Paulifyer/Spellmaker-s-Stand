@@ -29,15 +29,16 @@ for (var e = 0; e < array_length(effects); e++) {
 
 col = c_white;
 if (array_length(effects) > 0) {
-	col = effects[i].effect.col;
+	col = effects[0].effect.col;
 	for (var i = 1; i < array_length(effects); i++) {
 		col = merge_colour(col, effects[i].effect.col, 0.5);		
 	}	
 }
 
-
-if (form.uses_mask && form.sprite != undefined) {
+// This checks if the form glyph handles effects through collisions or steps
+if (form.uses_mask && form.sprite != undefined) { 
 	mask_index = form.sprite;
 	image_yscale = 0.5;
 	image_angle = dir;
+	
 }

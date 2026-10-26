@@ -7,8 +7,9 @@ if (path_position >= pos_to_stop)
 	my_speed = 0;
 	base_speed = 0;
 	if (ready_to_attack && stun_timer <= 0) {
-		reduce_village_hp(damage_dealt);
-		with (instance_create_depth(x, y - 100, depth, obj_arrow)) {
+		ready_to_attack = false;
+		var _arrow = instance_create_depth(x, y - 100, depth, obj_arrow)
+		with (_arrow) {
 			// Set image_angle using point_direction to get the direction to the target 
 			// We are offsetting the target's y value because we don't want to shoot at the target's feet
 			image_angle = point_direction(x, y, -x, y);
@@ -24,7 +25,10 @@ if (path_position >= pos_to_stop)
 			
 			//Set the sequence's angle to be the same as the arrows
 			layer_sequence_angle(_seq, image_angle);
+			
+			damage = other.damage_dealt;
 		}
+
 		switch (object_index) {
 			case obj_mook:
 				audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false);
@@ -35,8 +39,8 @@ if (path_position >= pos_to_stop)
 			default:
 				break;
 		}
-		if (!ready_to_attack && stun_timer <= 0) {
-			alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
-		}
+	}
+	if (!ready_to_attack && stun_timer <= 0 && alarm[0] <= 0) {
+		alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
 	}
 }

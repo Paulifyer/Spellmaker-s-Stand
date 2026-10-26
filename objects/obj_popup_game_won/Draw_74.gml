@@ -12,7 +12,7 @@ draw_self();
 global.menu_lock = true;
 
 // Handle glyph unlocks
-var _unlock_icons = handle_next_level_glyphs();
+var _unlock_icons = handle_next_level_glyphs(room_next(room));
 
 // drawing unlocked glyphs
 draw_unlocked_glyphs(_unlock_icons);
