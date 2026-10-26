@@ -7,6 +7,14 @@
 channel = noone // Holds the spell being channeled
 cost = 0 // Holds the drain cost of the spell casted for channels
 max_mana = tune_value("player", "max_mana", MAX_MANA);
+var _mana_increases = global.tuning.player[$ "max_mana_increase_by_level"];
+if (is_array(_mana_increases)) {
+	// Index 0 applies to level 1; add all increases through the current level.
+	var _level_count = min(global.current_level + 1, array_length(_mana_increases));
+	for (var _i = 0; _i < _level_count; _i++) {
+		max_mana += _mana_increases[_i];
+	}
+}
 mana = max_mana;
 mana_display = mana;
 mana_ticks = 6;

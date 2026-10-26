@@ -7,7 +7,11 @@
 //dictionary holding mutation stucts
 function init_mutations() {
 	global.mutations = {};
-	var _mut = new WardedMut();
+	var _mut = new FrostWardedMut();
+	register_mutation(_mut.key, _mut);
+	_mut = new FireWardedMut();
+	register_mutation(_mut.key, _mut);
+	_mut = new LightningWardedMut();
 	register_mutation(_mut.key, _mut);
 	_mut = new SkeletalMut();
 	register_mutation(_mut.key, _mut);
