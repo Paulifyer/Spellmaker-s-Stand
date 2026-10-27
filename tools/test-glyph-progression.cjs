@@ -7,6 +7,8 @@ for (const [key, level] of Object.entries(config)) {
     assert.ok(Number.isInteger(level.max_glyphs) && level.max_glyphs >= 2);
 }
 assert.deepEqual([1,2,3].map(n => config[`rm_level_${n}`].max_glyphs), [2,3,5]);
+const draft = JSON.parse(read('notes/level-campaign.draft.json'));
+assert.deepEqual([1,2,3,4,5,6,7,8].map(n => draft[`rm_level_${n}`].max_glyphs), [2,3,5,6,7,8,8,8]);
 const ctx = vm.createContext({
     room: 'rm_level_1', room_get_name: x => x,
     global: {level_config: config, spell_glyphs: {form: {}, effect: {}, modifier: {}}},
@@ -32,3 +34,19 @@ assert.equal(ctx.spell_max_glyphs(), 4); // no hardcoded per-level limit
 config.rm_level_1.unlocked_glyphs.push({type:'effect',id:'not_implemented'});
 assert.throws(() => ctx.unlock_glyphs_through_level('rm_level_1'), /Unknown unlocked glyph/);
 console.log('Glyph progression checks passed: JSON limits, counting, cumulative/direct entry, reset and unknown glyph rejection.');
+
+// Exercise the actual level parser as well as the JSON data.
+Object.assign(ctx, {
+    is_real: x => typeof x === 'number', floor: Math.floor,
+    variable_global_exists: () => true,
+    EnemyWaveDefinition: function(enemy,weight,min,max,mutation) {Object.assign(this,{enemy,weight,min,max,mutation});},
+    LevelWaveConfig: function(count,start,end,curve,roster) {Object.assign(this,{count,start,end,curve,roster});},
+});
+ctx.global.EnemyCatalog={MOOK:{},RANGER:{},BRUTE:{}};
+load(ctx,'scripts/LevelScript/LevelScript.gml',['parse_level_data']);
+assert.equal(ctx.parse_level_data(config.rm_level_2).max_glyphs,3);
+for (const invalid of [undefined,0,1,2.5,'5']) {
+    let failed=false;
+    try {ctx.parse_level_data({...config.rm_level_2,max_glyphs:invalid});} catch (error) {failed=String(error).includes('max_glyphs');}
+    assert.equal(failed,true);
+}

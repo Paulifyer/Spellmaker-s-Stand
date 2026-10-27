@@ -43,6 +43,51 @@ Delay or a group that would leave invalid repeats is rejected with a message.
 Remove the repeated effect first. Every effect occurrence and Delay stack
 adds its normal mana cost. A trailing Delay has no following effect to postpone.
 
+## Spell construction rules
+
+Each level entry in `datafiles/level.json` defines `max_glyphs` (an integer of
+at least 2) and `unlocked_glyphs` (only the new unlocks for that level). Limits
+for the existing rooms are 2, 3, and 5. The eight-level draft in `notes/` also
+contains the later limits of 6, 7, 8, 8, and 8; it still requires unfinished
+game features before activation. No separate progression JSON is used.
+
+Every Form, Effect, modifier, and repeated modifier counts toward the limit.
+The editor shows the count, refuses excess additions, and keeps excess groups
+visible if an old spell needs repair. Form changes remove incompatible Form
+modifiers and incompatible Effects (including their modifiers) automatically.
+Compatible Effect modifiers are preserved.
+
+A prepared spell needs a Form and at least one real Effect. Empty/name-only
+slots do not block Start. All occupied slots must have available, compatible
+glyphs, a valid Delay sequence, a legal glyph count, and an affordable cost.
+Invalid spells are also rejected when casting. Palette hover text explains
+why a glyph cannot be added; slot hover text explains invalid spells.
+
+Pierce accepts Projectile/Beam; Amplify accepts Harm/Fire/Hex; Extend Time
+accepts Fire/Frost/Lightning/Hex; Delay accepts all real Effects. AoE attaches
+to any current Form when the central group is selected, or to Pull when its
+Effect group is selected. These rules describe compatibility, not completion
+of the separate Amplify+Hex or AoE+Pull behavior fixes.
+
+Entering a level reconstructs cumulative ownership from that level and all
+earlier JSON entries, so direct entry works and later unlocks do not leak into
+earlier rooms. Victory previews upcoming glyphs without unlocking them early.
+Unknown unlock IDs raise a configuration error instead of exposing missing
+glyphs in the palette.
+
+Run `node tools/test-glyph-progression.cjs`, `node tools/test-spell-construction.cjs`,
+`node tools/test-spell-editor.cjs`, and `node tools/test-construction-regression.cjs`
+for construction checks. Existing Delay, Pierce, and mana preview checks are
+also retained. These tests simulate engine calls; verify in GameMaker:
+
+- Levels 1–3 show limits 2/3/5 and the correct cumulative unlocks.
+- Changing Projectile+Pierce to Strike removes Pierce but preserves legal Effect modifiers.
+- Incompatible palette entries explain their restrictions; Extend Time accepts Hex.
+- A Form-only, over-limit, or too-expensive spell in any slot blocks Start.
+- Clearing that slot restores Start; empty/name-only slots remain unused.
+- In a temporary test level with limit 8, seven Effect groups and modifier
+  satellites remain readable and clickable. Revert the temporary limit afterward.
+
 ## Standard wave generation
 
 Levels define a threat curve and an enemy roster instead of manually repeating

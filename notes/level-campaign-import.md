@@ -21,7 +21,7 @@ Source: https://docs.google.com/document/d/1LTrpE-MkG_Z15OTvQFKZCxWQj4My_fiyKoz9
 - Implement and register the reserved draft key `banneret-skeletal` for the combined haste/skeleton mutation. Current runtime supports only one mutation key per entry. Its intended surcharge is 4 (3 Banneret + 1 Skeletal).
 - Create rooms rm_level_4 through rm_level_8 with their gameplay and wave managers.
 - Implement missing glyphs and add their real catalog IDs to unlocked_glyphs: level 3 Combust; level 4 Snap; level 5 Chain; level 6 Force and Earth; level 7 Discharge. Existing glyphs are included; guessed IDs are intentionally not used.
-- Add support for the document's per-level glyph limits (2, 3, 5, 6, 7, 8, 8, 8); the current level parser has no field for them.
+- Per-level glyph limits are implemented using `max_glyphs` in each level entry. Both the active file and this draft include the limits (2, 3, 5, 6, 7, 8, 8, 8). Adjust the values in JSON; no script edits are needed.
 - Decide whether to align EnemyCatalog costs with the document. JSON does not define base enemy costs. Both cost sets were checked for minimum-budget feasibility.
 - Playtest in GameMaker. Static checks do not validate encounter pacing or implemented enemy/glyph behavior.
 
