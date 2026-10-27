@@ -50,13 +50,13 @@ Object.assign(ctx, {
     c_red: 1, c_black: 0, snd_button_click: 1,
     draw_set_color() {}, draw_text() {}, draw_set_alpha() {}, gui_button: () => true,
     start_next_wave: () => starts++, audio_play_sound: () => sounds++,
-    close_requested: false, naming: false, alarm: [], _expensive_slots: '2, 3',
+    close_requested: false, naming: false, alarm: [], _start_message: 'Too expensive: slots 2, 3',
 });
 vm.runInContext(start, ctx);
 assert.equal(starts, 0); assert.equal(sounds, 0);
 assert.equal(ctx.close_requested, false); assert.equal(ctx.alarm[0], undefined);
 assert.match(ctx.notice, /2, 3/);
-ctx._expensive_slots = ''; vm.runInContext(start, ctx);
+ctx._start_message = ''; vm.runInContext(start, ctx);
 assert.equal(starts, 1); assert.equal(sounds, 1);
 assert.equal(ctx.close_requested, true); assert.equal(ctx.alarm[0], 1);
 vm.runInContext(start, ctx); assert.equal(starts, 1);

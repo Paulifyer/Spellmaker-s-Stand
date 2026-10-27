@@ -22,8 +22,8 @@ for (var c = 0; c < 3; c++) {
 
         // form always available; the rest need a form, and modifiers must suit it
         var _status = glyph_status(_key, _id);
-		var _enabled = _status == GLYPH_STATE.owned && ((c == 0) || _has_form);
-        if (c == 2 && _has_form) _enabled = _status == GLYPH_STATE.owned && mod_valid_for_form(_id, _spell.form);
+        var _reason = spell_addition_message(_spell, _key, _id, active_group);
+		var _enabled = _status == GLYPH_STATE.owned && _reason == "";
 
         var _current = (c == 0 && _has_form) ? (_spell.form == _id) : false;
 		var _locked = _status == GLYPH_STATE.locked;
@@ -44,7 +44,7 @@ for (var c = 0; c < 3; c++) {
 			} else {
 				hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
 				if (_status == GLYPH_STATE.disabled) hover_text += "\nSome force has disabled this?";
-				if (!_enabled) hover_text += (c == 0 || !_has_form) ? "\n(pick a form first)" : "\n(can't be used with this form)";
+                if (!_enabled && _reason != "") hover_text += "\n" + _reason;
 			}
         }
         if (_b.clicked) {
@@ -81,8 +81,11 @@ _has_form = (_spell != undefined && _spell.form != undefined);   // may have jus
 var _rm_effect = -1;
 var _count = _has_form ? array_length(_spell.effects) : 0;
 
-for (var e = 0; e < MAX_EFFECTS; e++) {
-    var _ang = group_angles[e];
+// The JSON limit permits up to seven effects in the documented eight-glyph spell.
+// Keep existing excess groups visible so an invalid spell can still be repaired.
+var _effect_slots = max(1, spell_max_glyphs() - 1, _count);
+for (var e = 0; e < _effect_slots; e++) {
+    var _ang = 90 + e * 360 / _effect_slots;
     var _gx = craft_cx + lengthdir_x(200, _ang);
     var _gy = craft_cy + lengthdir_y(200, _ang);
 
@@ -132,6 +135,9 @@ var _player = instance_find(Player, 0);
 var _max_mana = instance_exists(_player) ? max(0, _player.max_mana) : 0;
 var _mana_preview = spell_mana_preview(_spell, _max_mana);
 var _expensive_slots = spellbook_expensive_slots(_max_mana);
+var _start_message = spellbook_start_message(_max_mana);
+var _spell_message = _has_form ? spell_validation_message(_spell) : "";
+draw_text(960, 63, "Glyphs: " + string(spell_glyph_count(_spell)) + " / " + string(spell_max_glyphs()));
 draw_text(960, 97, string(_mana_preview.cost) + " / " + string(_max_mana) + " mana");
 var _bar_x = 960, _bar_y = 132, _bar_w = 450, _bar_h = 22;
 draw_set_color(#263442);
@@ -145,6 +151,10 @@ draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w, _bar_y + _bar_h, true);
 if (_mana_preview.too_expensive) {
     draw_set_color(c_red);
     draw_text(960, 163, "Spell is too expensive");
+    draw_set_color(c_black);
+} else if (_spell_message != "") {
+    draw_set_color(c_red);
+    draw_text(960, 163, _spell_message);
     draw_set_color(c_black);
 }
 if (notice_timer > 0 && notice != "") {
@@ -179,6 +189,7 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
 		draw_set_colour(c_white);
 	}
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
+    if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) hover_text = spell_validation_message(_sp);
     if (_b.hover && _too_expensive) hover_text = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
     if (_b.clicked) { sel = i; naming = false; }
 }
@@ -206,15 +217,15 @@ if (_n > 0) {
 draw_text_ext(1610, 680, hover_text, 26, 220);
 
 // ---- Start ----
-if (_expensive_slots != "") {
+if (_start_message != "") {
     draw_set_color(c_red);
-    draw_text(960, 1040, "Too expensive: spell slots " + _expensive_slots);
+    draw_text(960, 1040, "Fix highlighted spell slots before starting");
     draw_set_color(c_black);
     draw_set_alpha(0.45);
 }
 if (!close_requested && !naming && gui_button(1340, 950, 150, 70, "Start", false)) {
-    if (_expensive_slots != "") {
-        notice = "Reduce the mana cost of spell slots " + _expensive_slots + " before starting";
+    if (_start_message != "") {
+        notice = _start_message;
         notice_timer = 120;
     } else {
         close_requested = true;

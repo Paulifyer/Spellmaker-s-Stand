@@ -12,7 +12,6 @@ enemy_view = 0;
 column_keys   = ["form", "effect", "modifier"];
 column_titles = ["Form", "Effect", "Modifier"];
 glyph_row_y   = [265, 490, 835];     // palette rows, under each heading
-group_angles   = [90, 162, 234, 306, 18];     // where effect groups sit around the hexagram
 active_group = -1;					 // -1 = form group, 0.. = effect index
 notice = ""; notice_timer = 0;
 craft_cx = 1142; craft_cy = 495;     // centre of the hexagram

@@ -1,7 +1,5 @@
 #macro SPELL_SLOTS 3
 
-#macro MAX_EFFECTS 5
-#macro MAX_MODS 5
 
 
 
@@ -231,6 +229,21 @@ function spellbook_expensive_slots(_max_mana) {
     return _slots;
 }
 
+function spellbook_start_message(_max_mana) {
+    var _message = "";
+    for (var i = 0; i < array_length(global.spellbook); i++) {
+        var _s = global.spellbook[i];
+        // Empty and name-only slots are unused, not incomplete prepared spells.
+        if (_s == undefined || _s.form == undefined) continue;
+        var _reason = spell_validation_message(_s);
+        if (_reason == "" && spell_cost(_s) > _max_mana) _reason = "Spell is too expensive";
+        if (_reason == "") continue;
+        if (_message != "") _message += "\n";
+        _message += "Spell " + string(i + 1) + ": " + _reason;
+    }
+    return _message;
+}
+
 function gui_button(_x, _y, _w, _h, _label, _active) {
     var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
     var _hover = point_in_rectangle(_mx, _my, _x, _y, _x + _w, _y + _h);
@@ -283,7 +296,8 @@ function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selecte
     // connectors first, so circles sit on top
     draw_set_color(c_black);
     for (var k = 0; k < _n; k++) {
-        var _a = _base + (k - (MAX_MODS - 1) / 2) * _spread;
+        var _spacing = min(_spread, 240 / max(1, _n - 1));
+        var _a = _base + (k - (_n - 1) / 2) * _spacing;
         array_push(_px, _x + lengthdir_x(_r + 38, _a));
         array_push(_py, _y + lengthdir_y(_r + 38, _a));
         draw_line_width(_x, _y, _px[k], _py[k], 3);

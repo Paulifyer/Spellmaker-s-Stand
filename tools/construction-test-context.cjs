@@ -27,7 +27,7 @@ function makeContext(limit = 8) {
         is_glyph_available:()=>true, is_instanceof:()=>false, Mod_Amplify:function(){},
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
-    load(ctx,helper,['spell_max_glyphs','spell_glyph_count','spell_catalog_entry','mod_valid_for_form','mod_valid_for_effect','effect_valid_for_form','spell_sequence_valid','spell_can_append_effect','spell_validation_message','spell_addition_message','spell_add_glyph','spell_cost','spell_mana_preview','spellbook_expensive_slots']);
+    load(ctx,helper,['spell_max_glyphs','spell_glyph_count','spell_catalog_entry','mod_valid_for_form','mod_valid_for_effect','effect_valid_for_form','spell_sequence_valid','spell_can_append_effect','spell_validation_message','spell_addition_message','spell_add_glyph','spell_cost','spell_mana_preview','spellbook_expensive_slots','spellbook_start_message']);
     load(ctx,'scripts/GlyphAccessScripts/GlyphAccessScripts.gml',['is_spell_usable','sanitize_owned']);
     return ctx;
 }
