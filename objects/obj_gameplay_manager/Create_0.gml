@@ -1,8 +1,7 @@
 /// @description Gameplay Manager
 
-// This handles the glyphs to be unlocked for the first level
-if (room == rm_level_1)
-	handle_next_level_glyphs(room);
+// The room's JSON defines cumulative unlocks, including when entered directly.
+unlock_glyphs_through_level(room);
 
 // This validates the glyphs in the global spell glyphs array
 validate_glyphs();

@@ -363,14 +363,16 @@ function draw_unlocked_glyphs(glyph_icon_array) {
 /// @description Uses the unlocked_glyphs struct in the json to unlock glyphs to the owned global struct
 /// @param {Asset.GMRoom} _room Room Unlocked Glyphs
 /// @returns {Array<Asset.GMSprite>}
-function handle_next_level_glyphs(_room) {
+function handle_next_level_glyphs(_room, _unlock = true) {
+	if (!room_exists(_room)) return [];
+	if (!variable_struct_exists(global.level_config, room_get_name(_room))) return [];
 	var _unlocked_glyphs = global.level_config[$ room_get_name(_room)].unlocked_glyphs
 	var glyph_icon_array = []
 	for (var i = 0; i < array_length(_unlocked_glyphs); i++) {
 		var _glyph = _unlocked_glyphs[i];
 		var _type = _glyph[$ "type"];
 		var _name = _glyph[$ "id"];
-		unlock_glyph(_type, _name);
+		if (_unlock) unlock_glyph(_type, _name);
 		var _glyph_icon = global.spell_glyphs[$ _type][$ _name].icon;
 		array_push(glyph_icon_array, _glyph_icon);
 	}

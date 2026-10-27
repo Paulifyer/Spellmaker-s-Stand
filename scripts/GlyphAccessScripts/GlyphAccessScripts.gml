@@ -57,6 +57,24 @@ function unlock_glyph(_type, _id) {
 	if (!array_contains(global.owned[$ _type], _id)) array_push(global.owned[$ _type], _id);
 }
 
+// Rebuild cumulative ownership from the room's level number, including direct entry.
+function unlock_glyphs_through_level(_room) {
+    var _number = real(string_delete(room_get_name(_room), 1, 9));
+    global.owned = { form: [], effect: [], modifier: [] };
+    for (var n = 1; n <= _number; n++) {
+        var _config = global.level_config[$ "rm_level_" + string(n)];
+        if (!is_struct(_config)) continue;
+        var _glyphs = _config.unlocked_glyphs;
+        for (var i = 0; i < array_length(_glyphs); i++) {
+            var _glyph = _glyphs[i];
+            var _catalog = global.spell_glyphs[$ _glyph.type];
+            if (!is_struct(_catalog) || !variable_struct_exists(_catalog, _glyph.id))
+                throw "Unknown unlocked glyph in level.json: " + string(_glyph.id);
+            unlock_glyph(_glyph.type, _glyph.id);
+        }
+    }
+}
+
 ///@description Checks if the spell is usable/valid
 ///@param {struct.loadout} _s The loadout of the spell being checked
 ///@returns {bool} if the spell is valid

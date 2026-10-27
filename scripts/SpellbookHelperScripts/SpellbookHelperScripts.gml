@@ -7,6 +7,19 @@
 // The spellbook used by the player when casting spells
 global.spellbook = array_create(SPELL_SLOTS, undefined);
 
+function spell_max_glyphs() {
+    return global.level_config[$ room_get_name(room)].max_glyphs;
+}
+
+function spell_glyph_count(_s) {
+    if (_s == undefined || _s.form == undefined) return 0;
+    var _count = 1 + array_length(_s.form_mods);
+    for (var e = 0; e < array_length(_s.effects); e++) {
+        _count += 1 + array_length(_s.effects[e].mods);
+    }
+    return _count;
+}
+
 function spell_ensure(_i) {
     if (global.spellbook[_i] == undefined)
         global.spellbook[_i] = { name: "", form: undefined, form_mods: [], effects: [] };

@@ -1,6 +1,7 @@
 {
   "_readme": "Threat budgets buy enemies plus mutation surcharges. Settings arrays have one entry per wave. Costs are defined in EnemyCatalog.gml, not here.",
   "rm_level_1": {
+    "max_glyphs": 2,
     "enemy_roster": [
       {
         "enemy": "MOOK",
@@ -63,6 +64,7 @@
     ]
   },
   "rm_level_2": {
+    "max_glyphs": 3,
     "enemy_roster": [
       {
         "enemy": "MOOK",
@@ -157,6 +159,7 @@
     ]
   },
   "rm_level_3": {
+    "max_glyphs": 5,
     "enemy_roster": [
       {
         "enemy": "MOOK",
