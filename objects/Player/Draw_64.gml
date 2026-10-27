@@ -24,7 +24,9 @@ draw_set_alpha(1);
 
 // Fills the Mana Bar
 draw_set_colour(c_aqua);
+draw_set_alpha(mana_exhausted ? 0.5 : 1);
 draw_rectangle(_x, _y + _h * (1 - _pct), _x + _w, _y + _h, false);
+draw_set_alpha(1);
 
 // Mana Bar Border
 draw_set_colour(c_white);

@@ -42,7 +42,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "ice", "duration", FROST_DURATION);
 		var slow_amt = tune_params("effects", "ice", "slow_amt_per_stack", FROST_SLOW);
-		target.slow_amt += min(0.8, target.slow_amt + slow_amt); // ensures slow_amt is maximally 0.8
+		target.slow_amt = clamp(target.slow_amt + slow_amt, 0, 0.8); // Cap total slow at 80%.
 		// Hypothetically, older frost stacks also will inherit extend time
 		target.slow_timer = TARGET_ROOM_SPEED * (_duration + fx.duration); 
 	};
