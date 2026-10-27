@@ -32,6 +32,9 @@ if (stun_timer == 0) {
 
 if (stun_timer > 0) stun_timer--;
 
+// Hex lasts for a fixed duration after it is applied.
+if (hex_timer > 0) hex_timer--;
+
 if (stun_immune_timer > 0) stun_immune_timer--;
 
 // Delay Handler

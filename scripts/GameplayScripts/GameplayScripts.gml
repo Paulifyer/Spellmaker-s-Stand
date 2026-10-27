@@ -125,8 +125,19 @@ function reduce_village_hp(_amount)
 /// @param {real} _amount
 function deal_damage(_id, _amount)
 {
-	// Reduce the enemies hp by the amount that was passed in
-	_id.hp -= (_amount * (1 - _id.dmg_reduction));
+	// Hex grants 10% extra damage for each distinct active status, including Hex.
+	var _hex_multiplier = 1;
+	if (_id.hex_timer > 0) {
+		var _status_count = 1; // Hex itself counts as a status.
+		if (_id.burn_timer > 0) _status_count++;
+		if (_id.slow_timer > 0) _status_count++;
+		if (_id.stun_timer > 0) _status_count++;
+		var _bonus_per_status = tune_params("effects", "hex", "damage_per_status", HEX_DAMAGE_PER_STATUS);
+		_hex_multiplier += _status_count * _bonus_per_status;
+	}
+
+	// Apply Hex amplification and mutation damage reduction.
+	_id.hp -= (_amount * _hex_multiplier * (1 - _id.dmg_reduction));
 	
 	// Set the enemy flash_alpha to 1 so that the hit flash will activate
 	_id.flash_alpha = 1;

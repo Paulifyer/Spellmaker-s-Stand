@@ -71,6 +71,9 @@ slow_timer = 0;
 // how long they are stunned for
 stun_timer = 0;
 
+// How long Hex amplifies damage taken.
+hex_timer = 0;
+
 // how long the stun_immue_timer is
 stun_immune_timer = 0;
 

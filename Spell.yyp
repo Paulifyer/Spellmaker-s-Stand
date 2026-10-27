@@ -293,6 +293,7 @@
     {"id":{"name":"spr_frankenstein_walk_side","path":"sprites/spr_frankenstein_walk_side/spr_frankenstein_walk_side.yy",},},
     {"id":{"name":"spr_frankenstein_walk_up","path":"sprites/spr_frankenstein_walk_up/spr_frankenstein_walk_up.yy",},},
     {"id":{"name":"spr_glyph_amplify","path":"sprites/spr_glyph_amplify/spr_glyph_amplify.yy",},},
+    {"id":{"name":"spr_glyph_hex","path":"sprites/spr_glyph_hex/spr_glyph_hex.yy",},},
     {"id":{"name":"spr_glyph_aoe","path":"sprites/spr_glyph_aoe/spr_glyph_aoe.yy",},},
     {"id":{"name":"spr_glyph_beam","path":"sprites/spr_glyph_beam/spr_glyph_beam.yy",},},
     {"id":{"name":"spr_glyph_delay","path":"sprites/spr_glyph_delay/spr_glyph_delay.yy",},},

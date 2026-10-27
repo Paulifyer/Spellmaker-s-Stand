@@ -27,3 +27,7 @@ if (slow_timer > 0) {
 if (stun_timer > 0) {
 	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_yellow, 0.3);
 }
+
+if (hex_timer > 0) {
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_fuchsia, 0.3);
+}

@@ -8,6 +8,9 @@
 #macro FROST_SLOW			0.2
 #macro FROST_DURATION		3
 #macro PULL_COST			25
+#macro HEX_COST 20
+#macro HEX_DURATION 5
+#macro HEX_DAMAGE_PER_STATUS 0.1
 
 function EffectGlyph(_name, _cost) constructor {
 	name = _name; cost = _cost;
@@ -53,6 +56,17 @@ function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor
 		var _duration = tune_params("effects", "lightning", "duration", LIGHTNING_DURATION);
 		if (target.stun_immune_timer <= 0 && target.stun_timer > 0)
 			target.stun_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
+	};
+}
+
+function Elem_Hex() : EffectGlyph("Hex", HEX_COST) constructor {
+	icon = spr_glyph_hex;
+	col = c_fuchsia;
+	desc = "Increases damage taken by 10% per active status, including Hex.";
+	cost = tune_params("effects", "hex", "cost", HEX_COST);
+	on_hit = function(spell, target, fx) {
+		var _duration = tune_params("effects", "hex", "duration", HEX_DURATION);
+		target.hex_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
 	};
 }
 

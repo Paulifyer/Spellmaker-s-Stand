@@ -111,7 +111,8 @@
             "difficulty_curve": 1.0
         },
         "unlocked_glyphs": [
-            { "type": "modifier", "id": "extend_time" }
+            { "type": "modifier", "id": "extend_time" },
+            { "type": "effect", "id": "hex" }
         ]
     }
 }
