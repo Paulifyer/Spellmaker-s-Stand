@@ -131,7 +131,8 @@ function deal_damage(_id, _amount)
 		var _status_count = 1; // Hex itself counts as a status.
 		if (_id.burn_timer > 0) _status_count++;
 		if (_id.slow_timer > 0) _status_count++;
-		if (_id.stun_timer > 0) _status_count++;
+		// Stunned and charged are consecutive phases of the same Lightning status.
+		if (_id.stun_timer > 0 || _id.stun_immune_timer > 0) _status_count++;
 		var _bonus_per_status = tune_params("effects", "hex", "damage_per_status", HEX_DAMAGE_PER_STATUS);
 		_hex_multiplier += _status_count * _bonus_per_status;
 	}

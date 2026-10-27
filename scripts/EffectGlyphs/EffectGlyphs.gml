@@ -88,6 +88,8 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
 	icon = spr_glyph_pull;
 	col = c_ltgray;
+	allowed_forms = ["projectile", "strike", "rune"];
+	desc = "Pulls enemies in a 3x3 area. Form AoE does not enlarge Pull.";
 	pull_sec = tune_params("effects", "pull", "pull_sec", 0.4); // travel time
 	hold_sec = tune_params("effects", "pull", "hold_sec", 1.0); // time held
 	

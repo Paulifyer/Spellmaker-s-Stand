@@ -4,6 +4,14 @@ function makeContext(limit = 8) {
     const glyphs = {form: {}, effect: {}, modifier: {}};
     for (const id of ['projectile','strike','beam','rune']) glyphs.form[id] = {cost: 5};
     for (const id of ['harm','fire','ice','lightning','hex','pull','none']) glyphs.effect[id] = {cost: 10};
+    const effectSource = read('scripts/EffectGlyphs/EffectGlyphs.gml');
+    for (const [id,name] of Object.entries({harm:'Harm',fire:'Fire',ice:'Ice',lightning:'Lightning',hex:'Hex',pull:'Pull'})) {
+        const start = effectSource.indexOf(`function Elem_${name}(`);
+        const next = effectSource.indexOf('\nfunction ',start+1);
+        const body = effectSource.slice(start,next<0?undefined:next);
+        const match = body.match(/allowed_forms = (\[[^\]]*\])/);
+        if (match) glyphs.effect[id].allowed_forms=JSON.parse(match[1]);
+    }
     const modifiers = read('scripts/ModifierGlyphs/ModifierGlyphs.gml');
     for (const [id, name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
         const start = modifiers.indexOf(`function Mod_${name}(`);
