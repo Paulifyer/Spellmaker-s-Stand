@@ -128,13 +128,31 @@ if (_has_form && gui_button(1340, 880, 150, 50, "Clear spell", false)) {
 _spell = spell_prune(sel);   // (name-only spells stay; empty ones free the slot)
 
 // ---- Mana / cost ----
-draw_text(960, 97, "Cost: " + string(spell_cost(_spell)));
+var _player = instance_find(Player, 0);
+var _max_mana = instance_exists(_player) ? max(0, _player.max_mana) : 0;
+var _mana_preview = spell_mana_preview(_spell, _max_mana);
+var _expensive_slots = spellbook_expensive_slots(_max_mana);
+draw_text(960, 97, string(_mana_preview.cost) + " / " + string(_max_mana) + " mana");
+var _bar_x = 960, _bar_y = 132, _bar_w = 450, _bar_h = 22;
+draw_set_color(#263442);
+draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w, _bar_y + _bar_h, false);
+if (_mana_preview.fill > 0) {
+    draw_set_color(_mana_preview.too_expensive ? c_red : c_aqua);
+    draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w * _mana_preview.fill, _bar_y + _bar_h, false);
+}
+draw_set_color(c_black);
+draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w, _bar_y + _bar_h, true);
+if (_mana_preview.too_expensive) {
+    draw_set_color(c_red);
+    draw_text(960, 163, "Spell is too expensive");
+    draw_set_color(c_black);
+}
 if (notice_timer > 0 && notice != "") {
-    draw_text_ext(960, 180, notice, 26, 500);
+    draw_text_ext(960, 205, notice, 26, 500);
 }
 if (_spell != undefined && _spell.form == undefined) {
     draw_set_color(c_red);
-    draw_text(960, 140, "Needs a form to be usable");
+    draw_text(960, 163, "Needs a form to be usable");
     draw_set_color(c_black);
 }
 
@@ -153,13 +171,15 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     var _sp = global.spellbook[i];
     var _ic = (_sp != undefined && _sp.form != undefined) ? global.spell_glyphs.form[$ _sp.form].icon : undefined;
     var _b = gui_circle_button(_slot_x[i], 990, 30, _ic, string(i + 1), i == sel);
-	var _bad_spell = (_sp != undefined && _sp.form != undefined && !is_spell_usable(_sp));
+	var _too_expensive = spell_mana_preview(_sp, _max_mana).too_expensive;
+	var _bad_spell = (_sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) || _too_expensive;
 	if (_bad_spell) {
 		draw_set_colour(c_red);
 		draw_circle(_slot_x[i], 990, 30, true);
 		draw_set_colour(c_white);
 	}
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
+    if (_b.hover && _too_expensive) hover_text = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
     if (_b.clicked) { sel = i; naming = false; }
 }
 
@@ -186,11 +206,23 @@ if (_n > 0) {
 draw_text_ext(1610, 680, hover_text, 26, 220);
 
 // ---- Start ----
-if (!close_requested && !naming && gui_button(1340, 950, 150, 70, "Start", false)) {
-    close_requested = true;
-	start_next_wave();
-	audio_play_sound(snd_button_click, 0, false);
-    alarm[0] = 1;
+if (_expensive_slots != "") {
+    draw_set_color(c_red);
+    draw_text(960, 1040, "Too expensive: spell slots " + _expensive_slots);
+    draw_set_color(c_black);
+    draw_set_alpha(0.45);
 }
+if (!close_requested && !naming && gui_button(1340, 950, 150, 70, "Start", false)) {
+    if (_expensive_slots != "") {
+        notice = "Reduce the mana cost of spell slots " + _expensive_slots + " before starting";
+        notice_timer = 120;
+    } else {
+        close_requested = true;
+		start_next_wave();
+		audio_play_sound(snd_button_click, 0, false);
+        alarm[0] = 1;
+    }
+}
+draw_set_alpha(1);
 
 draw_set_color(c_white);

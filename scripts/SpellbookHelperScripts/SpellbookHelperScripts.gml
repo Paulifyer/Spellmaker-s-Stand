@@ -129,6 +129,26 @@ function spell_cost(_s) {
     return _c;
 }
 
+// Compare against capacity, not the player's temporarily depleted mana.
+function spell_mana_preview(_s, _max_mana) {
+    var _cost = spell_cost(_s);
+    return {
+        cost: _cost,
+        fill: (_max_mana > 0) ? clamp(_cost / _max_mana, 0, 1) : 0,
+        too_expensive: _cost > _max_mana
+    };
+}
+
+function spellbook_expensive_slots(_max_mana) {
+    var _slots = "";
+    for (var i = 0; i < array_length(global.spellbook); i++) {
+        if (!spell_mana_preview(global.spellbook[i], _max_mana).too_expensive) continue;
+        if (_slots != "") _slots += ", ";
+        _slots += string(i + 1);
+    }
+    return _slots;
+}
+
 function gui_button(_x, _y, _w, _h, _label, _active) {
     var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
     var _hover = point_in_rectangle(_mx, _my, _x, _y, _x + _w, _y + _h);
