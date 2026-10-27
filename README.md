@@ -63,11 +63,13 @@ glyphs, a valid Delay sequence, a legal glyph count, and an affordable cost.
 Invalid spells are also rejected when casting. Palette hover text explains
 why a glyph cannot be added; slot hover text explains invalid spells.
 
-Pierce accepts Projectile/Beam; Amplify accepts Harm/Fire/Hex; Extend Time
+Pierce accepts Projectile/Beam; Amplify accepts Harm/Fire; Extend Time
 accepts Fire/Frost/Lightning/Hex; Delay accepts all real Effects. AoE attaches
-to any current Form when the central group is selected, or to Pull when its
-Effect group is selected. These rules describe compatibility, not completion
-of the separate Amplify+Hex or AoE+Pull behavior fixes.
+to a Form when the central group is selected, and cannot attach directly to
+Pull. Pull accepts Projectile/Strike/Rune. Form-level AoE remains legal on
+Pull spells: other Effects receive AoE delivery, but Pull still attracts its
+normal 3x3 region around each impact. Switching to Beam removes Pull and its
+modifiers automatically.
 
 Entering a level reconstructs cumulative ownership from that level and all
 earlier JSON entries, so direct entry works and later unlocks do not leak into
@@ -105,6 +107,43 @@ preserves the wave's active-enemy count; destroying the pile ends that enemy's s
 Run `node tools/test-skeletal-status.cjs` for simulated-engine regression checks.
 In GameMaker, check burning skeletons, delayed hits due before/after pile appearance,
 pause during the spawn gap, and a surviving pile carrying effects into revival.
+
+## Status interactions and Rune placement
+
+Lightning only stuns vulnerable enemies. Further hits during the stun or its
+following charged period do not refresh either timer. When the stun ends,
+charged immunity starts once and lasts `effects.lightning.stun_immune_duration`
+seconds. Extend Time lengthens the stun, not the charged period. Skeleton spawn
+gaps use the same timer transition. Frost is applied to movement independently
+of Lightning, retaining its three-stack/60% cap, including on enraged Brutes.
+Stun stops path movement and Pull retains control of its custom movement.
+
+Hex checks active statuses on every damage event. Adding/removing Burn, Frost,
+or Lightning immediately changes its bonus without reapplying Hex. Stunned and
+charged phases count as one Lightning status; Hex also counts itself. Amplify
+is incompatible with Hex; Extend Time remains compatible.
+
+Unmodified status durations match `datafiles/tune.json` exactly. Extend Time
+adds only its configured extra duration. Fire includes its final burn tick at
+expiry. Pull's configured hold time does not depend on the extra-duration field.
+Stacked Amplify costs use the same per-effect surcharge as the mana preview.
+
+Rune capacity is `forms.rune.max_placed` per exact Form/modifier/ordered-Effects
+configuration, independent of the spell's name or prepared slot. Arming and
+armed Runes both count. A successful cast over capacity replaces the oldest
+matching Rune. Occupied tiles and unaffordable casts are rejected before any
+Rune is removed or mana charged. Other Rune configurations remain unaffected.
+
+Run `node tools/test-status-interactions.cjs`, `node tools/test-glyph-restrictions.cjs`,
+`node tools/test-rune-placement.cjs`, and `node tools/test-spell-timing-costs.cjs`
+alongside the existing regression scripts. GameMaker checks still required:
+
+- Hold Beam+Lightning: one stun, a finite charged period, then eligibility for a new stun.
+- Frost slows normal enemies and enraged Brutes; Stun/Pull do not undo the slow.
+- Pull is unavailable with Beam; direct Pull+AoE and Hex+Amplify are unavailable.
+- Form AoE+Pull keeps a 3x3 attraction region while other Effects use AoE.
+- Rune overflow replaces the oldest matching Rune; failed casts leave traps intact.
+- Status durations, burn ticks, and stacked Amplify mana charges match the preview/tuning.
 
 ## Standard wave generation
 

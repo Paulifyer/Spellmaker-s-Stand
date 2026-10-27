@@ -104,7 +104,7 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
             var _a = random(360), _r = random(28);
             enemy_begin_pull(_list[i], _tx + lengthdir_x(_r, _a), _ty + lengthdir_y(_r, _a),
                              lane, round(pull_sec * TARGET_ROOM_SPEED),
-                             round(hold_sec * TARGET_ROOM_SPEED * fx.duration));
+                             round(hold_sec * TARGET_ROOM_SPEED));
         }
 	} 
 }

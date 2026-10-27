@@ -7,8 +7,10 @@ sprite_index = walk_side_sprite;
 if (pull != undefined) enemy_update_pull(id);
 
 // Burn Handler
-if (--burn_timer > 0 && burn_timer mod TARGET_ROOM_SPEED == 0) { //burn_handler
-		deal_damage(self, burn_dmg)
+if (burn_timer > 0) {
+	// Include the last tick at expiry without applying damage immediately on hit.
+	if ((burn_timer - 1) mod TARGET_ROOM_SPEED == 0) deal_damage(self, burn_dmg);
+	burn_timer = max(0, burn_timer - 1);
 }
 
 // Frost Handler

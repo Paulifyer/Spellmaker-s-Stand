@@ -168,8 +168,8 @@ function cast_spell(_caster, _loadout, _col, _row) {
 		_cost += _el.cost;
 
 		var _mods = [];
+		var _amp_count = 0;
 		for (var i = 0; i < array_length(_loadout.effects[e].mods); i++) {
-			var _amp_count = 0;
 			var _m = _g.modifier[$ _loadout.effects[e].mods[i]];
 			if (!is_struct(_m)) return { spell: noone, cost: 0 };
 			array_push(_mods, _m);
@@ -181,7 +181,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 			}
 		}
 
-		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0, delay_after: 0});
+		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
 	}
 	
 	var _rune_limit = 0;
