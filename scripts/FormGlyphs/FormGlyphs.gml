@@ -46,11 +46,15 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		spell.dir = 0;
 	};
 	on_hit = function(spell, target) {
-		var _col = (target.x - GRID_X0) div TILE_W;
+		// Overlap events repeat each frame, including for enemies hit by an earlier blast.
+		// Only a new, targetable contact consumes one penetration.
+		if (!instance_exists(target) || !target.is_targetable) return;
+		if (array_contains(spell.hit_list, target)) return;
+		var _col = floor((target.x - GRID_X0) / TILE_W);
 		if (!array_contains(spell.hit_list, target)) {
 			if (spell.area) {
 				var _t = world_to_grid(target.x, target.y);
-				var _lane = (_t != undefined) ? _t.lane : target_row div ROWS_PER_LANE;
+				var _lane = (_t != undefined) ? _t.lane : floor(spell.target_row / ROWS_PER_LANE);
 				spell_impact(spell, _col, _lane);
 				spell_hit_area(spell, _col - 1, _col + 1, _lane - 1, _lane + 1);
 			} else {
@@ -95,19 +99,22 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 
 		spell.beam_lanes = [];
 		for (var l = _first; l <= _last; l++) { // iterate from 1st lane to last lane
-			var _top = global.lane_top[l] + 20; // Middle-ish of lane
 			var _end = GRID_X0 + GRID_COLS * TILE_W; // End of Lane
-			var _pierce = spell.pierce;
-			if (_pierce <= 0) {
-				with (obj_enemy_parent) {
-					if (!is_targetable) continue;
-					if (y >= _top && y < _top + LANE_H && x < _end) _end = x;
-				}
+			var _targets = [];
+			for (var i = 0; i < instance_number(obj_enemy_parent); i++) {
+				var _enemy = instance_find(obj_enemy_parent, i);
+				if (!_enemy.is_targetable || enemy_lane(_enemy) != l) continue;
+				if (_enemy.x < spell.x || _enemy.x > _end) continue;
+				array_push(_targets, _enemy);
 			}
+			array_sort(_targets, function(_a, _b) { return _a.x - _b.x; });
+			// Pierce adds targets after the first, independently for each affected lane.
+			var _hit_count = min(array_length(_targets), 1 + max(0, floor(spell.pierce)));
+			if (_hit_count > 0) _end = _targets[_hit_count - 1].x;
 			var _len = max(0, _end - spell.x);
 			array_push(spell.beam_lanes, { lane: l, len: _len });
-			with (obj_enemy_parent) {
-				if (enemy_lane(id) == l && x >= spell.x && x <= _end) spell_hit(spell, id);
+			for (var i = 0; i < _hit_count; i++) {
+				spell_hit(spell, _targets[i]);
 			}
 		}
 	};
