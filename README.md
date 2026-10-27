@@ -88,6 +88,24 @@ also retained. These tests simulate engine calls; verify in GameMaker:
 - In a temporary test level with limit 8, seven Effect groups and modifier
   satellites remain readable and clickable. Revert the temporary limit afterward.
 
+## Skeletal status inheritance
+
+Skeletal enemies preserve Burn damage/duration, Frost strength/duration, stun,
+charged immunity, Hex, and queued delayed effects when they die. Timers continue
+through the one-second gap before the bone pile appears. Burn deals no damage
+during this gap; expired statuses stay expired. Delayed effects due during the
+gap apply once to the new pile, earliest due first and in insertion order for ties.
+
+The pile keeps its normal 15 HP. A delayed killing blow can destroy it immediately
+on appearance and cancel revival. If it survives, remaining statuses and delayed
+effects transfer to the revived enemy without restarting their timers. The revived
+enemy starts with its normal health and loses the skeletal mutation. Replacement
+preserves the wave's active-enemy count; destroying the pile ends that enemy's slot.
+
+Run `node tools/test-skeletal-status.cjs` for simulated-engine regression checks.
+In GameMaker, check burning skeletons, delayed hits due before/after pile appearance,
+pause during the spawn gap, and a surviving pile carrying effects into revival.
+
 ## Standard wave generation
 
 Levels define a threat curve and an enemy roster instead of manually repeating

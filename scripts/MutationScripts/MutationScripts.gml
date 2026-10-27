@@ -78,6 +78,71 @@ function LightningWardedMut() : EnemyMutation("lightning-warded", "Lightning-War
 	};
 }
 
+// Copy mutable timers so each stage owns its queue without retaining a dead instance.
+function enemy_capture_status(_enemy) {
+	var _pending = [];
+	for (var i = 0; i < array_length(_enemy.pending_effects); i++) {
+		var _p = _enemy.pending_effects[i];
+		array_push(_pending, { timer: _p.timer, fx: _p.fx, spell: _p.spell });
+	}
+	return {
+		burn_dmg: _enemy.burn_dmg, burn_timer: max(0, _enemy.burn_timer),
+		slow_amt: _enemy.slow_amt, slow_timer: max(0, _enemy.slow_timer),
+		stun_timer: max(0, _enemy.stun_timer),
+		stun_immune_timer: max(0, _enemy.stun_immune_timer),
+		hex_timer: max(0, _enemy.hex_timer), pending_effects: _pending
+	};
+}
+
+// Time passes while no target exists. Burn ticks in this gap deal no damage.
+function enemy_age_status(_state, _frames) {
+	_frames = max(0, _frames);
+	_state.burn_timer = max(0, _state.burn_timer - _frames);
+	_state.slow_timer = max(0, _state.slow_timer - _frames);
+	if (_state.slow_timer == 0) _state.slow_amt = 0;
+	_state.hex_timer = max(0, _state.hex_timer - _frames);
+	var _stun = _state.stun_timer;
+	_state.stun_timer = max(0, _stun - _frames);
+	if (_stun > 0 && _stun <= _frames) {
+		var _charged = round(tune_params("effects", "lightning", "stun_immune_duration", 3) * TARGET_ROOM_SPEED);
+		_state.stun_immune_timer = max(0, _charged - (_frames - _stun));
+	} else {
+		_state.stun_immune_timer = max(0, _state.stun_immune_timer - _frames);
+	}
+	for (var i = 0; i < array_length(_state.pending_effects); i++) {
+		// Negative values preserve which effects became due first during the gap.
+		_state.pending_effects[i].timer -= _frames;
+	}
+}
+
+function enemy_restore_status(_enemy, _state) {
+	_enemy.burn_dmg = _state.burn_dmg;
+	_enemy.burn_timer = _state.burn_timer;
+	_enemy.slow_amt = (_state.slow_timer > 0) ? _state.slow_amt : 0;
+	_enemy.slow_timer = _state.slow_timer;
+	_enemy.stun_timer = _state.stun_timer;
+	_enemy.stun_immune_timer = _state.stun_immune_timer;
+	_enemy.hex_timer = _state.hex_timer;
+	_enemy.pending_effects = _state.pending_effects;
+	_enemy.my_speed = _enemy.base_speed * (1 - _enemy.slow_amt);
+}
+
+// Apply overdue effects once to the new pile, earliest due first; ties keep insertion order.
+function enemy_apply_overdue_effects(_enemy) {
+	while (true) {
+		var _first = -1;
+		for (var i = 0; i < array_length(_enemy.pending_effects); i++) {
+			var _p = _enemy.pending_effects[i];
+			if (_p.timer > 0) continue;
+			if (_first < 0 || _p.timer < _enemy.pending_effects[_first].timer) _first = i;
+		}
+		if (_first < 0) break;
+		var _p = _enemy.pending_effects[_first];
+		array_delete(_enemy.pending_effects, _first, 1);
+		apply_effect_group(_p.spell, _enemy, _p.fx);
+	}
+}
+
 function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) constructor {
 	tint = c_gray;
 	on_death = function(enemy) {
@@ -87,6 +152,7 @@ function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) co
 			ex : enemy.x,
 			ey : enemy.y,
 			held_enemy : enemy.object_index,
+			status_state : enemy_capture_status(enemy),
 			wave_owner : enemy.wave_owner
 		};
 		var _rev_mngr = instance_create_layer(1024, 1024, "Instances", obj_revive_manager, _e_struct) //location is arbitrary, obj is invisible with no collision
