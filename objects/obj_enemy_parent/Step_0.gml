@@ -24,18 +24,11 @@ if (slow_timer == 0) {
 	slow_amt = 0;
 }
 
-// Lightning Handler
-if (stun_timer == 0) {
-	my_speed = base_speed;
-	stun_immune_timer = TARGET_ROOM_SPEED * 3;
-}
-
-if (stun_timer > 0) stun_timer--;
+// Lightning starts charged immunity once, when the stun expires.
+enemy_advance_lightning(self, 1);
 
 // Hex lasts for a fixed duration after it is applied.
 if (hex_timer > 0) hex_timer--;
-
-if (stun_immune_timer > 0) stun_immune_timer--;
 
 // Delay Handler
 // Process ties in insertion order so same-time effects keep their sequence order.

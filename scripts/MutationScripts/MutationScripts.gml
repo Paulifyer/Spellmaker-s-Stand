@@ -101,14 +101,7 @@ function enemy_age_status(_state, _frames) {
 	_state.slow_timer = max(0, _state.slow_timer - _frames);
 	if (_state.slow_timer == 0) _state.slow_amt = 0;
 	_state.hex_timer = max(0, _state.hex_timer - _frames);
-	var _stun = _state.stun_timer;
-	_state.stun_timer = max(0, _stun - _frames);
-	if (_stun > 0 && _stun <= _frames) {
-		var _charged = round(tune_params("effects", "lightning", "stun_immune_duration", 3) * TARGET_ROOM_SPEED);
-		_state.stun_immune_timer = max(0, _charged - (_frames - _stun));
-	} else {
-		_state.stun_immune_timer = max(0, _state.stun_immune_timer - _frames);
-	}
+	enemy_advance_lightning(_state, _frames);
 	for (var i = 0; i < array_length(_state.pending_effects); i++) {
 		// Negative values preserve which effects became due first during the gap.
 		_state.pending_effects[i].timer -= _frames;

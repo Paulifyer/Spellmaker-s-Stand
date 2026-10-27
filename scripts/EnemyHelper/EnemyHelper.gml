@@ -1,4 +1,17 @@
 
+// Advance the same stun/charged clock for live enemies and skeletal spawn gaps.
+function enemy_advance_lightning(_state, _frames) {
+	_frames = max(0, _frames);
+	var _stun = max(0, _state.stun_timer);
+	_state.stun_timer = max(0, _stun - _frames);
+	if (_stun > 0 && _stun <= _frames) {
+		var _charged = round(tune_params("effects", "lightning", "stun_immune_duration", 3) * TARGET_ROOM_SPEED);
+		_state.stun_immune_timer = max(0, _charged - (_frames - _stun));
+	} else {
+		_state.stun_immune_timer = max(0, _state.stun_immune_timer - _frames);
+	}
+}
+
 function enemy_begin_pull(_e, _x, _y, _lane, _frames, _hold) {
 	if (_e.pull != undefined || _e.is_pull_immune) return;
 	_e.pull = {

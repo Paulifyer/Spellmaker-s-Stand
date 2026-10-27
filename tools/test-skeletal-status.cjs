@@ -8,6 +8,7 @@ const ctx = vm.createContext({
     tune_params:(_,__,___,fallback)=>fallback,
     noone:null,obj_bonepile:'bone',obj_revive_manager:'manager',path_action_stop:0,
 });
+load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning']);
 load(ctx,'scripts/MutationScripts/MutationScripts.gml',[
     'enemy_capture_status','enemy_age_status','enemy_restore_status','enemy_apply_overdue_effects'
 ]);

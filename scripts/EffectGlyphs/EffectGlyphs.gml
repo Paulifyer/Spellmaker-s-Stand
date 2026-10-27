@@ -55,7 +55,7 @@ function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor
 	cost = tune_params("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "lightning", "duration", LIGHTNING_DURATION);
-		if (target.stun_immune_timer <= 0 && target.stun_timer > 0)
+		if (target.stun_immune_timer <= 0 && target.stun_timer <= 0)
 			target.stun_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
 	};
 }
