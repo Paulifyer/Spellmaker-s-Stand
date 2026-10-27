@@ -132,6 +132,17 @@ function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
 	}
 }
 
+// The limit belongs to one exact Rune configuration, across all prepared slots.
+function rune_trim_to_limit(_key, _limit) {
+	var _runes = [];
+	for (var i = 0; i < instance_number(obj_spells); i++) {
+		var _rune = instance_find(obj_spells, i);
+		if (_rune.form.name == "Rune" && _rune.rune_spell_key == _key) array_push(_runes, _rune);
+	}
+	array_sort(_runes, function(_a, _b) { return _a.rune_creation_order - _b.rune_creation_order; });
+	for (var i = 0; i < array_length(_runes) - _limit; i++) instance_destroy(_runes[i]);
+}
+
 function cast_spell(_caster, _loadout, _col, _row) {
 	if (_caster.mana_exhausted || !is_spell_usable(_loadout)) return { spell: noone, cost: 0 };
 
@@ -173,23 +184,20 @@ function cast_spell(_caster, _loadout, _col, _row) {
 		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0, delay_after: 0});
 	}
 	
+	var _rune_limit = 0;
 	if (_f.name == "Rune") {
-		var _rune_count = 0;
 		var _lane = _row div ROWS_PER_LANE;
-		var _max_placed = tune_params("forms", "rune", "max_placed", 6);
+		_rune_limit = floor(tune_params("forms", "rune", "max_placed", 6));
+		if (_rune_limit < 1) return { spell: noone, cost: 0 };
 		
 		for (var i = 0; i < instance_number(obj_spells); i++) {
 			var _existing = instance_find(obj_spells, i);
 			if (_existing.form.name != "Rune") continue;
 			
-			if (_existing.target_col == _col && _existing.lane = _lane) {
+			if (_existing.target_col == _col && _existing.lane == _lane) {
 				return { spell: noone, cost: 0 }
 			}
 			
-			_rune_count++;
-		}
-		if (_rune_count >= _max_placed) {
-			return { spell: noone, cost: 0 };
 		}
 	}
 
@@ -230,20 +238,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 
 	// Keep at most the max no. of live runes for this exact configured rune spell.
 	if (_rune_spell_key != undefined) {
-		var _rune_count = 0;
-		var _oldest_rune = noone;
-		var _oldest_order = _rune_creation_order;
-		for (var i = 0; i < instance_number(obj_spells); i++) {
-			var _existing = instance_find(obj_spells, i);
-			if (_existing.form.name != "Rune" || _existing.rune_spell_key != _rune_spell_key) continue;
-			_rune_count++;
-			if (_existing.rune_creation_order < _oldest_order) {
-				_oldest_order = _existing.rune_creation_order;
-				_oldest_rune = _existing;
-			}
-		}
-		var _max_placed = tune_params("forms", "rune", "max_placed", 6);
-		if (_rune_count > 6 && _oldest_rune != noone) instance_destroy(_oldest_rune);
+		rune_trim_to_limit(_rune_spell_key, _rune_limit);
 	}
 
 	return {
