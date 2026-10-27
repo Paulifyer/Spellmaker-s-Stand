@@ -22,7 +22,7 @@ if (is_array(_mana_increases)) {
 mana = max_mana;
 mana_display = mana;
 mana_ticks = 6;
-mana_regen_rate = tune_value("player", "mana_regen_rate", MANA_REGEN_RATE); // mana regen per sec
+mana_regen_rate = tune_value("player", "mana_regen_rate", MANA_REGEN_RATE); // Percent of max mana regenerated every 6 frames
 mana_exhausted_regen_multiplier = tune_value("player", "mana_exhaust_regen_mult", MANA_EXHAUST_MULT);
 spell_cooldowns = array_create(SPELL_SLOTS, 0);
 spell_cooldown_max = array_create(SPELL_SLOTS, 0);

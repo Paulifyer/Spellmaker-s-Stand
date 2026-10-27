@@ -14,7 +14,7 @@ if (mana <= 0) {
 if (mana < max_mana && channel == noone) {
 	if (mana_ticks == 0) {
 		var _regen_multiplier = mana_exhausted ? mana_exhausted_regen_multiplier : 1;
-		mana = min(max_mana, mana + mana_regen_rate * _regen_multiplier);
+		mana = min(max_mana, mana + max_mana * (mana_regen_rate / 100) * _regen_multiplier);
 		mana_ticks = 6;
 	}
 	mana_ticks--
