@@ -3,9 +3,6 @@
 // Set the sprite to the sideways sprite
 sprite_index = walk_side_sprite;
 	
-// Set path speed to normal speed
-path_speed = (stun_timer > 0) ? 0 : my_speed;
-
 // Ensures pull is set correctly
 if (pull != undefined) enemy_update_pull(id);
 
@@ -15,14 +12,8 @@ if (--burn_timer > 0 && burn_timer mod TARGET_ROOM_SPEED == 0) { //burn_handler
 }
 
 // Frost Handler
-if (--slow_timer > 0) {
-	my_speed = (1 - slow_amt) * base_speed
-}
-
-if (slow_timer == 0) {
-	my_speed = base_speed;
-	slow_amt = 0;
-}
+slow_timer = max(0, slow_timer - 1);
+if (slow_timer == 0) slow_amt = 0;
 
 // Lightning starts charged immunity once, when the stun expires.
 enemy_advance_lightning(self, 1);
@@ -40,6 +31,8 @@ for (var i = 0; i < array_length(pending_effects);) {
 	} else i++;
 }
 
+
+enemy_update_movement(self);
 
 // Save it's current x and y
 x_previous = x;

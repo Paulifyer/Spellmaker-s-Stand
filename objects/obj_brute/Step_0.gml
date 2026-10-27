@@ -1,8 +1,11 @@
 // Inherit the parent event
 event_inherited();
 
-if (hp < max_hp / 2) { // Enrage Handle
+var _enraged = hp < max_hp / 2;
+if (_enraged) { // Enrage Handle
 	attack_delay = max_attack_delay / enrage_mult;
-	my_speed = base_speed * enrage_mult * (1 - slow_amt);
+} else {
+	attack_delay = max_attack_delay;
 }
+enemy_update_movement(self, _enraged ? enrage_mult : 1);
 

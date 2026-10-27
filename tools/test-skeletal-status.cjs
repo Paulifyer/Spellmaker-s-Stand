@@ -83,7 +83,7 @@ assert.deepEqual(effects,['gap-hit']);
 // Tick the actual queued-effect handler for 30 pile frames before revival.
 ctx.pile=manager._bones;ctx.pile.id=ctx.pile;
 const step=read('objects/obj_enemy_parent/Step_0.gml');
-const handler=step.slice(step.indexOf('// Delay Handler'),step.indexOf('// Save'));
+const handler=step.slice(step.indexOf('// Delay Handler'),step.indexOf('enemy_update_movement(self);'));
 for(let i=0;i<30;i++) vm.runInContext(`(function(){with(pile){${handler}}})()`,ctx);
 assert.equal(manager._bones.pending_effects[0].timer,10);
 manager._bones.burn_timer=30;manager._bones.slow_timer=90;

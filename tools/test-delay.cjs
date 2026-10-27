@@ -91,7 +91,7 @@ assert.deepEqual(log, ['harm']);
 assert.deepEqual(Array.from(target.pending_effects, p => p.timer), [120, 180]);
 ctx.pending_effects = target.pending_effects; ctx.id = target;
 const step = read('objects/obj_enemy_parent/Step_0.gml');
-const handler = step.slice(step.indexOf('// Delay Handler'), step.indexOf('// Save'));
+const handler = step.slice(step.indexOf('// Delay Handler'), step.indexOf('enemy_update_movement(self);'));
 for (let i = 0; i < 119; i++) vm.runInContext(handler, ctx);
 assert.deepEqual(log, ['harm']);
 vm.runInContext(handler, ctx); assert.deepEqual(log, ['harm', 'fire']);
