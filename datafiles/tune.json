@@ -3,9 +3,9 @@
 
     "player":   { 
         "max_mana": 100, 
-        "max_mana_increase_by_level": [0, 25, 25, 25, 25, 25, 25, 25 ,25],
+        "max_mana_increase_by_level": [0, 50, 50, 50, 50, 50, 50, 50, 50],
         "mana_regen_rate": 0.5, 
-        "mana_exhaust_regen_mult": 6,
+        "mana_exhaust_regen_mult": 8,
         "spell_cd": 0.8,
         "spell_cd_by_slot": [0.4, 0.4, 0.4]
     },
