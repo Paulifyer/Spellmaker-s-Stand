@@ -24,10 +24,10 @@
         "carrion": { "hp_mult": 3, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "enrage_hp_mult": 0.2, "enrage_spd_mult": 0.1 }
     },
     "forms": {
-        "projectile": { "cost": 5, "spd": 15 },
-        "beam": { "cost": 5 },
-        "strike": { "cost": 15 },
-        "rune": { "cost": 15, "max_placed": 6 }
+        "projectile": { "cost": 15, "spd": 15 },
+        "beam": { "cost": 15 },
+        "strike": { "cost": 25 },
+        "rune": { "cost": 25, "max_placed": 6 }
     },
     "effects": {
         "harm": {"cost": 10},
