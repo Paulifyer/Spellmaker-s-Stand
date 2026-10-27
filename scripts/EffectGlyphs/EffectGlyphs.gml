@@ -17,6 +17,7 @@ function EffectGlyph(_name, _cost) constructor {
 	icon = undefined;
 	col = c_white
 	desc = "";
+	allowed_forms = undefined;
 	on_cast = function(spell, fx) {};
 	on_hit = function(spell, target, fx) {};
 	on_impact = function(spell, fx, col, lane) {};

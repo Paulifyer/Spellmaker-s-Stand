@@ -14,6 +14,7 @@ function ModifierGlyph(_name, _cost) constructor {
 	scope = "spell";
 	is_stacks = false;
 	allowed_forms = undefined;
+	allowed_effects = undefined;
 	icon = undefined;
 	desc = "";
 	on_cast = function(spell, fx) {};
@@ -22,7 +23,9 @@ function ModifierGlyph(_name, _cost) constructor {
 
 function Mod_Area() : ModifierGlyph("Area", AREA_COST) constructor {
 	icon = spr_glyph_aoe;
-	scope = "spell";
+	scope = "both";
+	allowed_forms = ["projectile", "beam", "strike", "rune"];
+	allowed_effects = ["pull"];
 	cost = tune_params("modifiers", "area", "cost", AREA_COST);
 	on_cast = function(spell, fx) {
 		spell.area = true;
@@ -35,6 +38,7 @@ function Mod_Amplify() : ModifierGlyph("Amplify", AMPLIFY_COST) constructor {
 	cost = tune_params("modifiers", "amplify", "cost", AMPLIFY_COST);
 	is_stacks = true;
 	scope = "effect";
+	allowed_effects = ["harm", "fire", "hex"];
 	on_cast = function(spell, fx) {
 		fx.effect_multiplier += tune_params("modifiers", "amplify", "dmg_multplier", AMPLIFY_ADD_MULT);
 	}
@@ -45,6 +49,7 @@ function Mod_Pierce() : ModifierGlyph("Pierce", PIERCE_COST) constructor {
 	cost = tune_params("modifiers", "pierce", "cost", PIERCE_COST);
 	is_stacks = true;
 	scope = "spell";
+	allowed_forms = ["projectile", "beam"];
 	on_cast = function(spell, fx) {
 		spell.pierce += tune_params("modifiers", "pierce", "pierce_amt", PIERCE_AMT);
 	}
@@ -56,6 +61,7 @@ function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constr
 	cost = tune_params("modifiers", "extend_time", "cost", EXTEND_TIME_COST);
 	is_stacks = true;
 	scope = "effect";
+	allowed_effects = ["fire", "ice", "lightning", "hex"];
 	on_cast = function(spell, fx) {
 		fx.duration += tune_params("modifiers", "extend_time", "duration_increase", EXTEND_TIME_ADD); // Uses fixed amount atm
 	}

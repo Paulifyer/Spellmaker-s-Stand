@@ -79,21 +79,11 @@ function unlock_glyphs_through_level(_room) {
 ///@param {struct.loadout} _s The loadout of the spell being checked
 ///@returns {bool} if the spell is valid
 function is_spell_usable(_s) {
-	if (_s == undefined || _s.form == undefined) return false;
-	if (!spell_sequence_valid(_s)) return false;
-	if(!is_glyph_available("form", _s.form)) return false;
-	for (var i = 0; i < array_length(_s.form_mods); i++) 
-		if (!is_glyph_available("modifier", _s.form_mods[i])) return false;
-	for (var e = 0; e < array_length(_s.effects); e++) {
-		if (!is_glyph_available("effect", _s.effects[e].effect)) return false;
-		for (var i = 0; i < array_length(_s.effects[e].mods); i++)
-			if (!is_glyph_available("modifier", _s.effects[e].mods[i])) return false;
-	}
-	return true;
+	return spell_validation_message(_s) == "";
 }
 
 function sanitize_owned() {
-    var _types = ["form", "element", "modifier"];
+    var _types = ["form", "effect", "modifier"];
     for (var t = 0; t < 3; t++) {
         if (!variable_struct_exists(global.owned, _types[t])) global.owned[$ _types[t]] = [];
         var _list = global.owned[$ _types[t]];

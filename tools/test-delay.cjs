@@ -21,11 +21,13 @@ const translate = s => s.replace(/\[\$\s*([^\]]+)\]/g, '[$1]')
 const log = [];
 const manager = {pending_spell_impacts: []};
 const ctx = {
+    spell_max_glyphs: () => 40,
+    spell_glyph_count: s => s == undefined || s.form == undefined ? 0 : 1 + s.form_mods.length + s.effects.reduce((n,e)=>n+1+e.mods.length,0),
     MAX_EFFECTS: 5, MAX_MODS: 5, TARGET_ROOM_SPEED: 60, ROWS_PER_LANE: 1,
     DELAY_COST: 5, DELAY_AMT: 1, noone: null, obj_gameplay_manager: 1, obj_spells: 2,
     array_length: a => a.length, array_contains: (a, x) => a.includes(x),
     array_push: (a, x) => a.push(x), array_delete: (a, i, n) => a.splice(i, n),
-    is_struct: x => !!x && typeof x === 'object',
+    is_struct: x => !!x && typeof x === 'object', variable_struct_exists: (s,k) => Object.hasOwn(s,k),
     min: Math.min, max: Math.max, round: Math.round,
     is_glyph_available: () => true, mod_valid_for_form: () => true,
     is_instanceof: () => false, Mod_Amplify: function(){}, Form_Beam: function(){},
@@ -35,7 +37,7 @@ const ctx = {
     global: {spell_glyphs: {form: {}, modifier: {}, effect: {}}},
 };
 vm.createContext(ctx);
-for (const name of ['spell_sequence_valid', 'spell_can_append_effect', 'spell_add_glyph', 'spell_cost'])
+for (const name of ['spell_catalog_entry', 'mod_valid_for_form', 'mod_valid_for_effect', 'effect_valid_for_form', 'spell_sequence_valid', 'spell_can_append_effect', 'spell_validation_message', 'spell_addition_message', 'spell_add_glyph', 'spell_cost'])
     vm.runInContext(translate(extract(helpers, name)), ctx);
 vm.runInContext(translate(extract(read('scripts/GlyphAccessScripts/GlyphAccessScripts.gml'), 'is_spell_usable')), ctx);
 for (const name of ['apply_effect_group', 'schedule_effect', 'spell_snapshot', 'spell_hit', 'spell_impact', 'cast_spell'])

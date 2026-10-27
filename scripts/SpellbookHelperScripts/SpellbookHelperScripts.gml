@@ -4,6 +4,7 @@
 #macro MAX_MODS 5
 
 
+
 // The spellbook used by the player when casting spells
 global.spellbook = array_create(SPELL_SLOTS, undefined);
 
@@ -35,19 +36,85 @@ function spell_prune(_i) {   // empty slot if no form and no name; returns the s
     return _s;
 }
 
+function spell_catalog_entry(_type, _id) {
+    var _catalog = global.spell_glyphs[$ _type];
+    if (!is_struct(_catalog) || !variable_struct_exists(_catalog, _id)) return undefined;
+    return _catalog[$ _id];
+}
+
 function mod_valid_for_form(_mod_id, _form_id) {
-    var _m = global.spell_glyphs.modifier[$ _mod_id];
+    var _m = spell_catalog_entry("modifier", _mod_id);
+    if (!is_struct(_m) || _m.scope == "effect") return false;
     return _m.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
 }
 
 function mod_valid_for_effect(_mod_id, _effect_id) {
-	var _m = global.spell_glyphs.modifier[$ _mod_id];
-    return _m.allowed_forms == undefined || array_contains(_m.allowed_forms, _effect_id);
+	var _m = spell_catalog_entry("modifier", _mod_id);
+    if (!is_struct(_m) || _m.scope == "spell") return false;
+    return _m.allowed_effects == undefined || array_contains(_m.allowed_effects, _effect_id);
 }
 
 function effect_valid_for_form(_effect_id, _form_id) {
-	var _e = global.spell_glyphs.effect[$ _effect_id];
-    return _e.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
+	var _e = spell_catalog_entry("effect", _effect_id);
+    if (!is_struct(_e) || _effect_id == "none") return false;
+    return _e.allowed_forms == undefined || array_contains(_e.allowed_forms, _form_id);
+}
+
+// Returns a player-facing reason, shared by the editor, Start, and casting.
+function spell_validation_message(_s) {
+    if (_s == undefined || _s.form == undefined) return "Pick a Form";
+    if (!is_struct(spell_catalog_entry("form", _s.form)) || !is_glyph_available("form", _s.form)) return "Form is unavailable";
+    if (spell_glyph_count(_s) > spell_max_glyphs()) return "Too many glyphs for this level";
+    if (array_length(_s.effects) == 0) return "Add an Effect";
+    if (!spell_sequence_valid(_s)) return "Add Delay between repeated effects";
+    for (var i = 0; i < array_length(_s.form_mods); i++) {
+        var _id = _s.form_mods[i];
+        if (!mod_valid_for_form(_id, _s.form)) return "Modifier is incompatible with this Form";
+        if (!is_glyph_available("modifier", _id)) return "Modifier is locked";
+        if (!spell_catalog_entry("modifier", _id).is_stacks) {
+            for (var j = 0; j < i; j++) if (_s.form_mods[j] == _id) return "Modifier cannot stack";
+        }
+    }
+    for (var e = 0; e < array_length(_s.effects); e++) {
+        var _fx = _s.effects[e];
+        if (!effect_valid_for_form(_fx.effect, _s.form)) return "Effect is incompatible with this Form";
+        if (!is_glyph_available("effect", _fx.effect)) return "Effect is locked";
+        for (var i = 0; i < array_length(_fx.mods); i++) {
+            var _id = _fx.mods[i];
+            if (!mod_valid_for_effect(_id, _fx.effect)) return "Modifier is incompatible with this Effect";
+            if (!is_glyph_available("modifier", _id)) return "Modifier is locked";
+            if (!spell_catalog_entry("modifier", _id).is_stacks) {
+                for (var j = 0; j < i; j++) if (_fx.mods[j] == _id) return "Modifier cannot stack";
+            }
+        }
+    }
+    return "";
+}
+
+function spell_addition_message(_s, _type, _id, _active) {
+    if (!is_struct(spell_catalog_entry(_type, _id)) || !is_glyph_available(_type, _id)) return "Not available";
+    if (_type == "form") return "";
+    if (_s == undefined || _s.form == undefined) return "Pick a Form first";
+    if (spell_glyph_count(_s) >= spell_max_glyphs()) return "Glyph limit reached";
+    if (_type == "effect") {
+        if (!effect_valid_for_form(_id, _s.form)) return "Can't use this Effect with this Form";
+        if (!spell_can_append_effect(_s, _id)) return "Add Delay between repeated effects";
+        return "";
+    }
+    var _m = spell_catalog_entry("modifier", _id);
+    var _list;
+    if (_m.scope == "spell" || (_m.scope == "both" && _active < 0)) {
+        if (!mod_valid_for_form(_id, _s.form)) return "Can't attach to this Form";
+        _list = _s.form_mods;
+    } else {
+        if (array_length(_s.effects) == 0) return "Add an Effect first";
+        var _ei = (_active >= 0) ? _active : array_length(_s.effects) - 1;
+        if (_ei >= array_length(_s.effects)) return "Select an Effect first";
+        if (!mod_valid_for_effect(_id, _s.effects[_ei].effect)) return "Can't attach to this Effect";
+        _list = _s.effects[_ei].mods;
+    }
+    if (array_contains(_list, _id) && !_m.is_stacks) return "Already attached";
+    return "";
 }
 
 // Delay satellites mark a boundary AFTER their effect group.
@@ -83,39 +150,41 @@ function spell_clear(_s) {
 
 // Returns "" on success, otherwise a message for the player
 function spell_add_glyph(_s, _type, _id, _active) {
-    if (!is_glyph_available(_type, _id)) return "Not available";
+    var _message = spell_addition_message(_s, _type, _id, _active);
+    if (_message != "") return _message;
 	if (_type == "form") {
         _s.form = _id;
         // drop anything the new form can't use
         for (var i = array_length(_s.form_mods) - 1; i >= 0; i--)
             if (!mod_valid_for_form(_s.form_mods[i], _id)) array_delete(_s.form_mods, i, 1);
-        for (var e = 0; e < array_length(_s.effects); e++)
+        for (var e = array_length(_s.effects) - 1; e >= 0; e--) {
+            if (!effect_valid_for_form(_s.effects[e].effect, _id)) {
+                array_delete(_s.effects, e, 1);
+                continue;
+            }
             for (var i = array_length(_s.effects[e].mods) - 1; i >= 0; i--)
-                if (!mod_valid_for_form(_s.effects[e].mods[i], _id)) array_delete(_s.effects[e].mods, i, 1);
+                if (!mod_valid_for_effect(_s.effects[e].mods[i], _s.effects[e].effect)) array_delete(_s.effects[e].mods, i, 1);
+        }
         return "";
     }
 
     if (_s.form == undefined) return "Pick a form first";
 
     if (_type == "effect") {
-        if (array_length(_s.effects) >= MAX_EFFECTS) return "Too many effects";
-        if (!spell_can_append_effect(_s, _id)) return "Add Delay between repeated effects";
         array_push(_s.effects, { effect: _id, mods: [] });
         return "";
     }
 
     // modifier
-    if (!mod_valid_for_form(_id, _s.form)) return "Can't attach to this form";
     var _m = global.spell_glyphs.modifier[$ _id];
     var _list;
-    if (_m.scope == "spell") {
+    if (_m.scope == "spell" || (_m.scope == "both" && _active < 0)) {
         _list = _s.form_mods;
     } else {
         if (array_length(_s.effects) == 0) return "Add an effect first";
         var _ei = (_active >= 0) ? _active : array_length(_s.effects) - 1;
         _list = _s.effects[_ei].mods;
     }
-    if (array_length(_list) >= MAX_MODS) return "Group is full";
     if (array_contains(_list, _id) && !_m.is_stacks) return "Already attached";
     array_push(_list, _id);
     return "";

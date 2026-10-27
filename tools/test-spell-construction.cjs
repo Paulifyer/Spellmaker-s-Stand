@@ -1,0 +1,45 @@
+const assert = require('node:assert/strict');
+const {makeContext} = require('./construction-test-context.cjs');
+const ctx = makeContext();
+const fresh = () => ({form:'projectile',form_mods:[],effects:[]});
+let s=fresh();
+assert.equal(ctx.is_spell_usable(s),false);
+assert.match(ctx.spell_validation_message(s),/Effect/);
+assert.equal(ctx.effect_valid_for_form('none','projectile'),false);
+assert.equal(ctx.mod_valid_for_form('pierce','projectile'),true);
+assert.equal(ctx.mod_valid_for_form('pierce','beam'),true);
+assert.equal(ctx.mod_valid_for_form('pierce','strike'),false);
+assert.equal(ctx.mod_valid_for_form('pierce','rune'),false);
+assert.equal(ctx.mod_valid_for_effect('extend_time','hex'),true);
+assert.equal(ctx.mod_valid_for_effect('extend_time','harm'),false);
+assert.equal(ctx.mod_valid_for_effect('amplify','ice'),false);
+assert.equal(ctx.mod_valid_for_effect('amplify','hex'),true);
+assert.equal(ctx.mod_valid_for_effect('area','pull'),true);
+assert.equal(ctx.mod_valid_for_effect('area','harm'),false);
+assert.equal(ctx.mod_valid_for_form('amplify','projectile'),false);
+assert.equal(ctx.mod_valid_for_effect('pierce','harm'),false);
+assert.equal(ctx.spell_add_glyph(s,'effect','harm',-1),'');
+assert.equal(ctx.spell_add_glyph(s,'modifier','pierce',-1),'');
+assert.equal(ctx.spell_add_glyph(s,'modifier','amplify',0),'');
+assert.equal(ctx.spell_add_glyph(s,'form','strike',-1),'');
+assert.equal(s.form_mods.length,0); // automatic removal
+assert.deepEqual(Array.from(s.effects[0].mods),['amplify']); // compatible effect modifiers stay
+assert.equal(ctx.is_spell_usable(s),true);
+ctx.global.spell_glyphs.effect.harm.allowed_forms=['projectile'];
+assert.equal(ctx.effect_valid_for_form('harm','strike'),false);
+assert.equal(ctx.spell_add_glyph(s,'form','projectile',-1),'');
+assert.equal(ctx.spell_add_glyph(s,'form','strike',-1),'');
+assert.equal(s.effects.length,0); // incompatible effect removed with its modifiers
+ctx.global.spell_glyphs.effect.harm.allowed_forms=undefined;
+s=fresh();ctx.spell_add_glyph(s,'effect','harm',-1);
+ctx.global.level_config.rm_test.max_glyphs=2;
+assert.match(ctx.spell_add_glyph(s,'modifier','pierce',-1),/limit/);
+s.form_mods=['pierce'];assert.equal(ctx.is_spell_usable(s),false);
+ctx.global.level_config.rm_test.max_glyphs=8;
+s=fresh();s.effects=[{effect:'harm',mods:['delay']},{effect:'harm',mods:[]}];
+assert.equal(ctx.is_spell_usable(s),true);
+s.effects[0].mods=[];assert.equal(ctx.is_spell_usable(s),false);
+ctx.global.owned={form:['projectile','unknown'],effect:['harm','unknown'],modifier:['delay']};
+ctx.sanitize_owned();assert.deepEqual(ctx.global.owned.effect,['harm']);
+assert.deepEqual(ctx.global.owned.form,['projectile']);
+console.log('Spell construction checks passed: required Effects, compatibility metadata, JSON limit, automatic removal, Delay and ownership cleanup.');
