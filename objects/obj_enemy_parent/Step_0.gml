@@ -38,12 +38,13 @@ if (hex_timer > 0) hex_timer--;
 if (stun_immune_timer > 0) stun_immune_timer--;
 
 // Delay Handler
-for (var i = array_length(pending_effects) - 1; i >= 0; i--) {
+// Process ties in insertion order so same-time effects keep their sequence order.
+for (var i = 0; i < array_length(pending_effects);) {
 	var _p = pending_effects[i];
 	if (--_p.timer <= 0) {
 		apply_effect_group(_p.spell, id, _p.fx);
 		array_delete(pending_effects, i, 1);
-	}
+	} else i++;
 }
 
 

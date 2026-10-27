@@ -93,7 +93,14 @@ for (var e = 0; e < MAX_EFFECTS; e++) {
         if (_gr.hover != "") hover_text = _gr.hover;
         if (_gr.main.clicked)  active_group = e;
         if (_gr.main.rclicked) _rm_effect = e;
-        if (_gr.mod_r >= 0)    array_delete(_fx.mods, _gr.mod_r, 1);
+        if (_gr.mod_r >= 0) {
+            if (spell_sequence_valid(_spell, -1, e, _gr.mod_r)) {
+                array_delete(_fx.mods, _gr.mod_r, 1);
+            } else {
+                notice = "Remove the repeated effect before removing its Delay";
+                notice_timer = 120;
+            }
+        }
     } else if (_has_form && e == _count) {
         draw_set_alpha(0.4);
         draw_circle(_gx, _gy, 45, true);
@@ -104,8 +111,13 @@ for (var e = 0; e < MAX_EFFECTS; e++) {
     }
 }
 if (_rm_effect >= 0) {
-    array_delete(_spell.effects, _rm_effect, 1);   // its modifiers go with it
-    active_group = -1;
+    if (spell_sequence_valid(_spell, _rm_effect)) {
+        array_delete(_spell.effects, _rm_effect, 1);   // its modifiers go with it
+        active_group = -1;
+    } else {
+        notice = "This group contains the Delay separating repeated effects";
+        notice_timer = 120;
+    }
 }
 
 // ---- Clear button ----
@@ -117,6 +129,9 @@ _spell = spell_prune(sel);   // (name-only spells stay; empty ones free the slot
 
 // ---- Mana / cost ----
 draw_text(960, 97, "Cost: " + string(spell_cost(_spell)));
+if (notice_timer > 0 && notice != "") {
+    draw_text_ext(960, 180, notice, 26, 500);
+}
 if (_spell != undefined && _spell.form == undefined) {
     draw_set_color(c_red);
     draw_text(960, 140, "Needs a form to be usable");

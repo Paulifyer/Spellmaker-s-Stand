@@ -27,6 +27,14 @@ for (var e = 0; e < array_length(effects); e++) {
 	for (var i = 0; i < array_length(_fx.mods); i++) _fx.mods[i].on_cast(self, _fx);
 }
 
+// Delays are cumulative boundaries: Harm + Delay, Fire + Delay, Harm
+// activates at 0, 1, and 2 seconds (with the default one-second Delay).
+var _sequence_delay = 0;
+for (var e = 0; e < array_length(effects); e++) {
+	effects[e].delay = _sequence_delay;
+	_sequence_delay += effects[e].delay_after;
+}
+
 col = c_white;
 if (array_length(effects) > 0) {
 	col = effects[0].effect.col;

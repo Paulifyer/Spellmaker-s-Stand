@@ -62,6 +62,7 @@ function unlock_glyph(_type, _id) {
 ///@returns {bool} if the spell is valid
 function is_spell_usable(_s) {
 	if (_s == undefined || _s.form == undefined) return false;
+	if (!spell_sequence_valid(_s)) return false;
 	if(!is_glyph_available("form", _s.form)) return false;
 	for (var i = 0; i < array_length(_s.form_mods); i++) 
 		if (!is_glyph_available("modifier", _s.form_mods[i])) return false;

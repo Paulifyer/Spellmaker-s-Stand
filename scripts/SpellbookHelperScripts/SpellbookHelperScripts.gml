@@ -37,6 +37,33 @@ function effect_valid_for_form(_effect_id, _form_id) {
     return _e.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
 }
 
+// Delay satellites mark a boundary AFTER their effect group.
+// Optional skips let the editor validate a removal before changing the spell.
+function spell_sequence_valid(_s, _skip_effect = -1, _skip_group = -1, _skip_mod = -1) {
+    var _seen = [];
+    for (var e = 0; e < array_length(_s.effects); e++) {
+        if (e == _skip_effect) continue;
+        var _fx = _s.effects[e];
+        if (array_contains(_seen, _fx.effect)) return false;
+        array_push(_seen, _fx.effect);
+        for (var i = 0; i < array_length(_fx.mods); i++) {
+            if (e == _skip_group && i == _skip_mod) continue;
+            if (_fx.mods[i] == "delay") _seen = [];
+        }
+    }
+    return true;
+}
+
+function spell_can_append_effect(_s, _id) {
+    var _seen = [];
+    for (var e = 0; e < array_length(_s.effects); e++) {
+        var _fx = _s.effects[e];
+        array_push(_seen, _fx.effect);
+        if (array_contains(_fx.mods, "delay")) _seen = [];
+    }
+    return !array_contains(_seen, _id);
+}
+
 function spell_clear(_s) {
     _s.form = undefined; _s.form_mods = []; _s.effects = [];
 }
@@ -59,8 +86,7 @@ function spell_add_glyph(_s, _type, _id, _active) {
 
     if (_type == "effect") {
         if (array_length(_s.effects) >= MAX_EFFECTS) return "Too many effects";
-        for (var e = 0; e < array_length(_s.effects); e++)
-            if (_s.effects[e].effect== _id) return "Effect already added";
+        if (!spell_can_append_effect(_s, _id)) return "Add Delay between repeated effects";
         array_push(_s.effects, { effect: _id, mods: [] });
         return "";
     }

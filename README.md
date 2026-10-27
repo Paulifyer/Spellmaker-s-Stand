@@ -28,6 +28,21 @@ In GameMaker, check all three slots with both keyboard sections, tile targeting,
 tap versus hold behavior, channel release and exhaustion, pause/resume, spellbook
 naming, mouse-operated buttons, and the slot highlights and control hint.
 
+## Delay in spell sequences
+
+Attach Delay to an effect group to postpone the effects after that group.
+For example, add Harm, attach Delay to Harm, then add Harm again: the first
+Harm happens on contact and the second happens one second later by default.
+All following effects keep that delay; another Delay adds another second.
+Stacking Delay on a group also adds more time. Adjust the seconds per stack
+with `modifiers.delay.delay_increase` in `datafiles/tune.json`.
+
+An effect can appear only once between Delay boundaries. Harm → Harm and
+Harm → Fire → Harm are rejected; Harm → Delay → Harm is allowed. Removing a
+Delay or a group that would leave invalid repeats is rejected with a message.
+Remove the repeated effect first. Every effect occurrence and Delay stack
+adds its normal mana cost. A trailing Delay has no following effect to postpone.
+
 ## Standard wave generation
 
 Levels define a threat curve and an enemy roster instead of manually repeating

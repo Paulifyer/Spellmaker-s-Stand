@@ -29,6 +29,8 @@ village_flash_color = c_red;
 
 // This variable tells whether the game is currently paused.
 paused = false;
+// Room-owned queue survives projectile destruction and clears on room changes.
+pending_spell_impacts = [];
 
 // This variable stores the id of the pause sequence if one exists, otherwise it stores negative 1.
 pause_sequence = -1;

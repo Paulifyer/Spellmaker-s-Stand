@@ -19,6 +19,16 @@ if (money_flash_alpha > 0)
 // Check if the game is over, and if so, exit this event
 if (game_over) exit;
 
+if (!paused) {
+	for (var i = 0; i < array_length(pending_spell_impacts);) {
+		var _pending = pending_spell_impacts[i];
+		if (--_pending.timer <= 0) {
+			_pending.fx.effect.on_impact(_pending.spell, _pending.fx, _pending.col, _pending.lane);
+			array_delete(pending_spell_impacts, i, 1);
+		} else i++;
+	}
+}
+
 // Check if the village's hp is less than zero
 if (get_village_hp() <= 0) 
 {

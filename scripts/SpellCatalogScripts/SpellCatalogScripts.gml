@@ -105,7 +105,17 @@ function spell_hit(spell, target) {
 function spell_impact(spell, col, lane) {
 	for (var e = 0; e < array_length(spell.effects); e++) {
 		var _fx = spell.effects[e];
-		_fx.effect.on_impact(spell, _fx, col, lane);
+		if (_fx.delay > 0) {
+			var _manager = instance_find(obj_gameplay_manager, 0);
+			if (instance_exists(_manager)) {
+				array_push(_manager.pending_spell_impacts, {
+					timer: max(1, round(_fx.delay * TARGET_ROOM_SPEED)),
+					spell: spell_snapshot(spell), fx: _fx, col: col, lane: lane
+				});
+			}
+		} else {
+			_fx.effect.on_impact(spell, _fx, col, lane);
+		}
 	}
 }
 
@@ -160,7 +170,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 			}
 		}
 
-		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0});
+		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 1, delay: 0, delay_after: 0});
 	}
 	
 	if (_f.name == "Rune") {

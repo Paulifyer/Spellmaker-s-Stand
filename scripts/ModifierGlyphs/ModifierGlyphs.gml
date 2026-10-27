@@ -66,8 +66,9 @@ function Mod_Delay(): ModifierGlyph("Delay", DELAY_COST) constructor {
 	cost = tune_params("modifiers", "delay", "cost", DELAY_COST);
 	is_stacks = true;
 	scope = "effect";
+	desc = "Delays the effects after this group. Allows an effect to repeat after the delay. Stacks add more time.";
 	on_cast = function(spell, fx) {
-		fx.delay += tune_params("modifiers", "delay", "delay_increase", DELAY_AMT);
+		fx.delay_after += tune_params("modifiers", "delay", "delay_increase", DELAY_AMT);
 	}
 }
 
