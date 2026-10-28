@@ -10,6 +10,9 @@ function parse_level_data(_level_data)
 	var _max_glyphs = _level_data[$ "max_glyphs"];
 	if (!is_real(_max_glyphs) || _max_glyphs < 2 || floor(_max_glyphs) != _max_glyphs)
 		throw "max_glyphs must be an integer of at least 2 in level.json";
+	var _spell_slots = _level_data[$ "spell_slots"];
+	if (!is_real(_spell_slots) || _spell_slots < 1 || _spell_slots > SPELL_SLOTS || floor(_spell_slots) != _spell_slots)
+		throw "spell_slots must be an integer from 1 to 4 in level.json";
 
 	if (!variable_global_exists("EnemyCatalog"))
 		init_enemy_catalog();
@@ -53,6 +56,7 @@ function parse_level_data(_level_data)
 
 	return {
 		max_glyphs: _max_glyphs,
+		spell_slots: _spell_slots,
 		level_wave_config:	new LevelWaveConfig (
 									_json_config[$ "wave_count"],
 									_json_config[$ "starting_budget"],

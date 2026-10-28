@@ -2,6 +2,7 @@
     "_readme": "Threat budgets buy enemies plus mutation surcharges. Settings arrays have one entry per wave. Costs are defined in EnemyCatalog.gml, not here.",
     "rm_level_1": {
         "max_glyphs": 2,
+        "spell_slots": 2,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -65,6 +66,7 @@
     },
     "rm_level_2": {
         "max_glyphs": 3,
+        "spell_slots": 2,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -160,6 +162,7 @@
     },
     "rm_level_3": {
         "max_glyphs": 5,
+        "spell_slots": 3,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -269,6 +272,7 @@
     },
     "rm_level_4": {
         "max_glyphs": 6,
+        "spell_slots": 3,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -400,6 +404,7 @@
     },
     "rm_level_5": {
         "max_glyphs": 7,
+        "spell_slots": 4,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -596,6 +601,7 @@
     },
     "rm_level_6": {
         "max_glyphs": 8,
+        "spell_slots": 4,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -788,6 +794,7 @@
     },
     "rm_level_7": {
         "max_glyphs": 8,
+        "spell_slots": 4,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
@@ -1055,6 +1062,7 @@
     },
     "rm_level_8": {
         "max_glyphs": 8,
+        "spell_slots": 4,
         "enemy_roster": [
             {
                 "enemy": "MOOK",

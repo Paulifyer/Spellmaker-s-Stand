@@ -1,10 +1,28 @@
-#macro SPELL_SLOTS 3
+#macro SPELL_SLOTS 4
 
 
 
 
 // The spellbook used by the player when casting spells
 global.spellbook = array_create(SPELL_SLOTS, undefined);
+
+function spell_slot_count() {
+    var _config = global.level_config[$ room_get_name(room)];
+    // Developer rooms have no campaign configuration and expose every slot.
+    return is_struct(_config) ? _config.spell_slots : SPELL_SLOTS;
+}
+
+function spell_slot_unlocked(_slot) {
+    return _slot >= 0 && _slot < spell_slot_count();
+}
+
+function spell_slot_unlock_level(_slot) {
+    for (var n = 0; n < array_length(global.level_array); n++) {
+        var _config = global.level_config[$ room_get_name(global.level_array[n])];
+        if (is_struct(_config) && _slot < _config.spell_slots) return n + 1;
+    }
+    return undefined;
+}
 
 function spell_max_glyphs() {
     return global.level_config[$ room_get_name(room)].max_glyphs;
