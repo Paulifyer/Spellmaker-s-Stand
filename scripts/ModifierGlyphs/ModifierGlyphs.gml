@@ -64,7 +64,7 @@ function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constr
 	scope = "effect";
 	allowed_effects = ["fire", "ice", "lightning", "hex"];
 	on_cast = function(spell, fx) {
-		fx.duration += tune_params("modifiers", "extend_time", "duration_increase", EXTEND_TIME_ADD); // Uses fixed amount atm
+		fx.duration += fx.params.duration * tune_params("modifiers", "extend_time", "duration_increase", EXTEND_TIME_ADD); // Uses fixed amount atm
 	}
 }
 

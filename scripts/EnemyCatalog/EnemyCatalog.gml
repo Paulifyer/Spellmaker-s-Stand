@@ -1,33 +1,34 @@
 function init_enemy_catalog() {
+    if (!variable_global_exists("tuning")) load_tuning();
     global.EnemyCatalog = {
         MOOK: {
             object: obj_mook,
-            cost: 1,
+            cost: tune_enemy("mook", "spawn_weight", 1),
         },
         RANGER: {
             object: obj_ranger,
-            cost: 2,
+            cost: tune_enemy("ranger", "spawn_weight", 2),
         },
 
         BRUTE: {
             object: obj_brute,
-            cost: 4,
+            cost: tune_enemy("brute", "spawn_weight", 4),
         },
 		SWARMER: {
 			object: obj_swarmer,
-			cost: 2
+			cost: tune_enemy("swarmer", "spawn_weight", 2)
 		},
 		SIEGE_BEAST: {
 			object: obj_siege_beast,
-			cost: 10
+			cost: tune_enemy("siege_beast", "spawn_weight", 10)
 		},
 		MOLE: {
 			object: obj_mole,
-			cost: 3
+			cost: tune_enemy("mole", "spawn_weight", 3)
 		},
 		CARRION: {
 			object: obj_carrion,
-			cost: 7
+			cost: tune_enemy("carrion", "spawn_weight", 7)
 		}
     };
 }

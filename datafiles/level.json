@@ -65,8 +65,8 @@
         ]
     },
     "rm_level_2": {
-        "max_glyphs": 3,
-        "spell_slots": 2,
+        "max_glyphs": 4,
+        "spell_slots": 3,
         "enemy_roster": [
             {
                 "enemy": "MOOK",
