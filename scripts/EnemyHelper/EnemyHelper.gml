@@ -191,19 +191,33 @@ function enemy_initialize_mole_marker(_enemy, _path) {
 	_enemy.emergence_marker = {x: path_get_x(_path, _enemy.pos_to_stop), y: path_get_y(_path, _enemy.pos_to_stop), active: true};
 }
 
+// Distances use columns and lanes. Radius one deliberately includes diagonals.
+function carrion_death_in_range(_source, _target, _radius) {
+	var _from = world_to_grid(_source.x, _source.y);
+	var _to = world_to_grid(_target.x, _target.y);
+	if (_from == undefined || _to == undefined) return false;
+	var _dx = abs(_from.col - _to.col);
+	var _dy = abs(_from.lane - _to.lane);
+	if (_radius == 1) return _dx <= 1 && _dy <= 1;
+	return _dx * _dx + _dy * _dy <= _radius * _radius;
+}
+
 // Notification comes from combat death, never from Destroy/room cleanup/replacement.
 function enemy_notify_combat_death(_enemy) {
 	if (_enemy.hp > 0 || _enemy.death_notified || enemy_is_bonepile(_enemy)) return;
 	_enemy.death_notified = true;
-	var _radius = max(0, floor(tune_enemy("carrion", "feed_radius_tiles", 1)));
+	var _radius = max(0, floor(tune_enemy("carrion", "death_radius_tiles", 1)));
 	for (var i = 0; i < instance_number(obj_carrion); i++) {
 		var _carrion = instance_find(obj_carrion, i);
 		if (_carrion == _enemy || _carrion.hp <= 0) continue;
-		var _tile = world_to_grid(_carrion.x, _carrion.y);
-		if (_tile == undefined || !enemy_overlaps_region(_enemy, _tile.col - _radius, _tile.col + _radius, _tile.lane - _radius, _tile.lane + _radius)) continue;
-		var _hp = tune_value("enemies", "base_hp", BASE_HP) * _carrion.enrage_hp_mult;
-		var _speed = tune_value("enemies", "base_speed", BASE_SPEED) * _carrion.enrage_spd_mult;
-		_carrion.max_hp += _hp; _carrion.hp += _hp; _carrion.base_speed += _speed;
+		if (!carrion_death_in_range(_carrion, _enemy, _radius)) continue;
+		var _hp = tune_value("enemies", "base_hp", BASE_HP) * _carrion.hp_gain_per_death_mult;
+		_carrion.max_hp += _hp; _carrion.hp += _hp;
+		_carrion.nearby_deaths += 1;
+		if (!_carrion.frenzied && _carrion.nearby_deaths >= _carrion.deaths_to_frenzy) {
+			_carrion.frenzied = true;
+			_carrion.base_speed *= _carrion.frenzy_speed_mult;
+		}
 		_carrion.image_xscale += 0.1; _carrion.image_yscale += 0.1; _carrion.hit_w += 12;
 		enemy_update_movement(_carrion);
 		instance_create_depth(_enemy.x, _enemy.y - 30, _enemy.depth - 1, obj_siphon, {target: _carrion});

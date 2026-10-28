@@ -57,6 +57,9 @@ damage_dealt = tune_enemy(name, "attack_dmg", 3);
 max_attack_delay = tune_enemy(name, "attack_delay", 3);
 attack_delay = max_attack_delay;
 
-// This variables holds the multiplier parameter for enrage
-enrage_hp_mult = tune_enemy(name, "enrage_hp_mult", 0.2);
-enrage_spd_mult = tune_enemy(name, "enrage_spd_mult", 0.1);
+// Nearby deaths grant standard HP; frenzy multiplies this Carrion's speed once.
+hp_gain_per_death_mult = max(0, tune_enemy(name, "hp_gain_per_death_mult", 0.2));
+deaths_to_frenzy = max(1, floor(tune_enemy(name, "deaths_to_frenzy", 5)));
+frenzy_speed_mult = max(1, tune_enemy(name, "frenzy_speed_mult", 3));
+nearby_deaths = 0;
+frenzied = false;
