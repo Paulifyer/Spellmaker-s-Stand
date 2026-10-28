@@ -27,7 +27,7 @@ function FormGlyph(_name, _cost) constructor {
 			var _size_modifier = 0;
 			if (spell.area) _size_modifier = 0.25;
 			else _size_modifier = 0;
-			draw_sprite_ext(sprite, 0, spell.x, spell.y, 1, 0.5 + _size_modifier, spell.dir, spell.col, 1); 
+			draw_spell_sprite_ext(sprite, 0, spell.x, spell.y, 1, 0.5 + _size_modifier, spell.dir, spell.col, 1);
 		}
 	}
 }
@@ -96,8 +96,8 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 	};
 	on_draw = function(spell) {
 		var _yscale = spell.area ? 2.0 : 1.5;
-		draw_sprite_ext(spell.projectile_sprite, floor(spell.projectile_frame),
-			spell.x, spell.y, 2.0, 1.5, spell.dir, spell.col, 0.5);
+		draw_spell_sprite_ext(spell.projectile_sprite, floor(spell.projectile_frame),
+			spell.x, spell.y, 2.0, 1.5, spell.dir, spell.col, 1.0);
 	};
 }
 
@@ -169,7 +169,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	on_draw = function(spell) {
 		for (var i = 0; i < array_length(spell.beam_lanes); i++) {
 			var _b = spell.beam_lanes[i];
-			draw_sprite_ext(sprite, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H,
+			draw_spell_sprite_ext(sprite, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H,
 				_b.len / sprite_get_width(sprite), 1, 0, spell.col, 0.5);
 		}
 	};
@@ -246,7 +246,7 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 			draw_set_alpha(1); draw_set_color(c_red);
 		}
 		var scale = 1 * _size_multiplier;
-		draw_sprite_ext(spell.strike_sprite, floor(spell.strike_frame), spell.x, spell.y + 10, scale, scale, 0, spell.col, 1);
+		draw_spell_sprite_ext(spell.strike_sprite, floor(spell.strike_frame), spell.x, spell.y + 10, scale, scale, 0, spell.col, 1);
 	};
 }
 
@@ -287,7 +287,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		var _sprite = spell.armed ? spr_vfx_rune_complete : spr_vfx_rune_arming;
 		var _size_multiplier = 1;
 		var scale = 0.5 * _size_multiplier;
-		draw_sprite_ext(_sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
+		draw_spell_sprite_ext(_sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
 	};
 }
 

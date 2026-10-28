@@ -83,6 +83,18 @@ function spell_snapshot(_spell) {
 	};
 }
 
+// Recolour pre-coloured VFX without multiplying away their shading.
+function draw_spell_sprite_ext(_sprite, _frame, _x, _y, _xs, _ys, _angle, _colour, _alpha) {
+	if (shader_is_compiled(sh_spell_recolour)) {
+		shader_set(sh_spell_recolour);
+		draw_sprite_ext(_sprite, _frame, _x, _y, _xs, _ys, _angle, _colour, _alpha);
+		shader_reset();
+	} else {
+		// Preserve the original artwork if this device cannot run the shader.
+		draw_sprite_ext(_sprite, _frame, _x, _y, _xs, _ys, _angle, c_white, _alpha);
+	}
+}
+
 function spell_effect_colour(_effects) {
 	if (array_length(_effects) == 0) return c_white;
 	var _colour = _effects[0].effect.col;

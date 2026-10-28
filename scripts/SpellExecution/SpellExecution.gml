@@ -317,7 +317,7 @@ function spell_chain_draw_links(_state) {
 		var _x = _link.x1 + lengthdir_x(sprite_get_xoffset(_sprite) * _scale, _angle) + lengthdir_x(_offset, _angle - 90);
 		var _y = _link.y1 + lengthdir_y(sprite_get_xoffset(_sprite) * _scale, _angle) + lengthdir_y(_offset, _angle - 90);
 		var _frame = floor(_age * _rate) mod sprite_get_number(_sprite);
-		draw_sprite_ext(_sprite, _frame, _x, _y, _scale, 1, _angle, _link.colour, 0.5 * (1 - _age / _link.duration));
+		draw_spell_sprite_ext(_sprite, _frame, _x, _y, _scale, 1, _angle, _link.colour, 0.5 * (1 - _age / _link.duration));
 	}
 }
 

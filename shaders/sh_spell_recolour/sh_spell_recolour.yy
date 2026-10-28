@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_spell_recolour",
+  "name":"sh_spell_recolour",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

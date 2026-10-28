@@ -79,4 +79,6 @@ draw_set_font(fnt_Arcane);
 var _slot_keys = "1";
 for (var i = 1; i < spell_slot_count(); i++) _slot_keys += "/" + string(i + 1);
 draw_text(300, display_get_gui_height() - 95, "Hover a tile + press " + _slot_keys + " to cast");
+draw_text(300, display_get_gui_height() - 105, "Press space to enter mana recovery");
+
 draw_set_font(-1);
