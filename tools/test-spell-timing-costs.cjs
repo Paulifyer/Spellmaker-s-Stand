@@ -21,7 +21,7 @@ for(const [name,key,field] of [['Fire','fire','burn_timer'],['Ice','ice','slow_t
     const hit=callback(effectFile,`Elem_${name}`,'on_hit');
     for(const bonus of [0,5,10]) {
         const target={slow_amt:0,stun_timer:0,stun_immune_timer:0};
-        hit({},target,{duration:bonus,effect_multiplier:1});
+        hit({},target,{duration:bonus,effect_multiplier:1,params:ctx.compile_effect_parameters(key)});
         assert.equal(target[field],60*(tuning.effects[key].duration+bonus));
     }
 }
@@ -60,7 +60,7 @@ const pull=callback(effectFile,'Elem_Pull','on_impact');let hold;
 Object.assign(ctx,{GRID_X0:0,TILE_W:100,LANE_H:100,pull_sec:0.4,hold_sec:0.2,
     show_debug_message(){},random:()=>0,point_distance:()=>0,lengthdir_x:()=>0,lengthdir_y:()=>0,
     enemies_in_region_list:()=>[{}],enemy_begin_pull:(e,x,y,lane,frames,value)=>{hold=value;}});
-ctx.global.lane_top=[0];pull({},{duration:0},0,0);assert.equal(hold,12);
+ctx.global.lane_top=[0];pull({},{duration:0,params:{pull_sec:0.4,hold_sec:0.2}},0,0);assert.equal(hold,12);
 // A three-second burn delivers three ticks, none on the first frame.
 let ticks=0;ctx.deal_damage=()=>ticks++;
 const burning={burn_timer:180,burn_dmg:40,slow_timer:0,slow_amt:0,stun_timer:0,stun_immune_timer:0,hex_timer:0};

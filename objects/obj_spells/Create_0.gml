@@ -10,16 +10,7 @@ hit_state = {contacts: [], applications: {}, epoch: 0};
 delivery_index = 0;
 beam_lanes = [];
 
-// This stores the form of the spell
-//form = undefined;
-
-// This stores the modifiers for the form alone
-//form_mods = [];
-
-// This stores the struct and modifiers for the effects {effect, mods[], power, duration}
-//effects = [];
-
-
+// form/effects/compiled are supplied before Create by cast_spell().
 form.on_cast(self);
 for (var e = 0; e < array_length(effects); e++) {
 	var _fx = effects[e];

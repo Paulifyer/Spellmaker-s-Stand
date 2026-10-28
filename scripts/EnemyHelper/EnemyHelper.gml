@@ -18,6 +18,13 @@ function combat_status_get(_subject, _field) {
 	return is_struct(_subject) ? _subject[$ _field] : variable_instance_get(_subject, _field);
 }
 
+function combat_status_initialize(_subject) {
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		for (var j = 0; j < array_length(_defs[i].fields); j++) combat_status_set(_subject, _defs[i].fields[j], 0);
+	}
+}
+
 function combat_status_set(_subject, _field, _value) {
 	if (is_struct(_subject)) _subject[$ _field] = _value;
 	else variable_instance_set(_subject, _field, _value);

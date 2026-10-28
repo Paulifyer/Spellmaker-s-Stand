@@ -24,6 +24,6 @@ function loadStatuses(ctx) {
         array_length:a=>a.length,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),max:Math.max,min:Math.min,round:Math.round,
         c_red:1,c_teal:2,c_yellow:3,c_fuchsia:4,TARGET_ROOM_SPEED:60,tune_params:(_,__,___,v)=>v};
     for(const [k,v] of Object.entries(defaults))if(ctx[k]===undefined)ctx[k]=v;
-    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['combat_status_definitions','combat_status_get','combat_status_set','combat_status_active','combat_status_count','combat_status_apply','combat_status_capture','combat_status_restore','combat_status_advance','enemy_advance_lightning']);
+    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['combat_status_definitions','combat_status_get','combat_status_set','combat_status_initialize','combat_status_active','combat_status_count','combat_status_apply','combat_status_capture','combat_status_restore','combat_status_advance','enemy_advance_lightning']);
 }
 module.exports = {read, extract, load, loadStatuses};

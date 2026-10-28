@@ -21,10 +21,11 @@ const ctx = {
     clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
     string: String, is_instanceof: m => !!m.amplify, Mod_Amplify: function(){},
     tune_params: (_, __, ___, fallback) => fallback,
+    tune_value:(_,__,value)=>value,
 };
 vm.createContext(ctx);
 const source = read('scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml');
-vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),'compile_spell'),ctx);
+for(const name of ['compile_effect_parameters','compile_spell']) vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),name),ctx);
 for (const name of ['spell_cost', 'spell_mana_preview', 'spellbook_expensive_slots'])
     vm.runInContext(extract(source, name), ctx);
 const spell = (mods = []) => ({form: 'projectile', form_mods: [], effects: [{effect: 'harm', mods}]});

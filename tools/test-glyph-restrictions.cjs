@@ -37,6 +37,6 @@ const regions=[];
 Object.assign(ctx,{GRID_X0:0,TILE_W:100,LANE_H:100,TARGET_ROOM_SPEED:60,pull_sec:0.4,hold_sec:0.2,
     show_debug_message(){},enemies_in_region_list:(...r)=>{regions.push(r);return [];}});
 ctx.global.lane_top=[0,100,200];
-pull({area:false},{duration:1},3,1);pull({area:true},{duration:1},3,1);
+pull({area:false},{duration:1,params:{pull_sec:0.4,hold_sec:0.2}},3,1);pull({area:true},{duration:1,params:{pull_sec:0.4,hold_sec:0.2}},3,1);
 assert.deepEqual(regions,[[2,4,0,2],[2,4,0,2]]);
 console.log('Glyph restriction checks passed: Pull/Form AoE, Beam exclusion, Hex modifiers and live status scaling.');

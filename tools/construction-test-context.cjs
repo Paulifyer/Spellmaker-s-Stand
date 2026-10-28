@@ -36,7 +36,7 @@ function makeContext(limit = 8) {
         variable_global_exists:k=>Object.hasOwn(ctx.global,k),
         string:String,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),
         is_glyph_available:()=>true, is_instanceof:()=>false, Mod_Amplify:function(){},
-        tune_params:(_,__,___,v)=>v,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
+        tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
     for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
@@ -44,7 +44,7 @@ function makeContext(limit = 8) {
         const part=body.slice(body.indexOf('on_cast = function')).replace('function(','function callback(');
         glyphs.modifier[id].on_cast=vm.runInContext(`(${extract(part,'callback')})`,ctx);
     }
-    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_spell','combat_next_id','spell_new_delivery']);
+    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_effect_parameters','compile_spell','combat_next_id','spell_new_delivery']);
     load(ctx,helper,['spell_max_glyphs','spell_glyph_count','spell_catalog_entry','mod_valid_for_form','mod_valid_for_effect','effect_valid_for_form','spell_sequence_valid','spell_can_append_effect','spell_validation_message','spell_addition_message','spell_add_glyph','spell_cost','spell_mana_preview','spellbook_expensive_slots','spellbook_start_message']);
     load(ctx,'scripts/GlyphAccessScripts/GlyphAccessScripts.gml',['is_spell_usable','sanitize_owned']);
     return ctx;

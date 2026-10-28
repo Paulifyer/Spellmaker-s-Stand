@@ -53,27 +53,27 @@ function combat_execution_flush(_state, _lineage = undefined) {
 	if (_state.processing) return;
 	_state.processing = true;
 	while (true) {
-	var _ready = [];
-	var _waiting = [];
-	for (var i = 0; i < array_length(_state.events); i++) {
-		var _event = _state.events[i];
-		if (_event.policy == "entity" && !_event.lineage.alive) continue;
-		var _eligible = _event.due <= _state.clock;
-		if (_lineage != undefined && _event.lineage != _lineage) _eligible = false;
-		if (_event.policy == "entity" && (_event.lineage.gap || !instance_exists(_event.lineage.target))) _eligible = false;
-		if (_eligible) array_push(_ready, _event); else array_push(_waiting, _event);
-	}
-	_state.events = _waiting;
-	if (array_length(_ready) == 0) break;
-	array_sort(_ready, combat_event_before);
-	for (var i = 0; i < array_length(_ready); i++) {
-		var _event = _ready[i];
-		if (_event.policy == "entity") {
-			if (!_event.lineage.alive) continue;
-			if (_event.lineage.gap) { array_push(_state.events, _event); continue; }
+		var _ready = [];
+		var _waiting = [];
+		for (var i = 0; i < array_length(_state.events); i++) {
+			var _event = _state.events[i];
+			if (_event.policy == "entity" && !_event.lineage.alive) continue;
+			var _eligible = _event.due <= _state.clock;
+			if (_lineage != undefined && _event.lineage != _lineage) _eligible = false;
+			if (_event.policy == "entity" && (_event.lineage.gap || !instance_exists(_event.lineage.target))) _eligible = false;
+			if (_eligible) array_push(_ready, _event); else array_push(_waiting, _event);
 		}
-		combat_execute_event(_event);
-	}
+		_state.events = _waiting;
+		if (array_length(_ready) == 0) break;
+		array_sort(_ready, combat_event_before);
+		for (var i = 0; i < array_length(_ready); i++) {
+			var _event = _ready[i];
+			if (_event.policy == "entity") {
+				if (!_event.lineage.alive) continue;
+				if (_event.lineage.gap) { array_push(_state.events, _event); continue; }
+			}
+			combat_execute_event(_event);
+		}
 	}
 	_state.processing = false;
 }

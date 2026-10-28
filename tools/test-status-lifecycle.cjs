@@ -13,6 +13,7 @@ const pile={};ctx.combat_status_restore(pile,state);assert.equal(pile.burn_timer
 // A registered status automatically participates in count, transfer, and expiry.
 ctx.combat_status_definitions().push({key:'test',timer:'test_timer',fields:['test_timer'],colour:0});
 pile.test_timer=5;const next=ctx.combat_status_capture(pile);
+const initialized={};ctx.combat_status_initialize(initialized);assert.equal(initialized.test_timer,0);
 assert.equal(ctx.combat_status_count(next),3);ctx.combat_status_advance(next,5,false);
 assert.equal(next.test_timer,0);assert.equal(ctx.combat_status_count(next),2);
 console.log('Status lifecycle checks passed: apply, refresh, cap, inspect, expiry and registry-driven transfer.');

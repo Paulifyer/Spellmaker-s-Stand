@@ -28,7 +28,7 @@ village_flash_color = c_red;
 
 // This variable tells whether the game is currently paused.
 paused = false;
-// Room-owned queue survives projectile destruction and clears on room changes.
+// Room-owned execution state survives delivery-object destruction.
 combat_execution = combat_execution_create();
 
 // This variable stores the id of the pause sequence if one exists, otherwise it stores negative 1.

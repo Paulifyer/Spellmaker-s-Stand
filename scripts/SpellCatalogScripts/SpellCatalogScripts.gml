@@ -51,10 +51,7 @@ function validate_glyphs() {
     }
 }
 
-/// @description Applies an effect on an enemy
-/// @param {Struct|Asset.GMObject} _spell A snapshot of a spell
-/// @param {Asset.GMObject} _target Enemy targetted
-/// @param {Struct} _fx effects being passed
+// IDs distinguish casts, deliveries and scheduled applications.
 function combat_next_id() {
 	if (!variable_global_exists("combat_id")) global.combat_id = 0;
 	global.combat_id += 1;
@@ -76,7 +73,7 @@ function apply_effect_group(_spell, _target, _fx) {
 function spell_snapshot(_spell) {
 	return {
 		cast_id: _spell.cast_id, caster: _spell.caster,
-		form: {is_channel: _spell.form.is_channel}, col: _spell.col,
+		compiled: _spell.compiled, form: _spell.compiled.form, col: _spell.col,
 		x: _spell.x, y: _spell.y, target_col: _spell.target_col, target_row: _spell.target_row,
 		hit_state: _spell.hit_state
 	};
@@ -94,6 +91,17 @@ function rune_trim_to_limit(_key, _limit) {
 }
 
 // Read-only by convention after compilation. Delivery instances own mutable hit state.
+function compile_effect_parameters(_id) {
+	var _duration = 0;
+	switch (_id) { case "fire": case "ice": _duration = 3; break; case "lightning": _duration = 1; break; case "hex": _duration = 5; break; }
+	return {base_damage: tune_value("combat", "base_dmg", 100),
+		duration: tune_params("effects", _id, "duration", _duration),
+		fire_mult: tune_params("effects", "fire", "fire_dmg_mult", 0.4),
+		slow_per_stack: tune_params("effects", "ice", "slow_amt_per_stack", 0.2),
+		pull_sec: tune_params("effects", "pull", "pull_sec", 0.4),
+		hold_sec: tune_params("effects", "pull", "hold_sec", 1.0)};
+}
+
 function compile_spell(_loadout) {
 	if (_loadout == undefined || _loadout.form == undefined) return undefined;
 	var _g = global.spell_glyphs;
@@ -131,7 +139,7 @@ function compile_spell(_loadout) {
 			}
 		}
 
-		array_push(_effects, {index: e, id: _loadout.effects[e].effect, effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
+		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0};

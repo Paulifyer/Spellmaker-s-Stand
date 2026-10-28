@@ -52,6 +52,21 @@ for(const order of [['harm','pull'],['pull','harm']]){
 }
 console.log('Execution contracts passed: ordered effects, delayed reselection, lineage, Beam ticks, pause/reset and cancellation.');
 // Already-due work precedes an instant delivery created later on the same frame.
+// A consumed Rune can hit a new entrant later, without following its original victim.
+{
+    const h=makeExecutionContext();const original=h.enemy();const newcomer=h.enemy(4);
+    const s=h.spell('rune',[fx('fire',['delay']),fx('harm')]);
+    Object.assign(s,{armed:true,lane:0,charges:1});h.ctx.forms.rune.on_hit(s,original);
+    assert.equal(s.destroyed,true);original.x=850;newcomer.x=250;h.tick(60);
+    assert.equal(original.hp,100000);assert.equal(newcomer.hp,99900);
+}
+// Captured tuning remains valid after the delivery instance disappears.
+{
+    const h=makeExecutionContext();const e=h.enemy();const s=h.spell('projectile',[fx('fire',['delay']),fx('harm')]);
+    h.ctx.spell_deliver(s,e,2,0);h.ctx.instance_destroy(s);h.ctx.tune_value=()=>999;h.tick(60);
+    assert.equal(e.hp,99900);
+}
+// Already-due work precedes an instant delivery created later on the same frame.
 {
     const h=makeExecutionContext();const e=h.enemy();
     h.ctx.spell_deliver(h.spell('projectile',[fx('fire',['delay']),fx('ice')]),e,2,0);

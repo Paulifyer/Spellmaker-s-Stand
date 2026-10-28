@@ -81,6 +81,9 @@
   },
   "name":"Spell",
   "resources":[
+    {"id":{"name":"obj_spell_test_driver","path":"objects/obj_spell_test_driver/obj_spell_test_driver.yy",},},
+    {"id":{"name":"obj_spell_test_enemy","path":"objects/obj_spell_test_enemy/obj_spell_test_enemy.yy",},},
+    {"id":{"name":"rm_spell_interaction_test","path":"rooms/rm_spell_interaction_test/rm_spell_interaction_test.yy",},},
     {"id":{"name":"fnt_Arcane","path":"fonts/fnt_Arcane/fnt_Arcane.yy",},},
     {"id":{"name":"fnt_button","path":"fonts/fnt_button/fnt_button.yy",},},
     {"id":{"name":"fnt_game_end_big","path":"fonts/fnt_game_end_big/fnt_game_end_big.yy",},},
@@ -367,6 +370,7 @@
     {"roomId":{"name":"rm_level_1","path":"rooms/rm_level_1/rm_level_1.yy",},},
     {"roomId":{"name":"rm_level_2","path":"rooms/rm_level_2/rm_level_2.yy",},},
     {"roomId":{"name":"rm_level_3","path":"rooms/rm_level_3/rm_level_3.yy",},},
+    {"roomId":{"name":"rm_spell_interaction_test","path":"rooms/rm_spell_interaction_test/rm_spell_interaction_test.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

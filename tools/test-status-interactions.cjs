@@ -5,10 +5,13 @@ const ctx=vm.createContext({max:Math.max,round:Math.round,clamp:(v,a,b)=>Math.ma
     tune_params:(_,__,___,fallback)=>fallback});
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning']);
 loadStatuses(ctx);
+ctx.tune_value=(_,__,v)=>v;
+load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_effect_parameters']);
 function hit(name){
     const body=extract(read('scripts/EffectGlyphs/EffectGlyphs.gml'),`Elem_${name}`);
     const part=body.slice(body.indexOf('on_hit = function')).replace('function(','function callback(');
-    return vm.runInContext(`(${extract(part,'callback')})`,ctx);
+    const fn=vm.runInContext(`(${extract(part,'callback')})`,ctx);
+    return (spell,target,fx)=>fn(spell,target,{...fx,params:ctx.compile_effect_parameters(name.toLowerCase())});
 }
 const lightning=hit('Lightning');
 const target={stun_timer:0,stun_immune_timer:0};

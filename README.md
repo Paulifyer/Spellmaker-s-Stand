@@ -145,6 +145,48 @@ alongside the existing regression scripts. GameMaker checks still required:
 - Rune overflow replaces the oldest matching Rune; failed casts leave traps intact.
 - Status durations, burn ticks, and stacked Amplify mana charges match the preview/tuning.
 
+## Shared spell execution
+
+The preview and casting use `compile_spell()` for one cost/modifier calculation.
+Compiled groups contain occurrence indices, target policies, cumulative delays,
+and captured tuning parameters. Delivery instances own hit records; compiled
+values are read-only by convention and are not recalculated when delayed work runs.
+
+All Forms report deliveries to `spell_deliver()` in `scripts/SpellExecution/`.
+Immediate and delayed groups use the same ordered executor. Pull starts movement
+at its place in the sequence; it does not wait for that movement to complete.
+For example, Strike + Pull + Harm misses enemies still travelling into the tile;
+Strike + Pull + Delay + Harm checks the tile again after the delay.
+
+| Delivery | Delayed targeting |
+| --- | --- |
+| Direct Projectile / individual Beam tick | Follow the hit enemy's skeletal lineage |
+| Strike / triggered Rune / Projectile AoE | Reselect the original area at activation |
+| Pull | Select the fixed 3x3 region around the original impact at activation |
+
+One room-owned scheduler orders work by due frame and insertion order. Its clock
+advances in the gameplay manager's Begin Step and drains in End Step, or when an
+immediate delivery needs to run. Pausing freezes gameplay time; entering a room
+creates a fresh queue. A destroyed delivery object does not cancel its work.
+Permanent enemy/pile destruction cancels work following that enemy identity.
+Beam epochs and Effect indices distinguish repeated applications; Projectile
+contact and per-Effect records prevent overlap from consuming Pierce repeatedly.
+
+The status registry in `EnemyHelper.gml` defines transfer fields, active counting,
+expiry and overlays. Effect callbacks call its apply interface. Existing enemy
+fields remain adapters, without a second copy of status state. Skeleton snapshots
+carry statuses only; scheduled work remains in the room queue and follows lineage.
+
+Run every `tools/test-*.cjs` script for the automated regression suite. The detailed
+architecture, extension rules and manual checklist are in
+`notes/spell-execution-refactor.md`.
+
+For native verification, temporarily make `rm_spell_interaction_test` the starting
+room in GameMaker, then restore `rm_menu` afterward. Keys 1–6 choose cases, R resets,
+P pauses, M moves an enemy into the target tile, and Escape returns to the menu.
+This room tests execution, timers and actual Pull movement. Campaign testing is
+still required for delivery collisions, Rune arming and the full gameplay UI.
+
 ## Standard wave generation
 
 Levels define a threat curve and an enemy roster instead of manually repeating

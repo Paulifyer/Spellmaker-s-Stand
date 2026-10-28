@@ -76,6 +76,8 @@ hex_timer = 0;
 
 // how long the stun_immue_timer is
 stun_immune_timer = 0;
+// Registry initialization also covers newly registered status fields.
+combat_status_initialize(self);
 
 ready_to_attack = true;
 damage_dealt = 0;
@@ -94,7 +96,7 @@ notes = "";
 //mutation_key
 mutation = undefined;
 
-// Delayed Effects
+// Stable identity used by the room's scheduled enemy-following work.
 combat_lineage = undefined;
 enemy_get_lineage(self);
 
