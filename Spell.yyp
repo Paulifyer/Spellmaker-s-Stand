@@ -295,6 +295,7 @@
     {"id":{"name":"spr_button_pause","path":"sprites/spr_button_pause/spr_button_pause.yy",},},
     {"id":{"name":"spr_button_red","path":"sprites/spr_button_red/spr_button_red.yy",},},
     {"id":{"name":"spr_button_skip","path":"sprites/spr_button_skip/spr_button_skip.yy",},},
+    {"id":{"name":"spr_carrion_carrionwalk_new","path":"sprites/spr_carrion_carrionwalk_new/spr_carrion_carrionwalk_new.yy",},},
     {"id":{"name":"spr_cursor","path":"sprites/spr_cursor/spr_cursor.yy",},},
     {"id":{"name":"spr_enemy_brute","path":"sprites/spr_enemy_brute/spr_enemy_brute.yy",},},
     {"id":{"name":"spr_enemy_carrionpreview","path":"sprites/spr_enemy_carrionpreview/spr_enemy_carrionpreview.yy",},},
