@@ -1,5 +1,14 @@
 for (var i = 1; i <= 6; i++) if (keyboard_check_pressed(ord("0") + i)) start_case(i);
-if (keyboard_check_pressed(ord("R"))) start_case(test_case);
+for (var i = 0; i < 6; i++) if (keyboard_check_pressed(vk_f1 + i)) start_enemy_case(i + 1);
+if (!paused && watched_lineage != undefined && instance_exists(watched_lineage.target)) {
+	var _tracked = watched_lineage.target;
+	if (keyboard_check_pressed(ord("K"))) _tracked.hp = 0;
+	if (keyboard_check_pressed(ord("T"))) combat_status_apply(_tracked,
+		(_tracked.object_index == obj_siege_beast) ? "lightning" : "burn", 3 * TARGET_ROOM_SPEED, 1);
+}
+if (keyboard_check_pressed(ord("R"))) {
+	if (enemy_case > 0) start_enemy_case(enemy_case); else start_case(test_case);
+}
 if (keyboard_check_pressed(ord("P"))) {
 	paused = !paused;
 	if (paused) { instance_deactivate_object(obj_enemy_parent); instance_deactivate_object(obj_revive_manager); }

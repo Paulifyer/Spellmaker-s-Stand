@@ -1166,7 +1166,7 @@
                     0,
                     3
                 ],
-                "mutation": "banneret-skeletal"
+                "mutation": ["banneret", "skeletal"]
             },
             {
                 "enemy": "BRUTE",

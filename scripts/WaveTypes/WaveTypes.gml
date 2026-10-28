@@ -18,7 +18,7 @@ enum WaveState
 /// @param {real|array} _weight_setting Relative selection weight after minimums are added
 /// @param {real|array} _min_setting Minimum amount required in each wave
 /// @param {real|array} _max_setting Maximum amount allowed in each wave
-/// @param {string|undefined} _mutation The mutation key from global.mutations
+/// @param {string|array|undefined} _mutation A mutation key or list of keys from global.mutations
 function EnemyWaveDefinition(_enemy, _weight_setting, _min_setting, _max_setting, _mutation = undefined) constructor
 {
 	enemy_object = _enemy.object;

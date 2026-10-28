@@ -11,6 +11,7 @@ if (watched_lineage != undefined) {
 	draw_text(40, 195, "Tracked enemy: " + _state);
 }
 draw_text(40, 235, "Tests native execution/timers/Pull movement. Campaign checks are still needed for projectile collisions and Rune arming.");
+draw_text(40, 270, "F1 Wards   F2 Banner/Skeleton   F3 Swarmer   F4 Siege   F5 Mole   F6 Carrion   T status   K kill tracked");
 var _x = GRID_X0 + test_col * TILE_W;
 var _y = global.lane_top[test_lane];
 draw_set_color(c_aqua); draw_rectangle(_x, _y, _x + TILE_W, _y + LANE_H, true);

@@ -17,12 +17,11 @@ Source: https://docs.google.com/document/d/1LTrpE-MkG_Z15OTvQFKZCxWQj4My_fiyKoz9
 
 ## Before activating all eight levels
 
-- Implement and register `banneret` with the intended haste aura. The current BanneretMut is empty and unregistered.
-- Implement and register the reserved draft key `banneret-skeletal` for the combined haste/skeleton mutation. Current runtime supports only one mutation key per entry. Its intended surcharge is 4 (3 Banneret + 1 Skeletal).
-- Create rooms rm_level_4 through rm_level_8 with their gameplay and wave managers.
+- Banneret and combined mutations are implemented. Use `"mutation": ["banneret", "skeletal"]` for the combined variant (surcharge 4). Existing single-key strings still work. At most one elemental ward is allowed per enemy.
+- Verify rooms rm_level_4 through rm_level_8 have their gameplay and wave managers before enabling them in the runtime campaign.
 - Implement missing glyphs and add their real catalog IDs to unlocked_glyphs: level 3 Combust; level 4 Snap; level 5 Chain; level 6 Force and Earth; level 7 Discharge. Existing glyphs are included; guessed IDs are intentionally not used.
 - Per-level glyph limits are implemented using `max_glyphs` in each level entry. Both the active file and this draft include the limits (2, 3, 5, 6, 7, 8, 8, 8). Adjust the values in JSON; no script edits are needed.
 - Decide whether to align EnemyCatalog costs with the document. JSON does not define base enemy costs. Both cost sets were checked for minimum-budget feasibility.
 - Playtest in GameMaker. Static checks do not validate encounter pacing or implemented enemy/glyph behavior.
 
-The draft is kept outside datafiles so it cannot trigger unknown mutation errors during the existing game's startup.
+The draft remains outside datafiles until the outstanding glyph and campaign activation work is complete.
