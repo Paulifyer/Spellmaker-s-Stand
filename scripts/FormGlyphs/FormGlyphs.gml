@@ -197,7 +197,6 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	on_step = function(spell) {
 		if (!spell.armed && --spell.arm_timer <= 0) {
 			spell.armed = true;
-			sprite = spr_vfx_rune_complete;
 			spell.mask_index = spr_vfx_rune_complete;
 		}
 	};

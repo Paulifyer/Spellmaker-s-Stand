@@ -143,12 +143,12 @@ function rune_trim_to_limit(_key, _limit) {
 	for (var i = 0; i < array_length(_runes) - _limit; i++) instance_destroy(_runes[i]);
 }
 
-function cast_spell(_caster, _loadout, _col, _row) {
-	if (_caster.mana_exhausted || !is_spell_usable(_loadout)) return { spell: noone, cost: 0 };
-
+// Read-only by convention after compilation. Delivery instances own mutable hit state.
+function compile_spell(_loadout) {
+	if (_loadout == undefined || _loadout.form == undefined) return undefined;
 	var _g = global.spell_glyphs;
 	var _f = _g.form[$ _loadout.form];
-	if (!is_struct(_f)) return { spell: noone, cost: 0 };
+	if (!is_struct(_f)) return undefined;
 
 	var _cost = _f.cost;
 
@@ -156,7 +156,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 
 	for (var i = 0; i < array_length(_loadout.form_mods); i++) {
 		var _m = _g.modifier[$ _loadout.form_mods[i]];
-		if (!is_struct(_m)) return { spell: noone, cost: 0 };
+		if (!is_struct(_m)) return undefined;
 		array_push(_fmods, _m);
 		_cost += _m.cost;
 	}
@@ -164,25 +164,52 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	var _effects = [];
 	for (var e = 0; e < array_length(_loadout.effects); e++) {
 		var _el = _g.effect[$ _loadout.effects[e].effect];
-		if (!is_struct(_el)) return { spell: noone, cost: 0 };
+		if (!is_struct(_el)) return undefined;
 		_cost += _el.cost;
 
 		var _mods = [];
 		var _amp_count = 0;
 		for (var i = 0; i < array_length(_loadout.effects[e].mods); i++) {
 			var _m = _g.modifier[$ _loadout.effects[e].mods[i]];
-			if (!is_struct(_m)) return { spell: noone, cost: 0 };
+			if (!is_struct(_m)) return undefined;
 			array_push(_mods, _m);
 			_cost += _m.cost;
-			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
+			if (_loadout.effects[e].mods[i] == "amplify") {
 				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
 				_cost += (_amp_count * _amp_cost);
 				_amp_count++;
 			}
 		}
 
-		array_push(_effects, {effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
+		array_push(_effects, {index: e, id: _loadout.effects[e].effect, effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
 	}
+	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
+		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
+	for (var i = 0; i < array_length(_fmods); i++) {
+		var _fn = _fmods[i][$ "on_cast"];
+		if (_fn != undefined) _fn(_compiled, undefined);
+	}
+	var _delay = 0;
+	for (var e = 0; e < array_length(_effects); e++) {
+		var _fx = _effects[e];
+		for (var i = 0; i < array_length(_fx.mods); i++) {
+			var _fn = _fx.mods[i][$ "on_cast"];
+			if (_fn != undefined) _fn(_compiled, _fx);
+		}
+		_fx.delay = _delay;
+		_delay += _fx.delay_after;
+		_fx.target_policy = (_fx.id == "pull") ? "location" :
+			((_compiled.form_id == "strike" || _compiled.form_id == "rune" || _compiled.area) && _compiled.form_id != "beam" ? "area" : "entity");
+	}
+	return _compiled;
+}
+
+function cast_spell(_caster, _loadout, _col, _row) {
+	if (_caster.mana_exhausted || !is_spell_usable(_loadout)) return { spell: noone, cost: 0 };
+	var _compiled = compile_spell(_loadout);
+	if (!is_struct(_compiled)) return { spell: noone, cost: 0 };
+	var _f = _compiled.form;
+	var _cost = _compiled.cost;
 	
 	var _rune_limit = 0;
 	if (_f.name == "Rune") {
@@ -226,10 +253,11 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	}
 
 	var _spell = instance_create_layer(_caster.x, _caster.y, "Instances", obj_spells, {
+			compiled    : _compiled,
 			caster		: _caster,
 			form		: _f,
-			form_mods	: _fmods,
-			effects		: _effects,
+			form_mods	: _compiled.form_mods,
+			effects		: _compiled.effects,
 			target_col	: _col,
 			target_row	: _row,
 			rune_spell_key: _rune_spell_key,

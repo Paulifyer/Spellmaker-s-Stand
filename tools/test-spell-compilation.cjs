@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const {makeContext}=require('./construction-test-context.cjs');
+const ctx=makeContext(12);
+const s={form:'projectile',form_mods:['area','pierce'],effects:[{effect:'fire',mods:['amplify','extend_time','delay']},{effect:'harm',mods:['amplify','amplify']}]};
+const before=JSON.stringify(s);
+const a=ctx.compile_spell(s),b=ctx.compile_spell(s);
+assert.equal(a.cost,ctx.spell_cost(s));assert.equal(a.area,true);assert.equal(a.pierce,2);
+assert.equal(a.effects[0].duration,5);assert.equal(a.effects[0].effect_multiplier,2);
+assert.equal(a.effects[1].delay,1);assert.equal(a.effects[1].effect_multiplier,3);
+assert.equal(a.effects[0].target_policy,'area');
+assert.notEqual(a,b);assert.notEqual(a.effects[0],b.effects[0]);
+assert.equal(JSON.stringify(s),before);
+assert.equal(ctx.global.spell_glyphs.modifier.amplify.effect_multiplier,undefined);
+const direct=ctx.compile_spell({form:'projectile',form_mods:[],effects:[{effect:'harm',mods:[]},{effect:'pull',mods:[]}]});
+assert.equal(direct.effects[0].target_policy,'entity');assert.equal(direct.effects[1].target_policy,'location');
+console.log('Spell compilation checks passed: shared cost, modifier values, independent plans and target policies.');

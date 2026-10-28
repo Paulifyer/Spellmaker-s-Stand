@@ -17,12 +17,14 @@ const ctx = {
         modifier: {amplify, delay: {cost: 5}, pierce: {cost: 15}}
     }},
     array_length: a => a.length,
+    array_push:(a,v)=>a.push(v),is_struct:x=>!!x&&typeof x==='object',
     clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
     string: String, is_instanceof: m => !!m.amplify, Mod_Amplify: function(){},
     tune_params: (_, __, ___, fallback) => fallback,
 };
 vm.createContext(ctx);
 const source = read('scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml');
+vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),'compile_spell'),ctx);
 for (const name of ['spell_cost', 'spell_mana_preview', 'spellbook_expensive_slots'])
     vm.runInContext(extract(source, name), ctx);
 const spell = (mods = []) => ({form: 'projectile', form_mods: [], effects: [{effect: 'harm', mods}]});

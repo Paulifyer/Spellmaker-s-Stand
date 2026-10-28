@@ -189,24 +189,8 @@ function spell_add_glyph(_s, _type, _id, _active) {
 }
 
 function spell_cost(_s) {
-    if (_s == undefined || _s.form == undefined) return 0;
-    var _g = global.spell_glyphs;
-    var _c = _g.form[$ _s.form].cost;
-    for (var i = 0; i < array_length(_s.form_mods); i++) _c += _g.modifier[$ _s.form_mods[i]].cost;
-    for (var e = 0; e < array_length(_s.effects); e++) {
-        _c += _g.effect[$ _s.effects[e].effect].cost;
-		var _amp_count = 0;
-        for (var i = 0; i < array_length(_s.effects[e].mods); i++) {
-			var _m = _g.modifier[$ _s.effects[e].mods[i]];
-            _c += _m.cost;
-			if (is_instanceof(_m, Mod_Amplify)) { // Handles Multiple Amplifies on one effect
-				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
-				_c += (_amp_count * _amp_cost);
-				_amp_count++;
-			}
-		}
-    }
-    return _c;
+    var _compiled = compile_spell(_s);
+    return is_struct(_compiled) ? _compiled.cost : 0;
 }
 
 // Compare against capacity, not the player's temporarily depleted mana.

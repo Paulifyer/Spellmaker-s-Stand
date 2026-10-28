@@ -40,7 +40,7 @@ vm.createContext(ctx);
 for (const name of ['spell_catalog_entry', 'mod_valid_for_form', 'mod_valid_for_effect', 'effect_valid_for_form', 'spell_sequence_valid', 'spell_can_append_effect', 'spell_validation_message', 'spell_addition_message', 'spell_add_glyph', 'spell_cost'])
     vm.runInContext(translate(extract(helpers, name)), ctx);
 vm.runInContext(translate(extract(read('scripts/GlyphAccessScripts/GlyphAccessScripts.gml'), 'is_spell_usable')), ctx);
-for (const name of ['apply_effect_group', 'schedule_effect', 'spell_snapshot', 'spell_hit', 'spell_impact', 'cast_spell'])
+for (const name of ['compile_spell', 'apply_effect_group', 'schedule_effect', 'spell_snapshot', 'spell_hit', 'spell_impact', 'cast_spell'])
     vm.runInContext(translate(extract(catalog, name)), ctx);
 const modifierSource = read('scripts/ModifierGlyphs/ModifierGlyphs.gml');
 const delayBody = extract(modifierSource, 'Mod_Delay');

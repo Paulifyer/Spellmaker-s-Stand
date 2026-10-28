@@ -1,11 +1,11 @@
 //obj_spell Create
 
-spd = 4; dmg = 1; lifetime = 60; pierce = 0; dir = 0;
+spd = 4; dmg = 1; lifetime = 60; pierce = compiled.pierce; dir = 0;
 col = c_white
 landed = false;
 lane = 0;
 target_x = 0; target_y = 0;
-area = false; // If area glyph is used
+area = compiled.area;
 hit_list = [];
 beam_lanes = [];
 
@@ -20,20 +20,14 @@ beam_lanes = [];
 
 
 form.on_cast(self);
-for (var i = 0; i < array_length(form_mods); i++) form_mods[i].on_cast(self, undefined);
 for (var e = 0; e < array_length(effects); e++) {
 	var _fx = effects[e];
 	_fx.effect.on_cast(self, _fx);
-	for (var i = 0; i < array_length(_fx.mods); i++) _fx.mods[i].on_cast(self, _fx);
 }
 
 // Delays are cumulative boundaries: Harm + Delay, Fire + Delay, Harm
 // activates at 0, 1, and 2 seconds (with the default one-second Delay).
-var _sequence_delay = 0;
-for (var e = 0; e < array_length(effects); e++) {
-	effects[e].delay = _sequence_delay;
-	_sequence_delay += effects[e].delay_after;
-}
+// Modifier values and cumulative delays are already resolved by compile_spell().
 
 col = c_white;
 if (array_length(effects) > 0) {
