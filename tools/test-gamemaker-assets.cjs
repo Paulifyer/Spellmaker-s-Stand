@@ -4,6 +4,7 @@ const path=require('node:path');
 const {read}=require('./gml-test-utils.cjs');
 const parse=p=>JSON.parse(read(p).replace(/,\s*([}\]])/g,'$1'));
 const project=parse('Spell.yyp');
+assert.doesNotMatch(read('scripts/SpellExecution/SpellExecution.gml'),/\b\d+(?:\.\d+)?[eE][+-]?\d+\b/,'Use GameMaker-compatible numeric literals');
 assert.equal(project.RoomOrderNodes[0].roomId.name,'rm_menu');
 for(const name of ['SpellExecution','obj_spell_test_driver','obj_spell_test_enemy','rm_spell_interaction_test']) {
     const entry=project.resources.find(r=>r.id.name===name);assert.ok(entry,name);

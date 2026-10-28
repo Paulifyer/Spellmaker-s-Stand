@@ -249,7 +249,7 @@ function spell_chain_fresh(_spell, _enemy) {
 }
 
 function spell_chain_nearest(_spell, _candidates, _x, _y, _exclude_roots = true) {
-	var _best = noone, _distance = 1e30, _best_id = 1e30;
+	var _best = noone, _distance = 0, _best_id = 0;
 	var _state = spell_chain_state(_spell);
 	for (var i = 0; i < array_length(_candidates); i++) {
 		var _enemy = _candidates[i];
@@ -258,7 +258,7 @@ function spell_chain_nearest(_spell, _candidates, _x, _y, _exclude_roots = true)
 		if (_exclude_roots && variable_struct_exists(_state.reserved_roots, string(_id))) continue;
 		var _dx = _enemy.x - _x, _dy = _enemy.y - _y;
 		var _d = _dx * _dx + _dy * _dy;
-		if (_d < _distance || (_d == _distance && _id < _best_id)) {
+		if (_best == noone || _d < _distance || (_d == _distance && _id < _best_id)) {
 			_best = _enemy; _distance = _d; _best_id = _id;
 		}
 	}
