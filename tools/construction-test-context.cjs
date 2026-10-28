@@ -15,7 +15,7 @@ function makeContext(limit = 8) {
         glyphs.effect[id].delivery_kind=delivery?delivery[1]:'target';
     }
     const modifiers = read('scripts/ModifierGlyphs/ModifierGlyphs.gml');
-    for (const [id, name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
+    for (const [id, name] of Object.entries({area:'Area',pierce:'Pierce',chain:'Chain',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
         const start = modifiers.indexOf(`function Mod_${name}(`);
         const next = modifiers.indexOf('\nfunction ', start + 1);
         const body = modifiers.slice(start, next < 0 ? undefined : next);
@@ -29,7 +29,7 @@ function makeContext(limit = 8) {
         glyphs.modifier[id] = m;
     }
     const ctx = vm.createContext({
-        room:'rm_test', room_get_name: x => x, SPELL_SLOTS:4, min:Math.min,floor:Math.floor,
+        room:'rm_test', room_get_name: x => x, SPELL_SLOTS:4, min:Math.min,max:Math.max,floor:Math.floor,round:Math.round,
         global:{spell_glyphs:glyphs,level_config:{rm_test:{max_glyphs:limit,spell_slots:4}},spellbook:[]},
         array_length:a=>a.length,array_contains:(a,v)=>a.includes(v),array_push:(a,v)=>a.push(v),array_delete:(a,i,n)=>a.splice(i,n),
         is_struct:x=>!!x && typeof x==='object', is_real:x=>typeof x==='number',is_array:Array.isArray,is_string:x=>typeof x==='string', variable_struct_exists:(s,k)=>Object.hasOwn(s,k),
@@ -42,7 +42,7 @@ function makeContext(limit = 8) {
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
     ctx.tune_setting=(...args)=>ctx.tune_params(...args);
-    for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
+    for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',chain:'Chain',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
         const body=extract(modifiers,`Mod_${name}`);
         const part=body.slice(body.indexOf('on_cast = function')).replace('function(','function callback(');
         glyphs.modifier[id].on_cast=vm.runInContext(`(${extract(part,'callback')})`,ctx);

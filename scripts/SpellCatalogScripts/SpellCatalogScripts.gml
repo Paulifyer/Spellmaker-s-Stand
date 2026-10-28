@@ -197,7 +197,7 @@ function compile_spell(_loadout) {
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
-		form_mods: _fmods, effects: _effects, area: false, pierce: 0, form_modifier_penalty: _form_penalty};
+		form_mods: _fmods, effects: _effects, area: false, pierce: 0, chain_hops: 0, form_modifier_penalty: _form_penalty};
 	if (_loadout.form == "beam") {
 		var _ticks_per_second = tune_params("forms", "beam", "ticks_per_second", 4);
 		var _damage_multiplier = tune_params("forms", "beam", "damage_multiplier_per_tick", 0.25);
@@ -212,6 +212,14 @@ function compile_spell(_loadout) {
 	for (var i = 0; i < array_length(_fmods); i++) {
 		var _fn = _fmods[i][$ "on_cast"];
 		if (_fn != undefined) _fn(_compiled, undefined);
+	}
+	if (_compiled.chain_hops > 0) {
+		var _range = tune_setting("modifiers", "chain", "range_radius_tiles", 2);
+		var _visual_time = tune_setting("modifiers", "chain", "visual_duration", 0.15);
+		if (!is_real(_range) || _range < 0 || floor(_range) != _range) throw "chain.range_radius_tiles must be a non-negative integer";
+		if (!is_real(_visual_time) || _visual_time < 0) throw "chain.visual_duration must be non-negative seconds";
+		_compiled.chain_range_radius = _range;
+		_compiled.chain_visual_frames = max(0, round(_visual_time * TARGET_ROOM_SPEED));
 	}
 	var _delay = 0;
 	var _segment = 0;

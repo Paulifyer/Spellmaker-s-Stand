@@ -140,6 +140,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		}
 
 		spell.beam_lanes = [];
+		var _direct_targets = [];
 		for (var l = _first; l <= _last; l++) { // iterate from 1st lane to last lane
 			var _end = GRID_X0 + GRID_COLS * TILE_W; // End of Lane
 			var _targets = [];
@@ -156,8 +157,13 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 			var _len = max(0, _end - spell.x);
 			array_push(spell.beam_lanes, { lane: l, len: _len });
 			for (var i = 0; i < _hit_count; i++) {
-				spell_deliver(spell, _targets[i], floor((_targets[i].x - GRID_X0) / TILE_W), l);
+				array_push(_direct_targets, _targets[i]);
 			}
+		}
+		spell_chain_reserve_roots(spell, _direct_targets);
+		for (var i = 0; i < array_length(_direct_targets); i++) {
+			var _target = _direct_targets[i];
+			if (instance_exists(_target)) spell_deliver(spell, _target, floor((_target.x - GRID_X0) / TILE_W), enemy_lane(_target));
 		}
 	};
 	on_draw = function(spell) {

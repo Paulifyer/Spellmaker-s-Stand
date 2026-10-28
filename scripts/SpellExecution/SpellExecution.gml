@@ -15,7 +15,7 @@ function spell_direct_damage(_spell, _enemy, _amount, _allow_combust = true) {
 	if (!is_struct(_spell) || !variable_struct_exists(_spell, "execution_scope")) return;
 	var _scope = _spell.execution_scope;
 	if (!is_struct(_scope) || _scope.combust == undefined) return;
-	var _eligible = (_scope.combust.target_policy == "entity")
+	var _eligible = (_scope.combust.target_policy == "entity" && !_scope.force_area)
 		? (_scope.lineage == enemy_get_lineage(_enemy))
 		: enemy_overlaps_region(_enemy, _scope.col - _scope.radius, _scope.col + _scope.radius, _scope.lane - _scope.radius, _scope.lane + _scope.radius);
 	if (!_eligible) return;
@@ -27,13 +27,13 @@ function spell_direct_damage(_spell, _enemy, _amount, _allow_combust = true) {
 }
 
 // Each Delay boundary owns a separate immediate execution context.
-function spell_execution_scope_create(_spell, _segment, _target, _col, _lane, _radius, _shared_reactions = undefined) {
+function spell_execution_scope_create(_spell, _segment, _target, _col, _lane, _radius, _shared_reactions = undefined, _force_area = false) {
 	var _combust = undefined;
 	for (var i = 0; i < array_length(_spell.effects); i++) {
 		var _fx = _spell.effects[i];
 		if (_fx.execution_segment == _segment && _fx.id == "combust") _combust = _fx;
 	}
-	return {id: combat_next_id(), combust: _combust,
+	return {id: combat_next_id(), combust: _combust, force_area: _force_area,
 		lineage: instance_exists(_target) ? enemy_get_lineage(_target) : undefined,
 		col: _col, lane: _lane, radius: _radius, exploded: {}, reactions: (_shared_reactions == undefined) ? {} : _shared_reactions, queue: [], cursor: 0, processing: false};
 }
@@ -199,7 +199,7 @@ function combat_flush_lineage(_lineage) {
 
 // A delivery starts all Effects in written order. Delay schedules activation;
 // it never waits implicitly for Pull movement to finish.
-function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
+function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force_area = false) {
 	var _state = combat_execution_state();
 	if (!is_struct(_state)) return false;
 	if (instance_exists(_target)) {
@@ -222,15 +222,107 @@ function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
 		var _fx = _spell.effects[e];
 		var _segment_key = string(_fx.execution_segment);
 		if (!variable_struct_exists(_scopes, _segment_key))
-			_scopes[$ _segment_key] = spell_execution_scope_create(_spell, _fx.execution_segment, _target, _col, _lane, _radius, _shared_reactions);
-		var _lineage = (_fx.target_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
-		if (_fx.target_policy == "entity" && _lineage == undefined) continue;
+			_scopes[$ _segment_key] = spell_execution_scope_create(_spell, _fx.execution_segment, _target, _col, _lane, _radius, _shared_reactions, _force_area);
+		var _policy = (_force_area && _fx.target_policy != "location") ? "area" : _fx.target_policy;
+		var _lineage = (_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
+		if (_policy == "entity" && _lineage == undefined) continue;
 		var _event = {due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), order: combat_next_id(),
-			cast_id: _delivery.cast_id, delivery_id: _delivery.id, fx: _fx, policy: _fx.target_policy,
+			cast_id: _delivery.cast_id, delivery_id: _delivery.id, fx: _fx, policy: _policy,
 			lineage: _lineage, col: _col, lane: _lane, radius: _radius,
 			epoch: _spell.hit_state.epoch, spell: _snapshot, scope: _scopes[$ _segment_key]};
 		array_push(_state.events, _event);
 	}
 	combat_execution_flush(_state);
+	return true;
+}
+
+function spell_chain_state(_spell) {
+	var _hits = _spell.hit_state;
+	if (!variable_struct_exists(_hits, "chain") || _hits.chain.epoch != _hits.epoch)
+		_hits.chain = {epoch: _hits.epoch, visited: {}, reserved_roots: {}};
+	return _hits.chain;
+}
+
+function spell_chain_fresh(_spell, _enemy) {
+	if (!enemy_can_receive_spell(_enemy, _spell.compiled) || _enemy.hp <= 0 || spell_contacted(_spell, _enemy)) return false;
+	return !variable_struct_exists(spell_chain_state(_spell).visited, string(enemy_get_lineage(_enemy).id));
+}
+
+function spell_chain_nearest(_spell, _candidates, _x, _y, _exclude_roots = true) {
+	var _best = noone, _distance = 1e30, _best_id = 1e30;
+	var _state = spell_chain_state(_spell);
+	for (var i = 0; i < array_length(_candidates); i++) {
+		var _enemy = _candidates[i];
+		if (!spell_chain_fresh(_spell, _enemy)) continue;
+		var _id = enemy_get_lineage(_enemy).id;
+		if (_exclude_roots && variable_struct_exists(_state.reserved_roots, string(_id))) continue;
+		var _dx = _enemy.x - _x, _dy = _enemy.y - _y;
+		var _d = _dx * _dx + _dy * _dy;
+		if (_d < _distance || (_d == _distance && _id < _best_id)) {
+			_best = _enemy; _distance = _d; _best_id = _id;
+		}
+	}
+	return _best;
+}
+
+function spell_chain_visit_region(_spell, _col, _lane, _radius) {
+	var _state = spell_chain_state(_spell);
+	var _targets = enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius);
+	for (var i = 0; i < array_length(_targets); i++) {
+		var _enemy = _targets[i];
+		if (enemy_can_receive_spell(_enemy, _spell.compiled) && _enemy.hp > 0)
+			_state.visited[$ string(enemy_get_lineage(_enemy).id)] = true;
+	}
+}
+
+// Reserve Beam's primary hits before traversal, so earlier chains cannot steal later roots.
+function spell_chain_reserve_roots(_spell, _targets) {
+	if (_spell.compiled.chain_hops <= 0) return;
+	var _state = spell_chain_state(_spell);
+	for (var i = 0; i < array_length(_targets); i++)
+		_state.reserved_roots[$ string(enemy_get_lineage(_targets[i]).id)] = true;
+}
+
+function spell_chain_add_link(_spell, _x1, _y1, _x2, _y2) {
+	var _state = combat_execution_state();
+	if (!is_struct(_state) || _spell.compiled.chain_visual_frames <= 0) return;
+	if (!variable_struct_exists(_state, "chain_links")) _state.chain_links = [];
+	array_push(_state.chain_links, {x1: _x1, y1: _y1, x2: _x2, y2: _y2, colour: _spell.col,
+		born: _state.clock, duration: _spell.compiled.chain_visual_frames});
+}
+
+function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
+	if (_spell.compiled.chain_hops <= 0) return spell_deliver_payload(_spell, _target, _col, _lane, _radius);
+	var _execution = combat_execution_state();
+	if (!is_struct(_execution)) return false;
+	var _seed = _target;
+	if (instance_exists(_seed)) {
+		if (!spell_chain_fresh(_spell, _seed)) return false;
+	} else {
+		var _candidates = enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius);
+		_seed = spell_chain_nearest(_spell, _candidates, GRID_X0 + (_col + 0.5) * TILE_W, global.lane_top[_lane] + LANE_H / 2, false);
+	}
+	// A location-only effect may still execute in an empty tile; it has no chain root.
+	if (!instance_exists(_seed)) return spell_deliver_payload(_spell, _target, _col, _lane, _radius);
+	var _last_x = _seed.x, _last_y = _seed.y;
+	var _state = spell_chain_state(_spell);
+	_state.visited[$ string(enemy_get_lineage(_seed).id)] = true;
+	if (_spell.compiled.form_id == "strike" || _spell.compiled.form_id == "rune" || (_spell.area && !_spell.form.is_channel))
+		spell_chain_visit_region(_spell, _col, _lane, _radius);
+	if (!spell_deliver_payload(_spell, _target, _col, _lane, _radius)) return false;
+	for (var h = 0; h < _spell.compiled.chain_hops; h++) {
+		var _near = spell_reaction_targets(_spell, _last_x, _last_y, _spell.compiled.chain_range_radius);
+		var _next = spell_chain_nearest(_spell, _near, _last_x, _last_y);
+		if (!instance_exists(_next)) break;
+		var _x = _next.x, _y = _next.y, _tile = world_to_grid(_x, _y);
+		if (_tile == undefined) break;
+		_state.visited[$ string(enemy_get_lineage(_next).id)] = true;
+		var _r = _spell.area ? 1 : 0;
+		if (_spell.area || _spell.compiled.form_id == "strike" || _spell.compiled.form_id == "rune")
+			spell_chain_visit_region(_spell, _tile.col, _tile.lane, _r);
+		spell_chain_add_link(_spell, _last_x, _last_y, _x, _y);
+		spell_deliver_payload(_spell, _next, _tile.col, _tile.lane, _r, _spell.form.is_channel && _spell.area);
+		_last_x = _x; _last_y = _y;
+	}
 	return true;
 }

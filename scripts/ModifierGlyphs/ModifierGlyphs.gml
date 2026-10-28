@@ -81,3 +81,16 @@ function Mod_Delay(): ModifierGlyph("Delay", DELAY_COST) constructor {
 
 function Mod_None() : ModifierGlyph("none", 0) constructor {
 }
+
+function Mod_Chain() : ModifierGlyph("Chain", CHAIN_COST) constructor {
+	cost = tune_params("modifiers", "chain", "cost", CHAIN_COST);
+	scope = "spell";
+	is_stacks = true;
+	allowed_forms = ["projectile", "beam", "strike", "rune"];
+	desc = "Each fresh Form hit chains sequentially to nearby unhit enemies. Stacks add more hops.";
+	on_cast = function(spell, fx) {
+		var _hops = tune_setting("modifiers", "chain", "hops_per_stack", 2);
+		if (!is_real(_hops) || _hops < 0 || floor(_hops) != _hops) throw "chain.hops_per_stack must be a non-negative integer";
+		spell.chain_hops += _hops;
+	};
+}
