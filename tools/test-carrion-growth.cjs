@@ -6,7 +6,7 @@ const tuning = JSON.parse(read('datafiles/tune.json')).enemies.carrion;
 function setup(overrides = {}) {
     // Fixed scenario values keep assertions stable when designers edit the live JSON.
     const h = makeEnemyContext(), ctx = h.ctx, config = {...tuning, hp_gain_per_death_mult: 0.2,
-        deaths_to_frenzy: 5, frenzy_speed_mult: 3, screech_duration: 0.5, ...overrides};
+        deaths_to_frenzy: 5, frenzy_speed_mult: 3, screech_duration: 0.5, heal_on_nearby_death_pct: 15, ...overrides};
     load(ctx, 'scripts/MutationScripts/MutationScripts.gml', ['enemy_is_bonepile']);
     load(ctx, 'scripts/EnemyHelper/EnemyHelper.gml', ['carrion_death_in_range', 'carrion_begin_frenzy',
         'carrion_update_frenzy', 'enemy_update_movement', 'enemy_notify_combat_death', 'enemy_update_pull']);
@@ -31,7 +31,7 @@ function setup(overrides = {}) {
         const state = {};
         for (const key of ['hp', 'max_hp', 'base_speed', 'hp_gain_per_death_mult', 'deaths_to_frenzy',
             'frenzy_speed_mult', 'nearby_deaths', 'frenzied', 'hit_w', 'screech_duration_frames',
-            'screech_timer', 'mask_index', 'walk_side_sprite']) state[key] = ctx[key];
+            'screech_timer', 'mask_index', 'walk_side_sprite', 'heal_on_nearby_death_pct', 'is_rune_immune']) state[key] = ctx[key];
         return h.enemy(col, lane, {...state, object_index: 'carrion', image_xscale: 1, image_yscale: 1,
             sprite_index: state.walk_side_sprite, mutation: undefined});
     };
@@ -50,7 +50,7 @@ const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
     for (let i = 1; i <= 6; i++) {
         const e = h.dead(); h.kill(e); h.kill(e);
         assert.equal(c.nearby_deaths, i);
-        assert.equal(c.max_hp, 750 + i * 30); assert.equal(c.hp, 500 + i * 30);
+        assert.equal(c.max_hp, 750 + i * 30); near(c.hp, [647,798.5,840,870,900,930][i-1]);
         if (i === 5) {
             near(c.base_speed, 0.7); assert.equal(c.my_speed, 0);
             assert.equal(c.sprite_index, 'screech'); assert.equal(c.screech_timer, 30);
@@ -139,4 +139,66 @@ for (const [seconds, frames] of [[0.25,15],[0,1],[-1,1]]) {
     h.advance(c,frames-1); assert.equal(c.sprite_index,'screech');
     h.advance(c,1); assert.equal(c.sprite_index,'flight');
 }
-console.log('Carrion checks passed: HP/frenzy tuning, grid shapes, death lifecycle, exact screech timing, attack gating, live Pull/statuses and flight.');
+// Extra healing uses the newly increased max HP, throughout all three phases.
+{
+    const h = setup({deaths_to_frenzy:2}), c = h.carrion();
+    c.hp = 100;
+    assert.equal(c.is_rune_immune, false);
+    h.kill(h.dead()); assert.equal(c.max_hp,780); near(c.hp,247);
+    assert.equal(c.frenzied,false);
+    h.kill(h.dead()); assert.equal(c.max_hp,810); near(c.hp,398.5);
+    assert.equal(c.screech_timer,30); assert.equal(c.is_rune_immune,false);
+    // A further death during screech heals without restarting the transition.
+    h.advance(c,10);
+    h.kill(h.dead()); assert.equal(c.max_hp,840); near(c.hp,554.5); assert.equal(c.screech_timer,20);
+    h.advance(c);
+    assert.equal(c.is_rune_immune,true);
+    h.kill(h.dead()); assert.equal(c.max_hp,870); near(c.hp,715);
+    h.kill(h.dead()); near(c.hp,880);
+    h.kill(h.dead()); assert.equal(c.hp,c.max_hp); // No overheal.
+    const before = c.hp;
+    const pile = h.dead(); pile.is_bonepile = true; h.kill(pile);
+    h.kill(h.dead(10)); assert.equal(c.hp,before);
+}
+for (const [percent, expected] of [[0,130],[10,208],[-10,130],[200,780]]) {
+    const h = setup({heal_on_nearby_death_pct:percent}), c = h.carrion();
+    c.hp=100; h.kill(h.dead()); near(c.hp,expected);
+}
+
+// Rune eligibility changes only on flight. Use real Rune delivery and scheduling.
+{
+    const h = setup({deaths_to_frenzy:1}), ctx=h.ctx, c=h.carrion(2,0);
+    const fx = (effect,mods=[]) => ({effect,mods});
+    const rune = () => Object.assign(h.spell('rune',[fx('harm')],['area']), {armed:true,lane:0,charges:1});
+    const ground = rune(); ctx.forms.rune.on_hit(ground,c);
+    assert.equal(ground.charges,0); assert.equal(c.hp,650);
+    h.kill(h.dead(3,0));
+    const screech = rune(); ctx.forms.rune.on_hit(screech,c);
+    assert.equal(screech.charges,0); assert.equal(c.hp,680);
+    const queued = h.spell('rune',[fx('harm',['delay']),fx('fire')]);
+    ctx.spell_deliver(queued,c,2,0); // Accepted while still screeching.
+    h.advance(c);
+    const before = c.hp, flying = rune(); ctx.forms.rune.on_hit(flying,c);
+    assert.equal(flying.charges,1); assert.equal(flying.destroyed,undefined);
+    assert.equal(c.hp,before);
+    const neighbor = h.enemy(2,0);
+    ctx.forms.rune.on_hit(flying,neighbor); // Neighbor triggers, Carrion ignores splash.
+    assert.equal(flying.charges,0); assert.equal(neighbor.hp,99900); assert.equal(c.hp,before);
+    const pull = h.spell('rune',[fx('pull')]); ctx.spell_deliver(pull,neighbor,2,0);
+    assert.equal(c.pull,undefined); assert.ok(neighbor.pull);
+    h.tick(60); assert.equal(c.burn_timer,0); assert.equal(c.hp,before);
+    c.stun_immune_timer=60; neighbor.stun_immune_timer=60;
+    const discharge=h.spell('rune',[fx('discharge')]);
+    ctx.spell_deliver(discharge,neighbor,2,0);
+    assert.equal(c.hp,before); assert.equal(c.stun_immune_timer,60);
+    neighbor.burn_timer=60; neighbor.hp=10;
+    const combust=h.spell('rune',[fx('harm'),fx('combust')]);
+    ctx.spell_deliver(combust,neighbor,2,0);
+    assert.ok(neighbor.hp<=0); assert.equal(c.hp,before); assert.equal(c.burn_timer,0);
+    for (const form of ['strike','projectile','beam']) {
+        const spell = h.spell(form,[fx('harm')]);
+        ctx.spell_deliver(spell,c,2,0);
+    }
+    assert.ok(c.hp < before); // Other Forms remain effective.
+}
+console.log('Carrion checks passed: growth/healing in every phase, tuning/caps, lifecycle, screech timing, Pull/statuses and flight-only Rune immunity.');

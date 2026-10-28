@@ -5,6 +5,7 @@ Configure `enemies.carrion` in `datafiles/tune.json`:
 | Parameter | Code fallback | Meaning |
 | --- | --- | --- |
 | `hp_gain_per_death_mult` | 0.2 | Standard enemy HP added to both current and maximum HP per qualifying death. With standard HP 150, this grants 30 HP. Negative values clamp to zero. |
+| `heal_on_nearby_death_pct` | 15 | Additional healing as a percentage of the newly increased maximum HP. `15` means 15%, clamped to 0–100. Works before, during and after the flight transition; total current HP caps at max HP. |
 | `deaths_to_frenzy` | 5 | Nearby deaths required to start the one-time screech-to-flight transition; integer, minimum 1. |
 | `frenzy_speed_mult` | 3 | Multiplies Carrion's own base speed once after the screech ends; minimum 1. Frost and Banneret multipliers still compose normally. |
 | `death_radius_tiles` | 1 | Nonnegative integer radius, rounded down. Measures differences in columns and lanes between the two enemies' occupied cells. |
@@ -14,9 +15,13 @@ Radius 0 includes only the same cell. Radius 1 deliberately includes all nine ce
 
 Each actual combat death is notified once. A living Carrion cannot feed on itself. Individual Swarmers count, and a revived skeletal body can count on its next death. Destroying a bone pile and room cleanup do not notify Carrion. Multiple nearby Carrions track their own counters. Deaths after frenzy still add HP and visual growth without another speed multiplier. Frenzy does not release Stun or Pull. A newly spawned/revived Carrion starts a fresh counter, consistent with the existing ability reset on skeletal revival.
 
+Healing is additional to the current/max HP growth. For example, with standard enemy HP 150 and growth multiplier 0.2, a Carrion at 500/750 HP gains 30 current/max HP and then heals 15% of its new 780 max HP (117), ending at 647/780. Healing uses the existing death radius and notification exclusions, does not revive a dead Carrion, and does not replace the max HP growth.
+
 At the threshold Carrion immediately uses the supplied screech pose and plays `snd_carrion_screech` once. During the transition its own movement speed is zero and it cannot attack the village. Pull continues moving it, and Burn/Frost/Lightning timers and mutation updates continue normally. Attack alarms can become ready, but no hit executes until the transition ends. The existing game pause deactivates enemy instances, freezing the transition alongside their other updates.
 
 After the timer ends Carrion applies its speed multiplier and uses the supplied flight pose for all movement directions. Subsequent nearby deaths grant HP without restarting the screech or multiplying speed again. Sprite origins match the original walk sprite, and `mask_index` stays on the walk sprite to preserve gameplay collision geometry. The supplied PNGs and MP3 are imported byte-for-byte; the sound plays once at its full original 6.84-second duration, including after flight begins.
+
+Rune immunity begins at that same transition to flight; walking and screeching Carrions remain vulnerable. A flying Carrion cannot trigger or consume a Rune, receive its splash/Pull/reaction effects, or receive a previously queued Rune hit that resolves after flight begins. Statuses already applied by Runes remain active, and an existing Pull continues; the immunity blocks new applications rather than cleansing statuses. Strike, Projectile and Beam still work normally.
 
 ## Complete change inventory
 
@@ -43,6 +48,17 @@ After the timer ends Carrion applies its speed multiplier and uses the supplied 
 - `tools/test-carrion-frenzy-assets.cjs`: Check project registration, event registration, sprite frame/layer references, bounds, origins, audio metadata and original source hashes.
 - `notes/enemy-abilities-implementation.md`: Update the ability overview for the screech and flight phase.
 - `notes/carrion-rework.md`: Explain the transition, distinguish code fallbacks from editable JSON values, and add this complete inventory.
+
+## Healing and Rune immunity change inventory
+
+- `datafiles/tune.json`: Add `heal_on_nearby_death_pct: 15` under Carrion while preserving existing tuning edits.
+- `objects/obj_carrion/Create_0.gml`: Read and clamp the healing percentage; initialize `is_rune_immune` to false so newly spawned/revived Carrions remain vulnerable until flight.
+- `scripts/EnemyHelper/EnemyHelper.gml`: Enable Rune immunity when the screech timer finishes, alongside the flight sprite/speed change. On each qualifying death, grow max HP first, calculate percentage healing from that new maximum, then add growth plus healing to current HP with a max HP cap.
+- `scripts/SpellExecution/SpellExecution.gml`: Extend the shared eligibility filter to reject Rune spells against enemies with `is_rune_immune`. Existing Swarmer immunity stays intact; trigger, splash, delayed-hit, Pull and reaction paths share this filter.
+- `scripts/EnemyCatalog/EnemyCatalog.gml`: Update Carrion's displayed description to explain growth, healing, screech, flight and Rune immunity without hardcoded tuning values.
+- `tools/test-carrion-growth.cjs`: Add arithmetic/order tests for extra healing in walking/screeching/flying phases, cap and percentage overrides/clamps, and lifecycle exclusions. Exercise actual Rune hits before/during/after transition, unchanged charges against flying targets, neighboring Rune triggers/splash, queued hits, Pull, Discharge/Combust reactions and other Forms.
+- `notes/enemy-abilities-implementation.md`: Add healing and flight-only Rune immunity to the overview.
+- `notes/carrion-rework.md`: Document the percentage units, HP calculation example, immunity timing/semantics and this full change inventory.
 
 ## Validation
 
