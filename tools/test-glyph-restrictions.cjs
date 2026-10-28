@@ -1,8 +1,9 @@
 const assert=require('node:assert/strict');
 const vm=require('node:vm');
-const {load,read,extract}=require('./gml-test-utils.cjs');
+const {load,read,extract,loadStatuses}=require('./gml-test-utils.cjs');
 const {makeContext}=require('./construction-test-context.cjs');
 const ctx=makeContext();
+loadStatuses(ctx);
 const fresh=form=>({form,form_mods:[],effects:[]});
 let s=fresh('projectile');
 assert.equal(ctx.spell_add_glyph(s,'effect','pull',-1),'');

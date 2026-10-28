@@ -1,5 +1,97 @@
 
 // Advance the same stun/charged clock for live enemies and skeletal spawn gaps.
+// Registry owns expiry, counting, display and transfer metadata. Legacy fields remain
+// adapters for enemy abilities; there is no second copy of the status state.
+function combat_status_definitions() {
+	if (!variable_global_exists("combat_status_definitions")) {
+		global.combat_status_definitions = [
+			{key: "burn", timer: "burn_timer", fields: ["burn_timer", "burn_dmg"], colour: c_red},
+			{key: "frost", timer: "slow_timer", fields: ["slow_timer", "slow_amt"], colour: c_teal},
+			{key: "lightning", timer: "stun_timer", fields: ["stun_timer", "stun_immune_timer"], colour: c_yellow},
+			{key: "hex", timer: "hex_timer", fields: ["hex_timer"], colour: c_fuchsia}
+		];
+	}
+	return global.combat_status_definitions;
+}
+
+function combat_status_get(_subject, _field) {
+	return is_struct(_subject) ? _subject[$ _field] : variable_instance_get(_subject, _field);
+}
+
+function combat_status_set(_subject, _field, _value) {
+	if (is_struct(_subject)) _subject[$ _field] = _value;
+	else variable_instance_set(_subject, _field, _value);
+}
+
+function combat_status_active(_subject, _key) {
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		var _def = _defs[i];
+		if (_def.key != _key) continue;
+		if (_key == "lightning" && combat_status_get(_subject, "stun_immune_timer") > 0) return true;
+		return combat_status_get(_subject, _def.timer) > 0;
+	}
+	return false;
+}
+
+function combat_status_count(_subject) {
+	var _count = 0;
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) if (combat_status_active(_subject, _defs[i].key)) _count++;
+	return _count;
+}
+
+function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
+	_frames = max(0, round(_frames));
+	switch (_key) {
+		case "burn": _enemy.burn_timer = _frames; _enemy.burn_dmg = _strength; break;
+		case "frost": _enemy.slow_timer = _frames; _enemy.slow_amt = clamp(_enemy.slow_amt + _strength, 0, 0.6); break;
+		case "lightning":
+			if (!combat_status_active(_enemy, "lightning")) _enemy.stun_timer = _frames;
+			break;
+		case "hex": _enemy.hex_timer = _frames; break;
+	}
+}
+
+function combat_status_capture(_subject) {
+	var _state = {};
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		var _fields = _defs[i].fields;
+		for (var j = 0; j < array_length(_fields); j++) {
+			var _field = _fields[j];
+			_state[$ _field] = max(0, combat_status_get(_subject, _field));
+		}
+	}
+	return _state;
+}
+
+function combat_status_restore(_subject, _state) {
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		var _fields = _defs[i].fields;
+		for (var j = 0; j < array_length(_fields); j++) combat_status_set(_subject, _fields[j], _state[$ _fields[j]]);
+	}
+	if (!combat_status_active(_subject, "frost")) combat_status_set(_subject, "slow_amt", 0);
+}
+
+function combat_status_advance(_subject, _frames, _live = true) {
+	_frames = max(0, round(_frames));
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		var _def = _defs[i];
+		if (_def.key == "lightning") { enemy_advance_lightning(_subject, _frames); continue; }
+		var _before = max(0, combat_status_get(_subject, _def.timer));
+		if (_def.key == "burn" && _live) {
+			for (var t = 1; t <= min(_frames, _before); t++) {
+				if ((_before - t) mod TARGET_ROOM_SPEED == 0) deal_damage(_subject, _subject.burn_dmg);
+			}
+		}
+		combat_status_set(_subject, _def.timer, max(0, _before - _frames));
+	}
+	if (!combat_status_active(_subject, "frost")) combat_status_set(_subject, "slow_amt", 0);
+}
+
 function enemy_get_lineage(_enemy) {
 	if (!variable_instance_exists(_enemy, "combat_lineage") || _enemy.combat_lineage == undefined) {
 		_enemy.combat_lineage = {id: combat_next_id(), target: _enemy, alive: true, gap: false};

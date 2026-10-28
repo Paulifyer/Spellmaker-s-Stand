@@ -31,8 +31,7 @@ function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 		var _base_dmg = tune_value("combat", "base_dmg", BASE_DAMAGE);
 		var _fire_dmg_mult = tune_params("effects", "fire", "fire_dmg_mult", FIRE_MULT);
 		var _duration = tune_params("effects", "fire", "duration", FIRE_DURATION);
-		target.burn_dmg = _base_dmg * _fire_dmg_mult * fx.effect_multiplier;
-		target.burn_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
+		combat_status_apply(target, "burn", TARGET_ROOM_SPEED * (_duration + fx.duration), _base_dmg * _fire_dmg_mult * fx.effect_multiplier);
 	};
 }
 
@@ -43,9 +42,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "ice", "duration", FROST_DURATION);
 		var slow_amt = tune_params("effects", "ice", "slow_amt_per_stack", FROST_SLOW);
-		target.slow_amt = clamp(target.slow_amt + slow_amt, 0, 0.6); // Cap total slow at 60% (three default stacks).
-		// Hypothetically, older frost stacks also will inherit extend time
-		target.slow_timer = TARGET_ROOM_SPEED * (_duration + fx.duration); 
+		combat_status_apply(target, "frost", TARGET_ROOM_SPEED * (_duration + fx.duration), slow_amt);
 	};
 }
 
@@ -55,8 +52,7 @@ function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor
 	cost = tune_params("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "lightning", "duration", LIGHTNING_DURATION);
-		if (target.stun_immune_timer <= 0 && target.stun_timer <= 0)
-			target.stun_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
+		combat_status_apply(target, "lightning", TARGET_ROOM_SPEED * (_duration + fx.duration));
 	};
 }
 
@@ -67,7 +63,7 @@ function Elem_Hex() : EffectGlyph("Hex", HEX_COST) constructor {
 	cost = tune_params("effects", "hex", "cost", HEX_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = tune_params("effects", "hex", "duration", HEX_DURATION);
-		target.hex_timer = TARGET_ROOM_SPEED * (_duration + fx.duration);
+		combat_status_apply(target, "hex", TARGET_ROOM_SPEED * (_duration + fx.duration));
 	};
 }
 

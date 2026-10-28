@@ -128,11 +128,7 @@ function deal_damage(_id, _amount)
 	// Hex grants 10% extra damage for each distinct active status, including Hex.
 	var _hex_multiplier = 1;
 	if (_id.hex_timer > 0) {
-		var _status_count = 1; // Hex itself counts as a status.
-		if (_id.burn_timer > 0) _status_count++;
-		if (_id.slow_timer > 0) _status_count++;
-		// Stunned and charged are consecutive phases of the same Lightning status.
-		if (_id.stun_timer > 0 || _id.stun_immune_timer > 0) _status_count++;
+		var _status_count = combat_status_count(_id);
 		var _bonus_per_status = tune_params("effects", "hex", "damage_per_status", HEX_DAMAGE_PER_STATUS);
 		_hex_multiplier += _status_count * _bonus_per_status;
 	}

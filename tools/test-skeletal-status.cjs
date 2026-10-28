@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
-const {read, load} = require('./gml-test-utils.cjs');
+const {read, load, loadStatuses} = require('./gml-test-utils.cjs');
 const effects = [];
 const ctx = vm.createContext({
     array_length:a=>a.length, array_push:(a,v)=>a.push(v), array_delete:(a,i,n)=>a.splice(i,n),
@@ -11,6 +11,7 @@ const ctx = vm.createContext({
 });
 load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['combat_next_id']);
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning','enemy_get_lineage','enemy_bind_lineage']);
+loadStatuses(ctx);
 load(ctx,'scripts/MutationScripts/MutationScripts.gml',[
     'enemy_capture_status','enemy_age_status','enemy_restore_status','enemy_apply_overdue_effects'
 ]);

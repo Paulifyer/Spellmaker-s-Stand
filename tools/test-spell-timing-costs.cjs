@@ -1,9 +1,10 @@
 const assert=require('node:assert/strict');
 const vm=require('node:vm');
-const {read,extract,load}=require('./gml-test-utils.cjs');
+const {read,extract,load,loadStatuses}=require('./gml-test-utils.cjs');
 const {makeContext}=require('./construction-test-context.cjs');
 const ctx=makeContext();
 const tuning=JSON.parse(read('datafiles/tune.json'));
+loadStatuses(ctx);
 Object.assign(ctx,{
     TARGET_ROOM_SPEED:60,BASE_DAMAGE:100,FIRE_MULT:0.4,FIRE_DURATION:3,FROST_DURATION:3,FROST_SLOW:0.2,
     LIGHTNING_DURATION:1,HEX_DURATION:5,max:Math.max,min:Math.min,floor:Math.floor,round:Math.round,
@@ -61,11 +62,10 @@ Object.assign(ctx,{GRID_X0:0,TILE_W:100,LANE_H:100,pull_sec:0.4,hold_sec:0.2,
     enemies_in_region_list:()=>[{}],enemy_begin_pull:(e,x,y,lane,frames,value)=>{hold=value;}});
 ctx.global.lane_top=[0];pull({},{duration:0},0,0);assert.equal(hold,12);
 // A three-second burn delivers three ticks, none on the first frame.
-const step=read('objects/obj_enemy_parent/Step_0.gml');
-const burn=step.slice(step.indexOf('// Burn Handler'),step.indexOf('// Frost Handler')).replace(/\bmod\b/g,'%');
-let ticks=0;Object.assign(ctx,{burn_timer:180,burn_dmg:40,deal_damage:()=>ticks++});
-vm.runInContext(burn,ctx);assert.equal(ticks,0);
-for(let i=1;i<180;i++)vm.runInContext(burn,ctx);
-assert.equal(ticks,3);assert.equal(ctx.burn_timer,0);
-vm.runInContext(burn,ctx);assert.equal(ticks,3);
+let ticks=0;ctx.deal_damage=()=>ticks++;
+const burning={burn_timer:180,burn_dmg:40,slow_timer:0,slow_amt:0,stun_timer:0,stun_immune_timer:0,hex_timer:0};
+ctx.combat_status_advance(burning,1);assert.equal(ticks,0);
+for(let i=1;i<180;i++)ctx.combat_status_advance(burning,1);
+assert.equal(ticks,3);assert.equal(burning.burn_timer,0);
+ctx.combat_status_advance(burning,1);assert.equal(ticks,3);
 console.log('Timing/cost checks passed: configured durations, Extend/Delay, Amplify surcharge, Pull hold and final burn tick.');

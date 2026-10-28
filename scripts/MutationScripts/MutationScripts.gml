@@ -85,23 +85,15 @@ function enemy_capture_status(_enemy) {
 		var _p = _enemy.pending_effects[i];
 		array_push(_pending, { timer: _p.timer, fx: _p.fx, spell: _p.spell });
 	}
-	return {
-		burn_dmg: _enemy.burn_dmg, burn_timer: max(0, _enemy.burn_timer),
-		slow_amt: _enemy.slow_amt, slow_timer: max(0, _enemy.slow_timer),
-		stun_timer: max(0, _enemy.stun_timer),
-		stun_immune_timer: max(0, _enemy.stun_immune_timer),
-		hex_timer: max(0, _enemy.hex_timer), pending_effects: _pending
-	};
+	var _state = combat_status_capture(_enemy);
+	_state.pending_effects = _pending;
+	return _state;
 }
 
 // Time passes while no target exists. Burn ticks in this gap deal no damage.
 function enemy_age_status(_state, _frames) {
 	_frames = max(0, _frames);
-	_state.burn_timer = max(0, _state.burn_timer - _frames);
-	_state.slow_timer = max(0, _state.slow_timer - _frames);
-	if (_state.slow_timer == 0) _state.slow_amt = 0;
-	_state.hex_timer = max(0, _state.hex_timer - _frames);
-	enemy_advance_lightning(_state, _frames);
+	combat_status_advance(_state, _frames, false);
 	for (var i = 0; i < array_length(_state.pending_effects); i++) {
 		// Negative values preserve which effects became due first during the gap.
 		_state.pending_effects[i].timer -= _frames;
@@ -109,13 +101,7 @@ function enemy_age_status(_state, _frames) {
 }
 
 function enemy_restore_status(_enemy, _state) {
-	_enemy.burn_dmg = _state.burn_dmg;
-	_enemy.burn_timer = _state.burn_timer;
-	_enemy.slow_amt = (_state.slow_timer > 0) ? _state.slow_amt : 0;
-	_enemy.slow_timer = _state.slow_timer;
-	_enemy.stun_timer = _state.stun_timer;
-	_enemy.stun_immune_timer = _state.stun_immune_timer;
-	_enemy.hex_timer = _state.hex_timer;
+	combat_status_restore(_enemy, _state);
 	_enemy.pending_effects = _state.pending_effects;
 	_enemy.my_speed = _enemy.base_speed * (1 - _enemy.slow_amt);
 }

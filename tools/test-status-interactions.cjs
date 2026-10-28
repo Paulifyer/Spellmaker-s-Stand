@@ -1,9 +1,10 @@
 const assert=require('node:assert/strict');
 const vm=require('node:vm');
-const {read,extract,load}=require('./gml-test-utils.cjs');
+const {read,extract,load,loadStatuses}=require('./gml-test-utils.cjs');
 const ctx=vm.createContext({max:Math.max,round:Math.round,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),TARGET_ROOM_SPEED:60,LIGHTNING_DURATION:1,
     tune_params:(_,__,___,fallback)=>fallback});
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning']);
+loadStatuses(ctx);
 function hit(name){
     const body=extract(read('scripts/EffectGlyphs/EffectGlyphs.gml'),`Elem_${name}`);
     const part=body.slice(body.indexOf('on_hit = function')).replace('function(','function callback(');

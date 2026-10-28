@@ -16,18 +16,10 @@ if (flash_alpha > 0)
 	shader_reset();
 }
 
-if (burn_timer > 0) {
-	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_red, 0.3);
-}
-
-if (slow_timer > 0) {
-	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_teal, 0.3);
-}
-
-if (stun_timer > 0) {
-	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_yellow, 0.3);
-}
-
-if (hex_timer > 0) {
-	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_fuchsia, 0.3);
+var _statuses = combat_status_definitions();
+for (var i = 0; i < array_length(_statuses); i++) {
+	var _status = _statuses[i];
+	if (combat_status_active(self, _status.key)) {
+		draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, _status.colour, 0.3);
+	}
 }
