@@ -20,7 +20,7 @@ function load(ctx, file, names) {
 }
 function loadStatuses(ctx) {
     if (!ctx.global) ctx.global={};
-    const defaults={is_struct:x=>!!x&&typeof x==='object',variable_global_exists:k=>Object.hasOwn(ctx.global,k),
+    const defaults={is_struct:x=>!!x&&typeof x==='object',is_array:Array.isArray,variable_global_exists:k=>Object.hasOwn(ctx.global,k),
         array_length:a=>a.length,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),max:Math.max,min:Math.min,round:Math.round,
         c_red:1,c_teal:2,c_yellow:3,c_fuchsia:4,TARGET_ROOM_SPEED:60,tune_params:(_,__,___,v)=>v,
         variable_instance_exists:(o,k)=>Object.hasOwn(o,k)};

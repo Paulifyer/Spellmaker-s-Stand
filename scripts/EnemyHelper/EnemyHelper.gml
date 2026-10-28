@@ -3,15 +3,16 @@
 // Registry owns expiry, counting, display and transfer metadata. Legacy fields remain
 // adapters for enemy abilities; there is no second copy of the status state.
 function combat_status_definitions() {
-	if (!variable_global_exists("combat_status_definitions")) {
-		global.combat_status_definitions = [
+	// Keep cached data separate from the globally named accessor function.
+	if (!variable_global_exists("combat_status_registry") || !is_array(global.combat_status_registry)) {
+		global.combat_status_registry = [
 			{key: "burn", timer: "burn_timer", fields: ["burn_timer", "burn_dmg"], colour: c_red},
 			{key: "frost", timer: "slow_timer", fields: ["slow_timer", "slow_amt"], colour: c_teal},
 			{key: "lightning", timer: "stun_timer", fields: ["stun_timer", "stun_immune_timer"], colour: c_yellow},
 			{key: "hex", timer: "hex_timer", fields: ["hex_timer"], colour: c_fuchsia}
 		];
 	}
-	return global.combat_status_definitions;
+	return global.combat_status_registry;
 }
 
 function combat_status_get(_subject, _field) {
