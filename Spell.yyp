@@ -85,6 +85,9 @@
   },
   "name":"Spell",
   "resources":[
+    {"id":{"name":"snd_carrion_screech","path":"sounds/snd_carrion_screech/snd_carrion_screech.yy"}},
+    {"id":{"name":"spr_enemy_carrionflight","path":"sprites/spr_enemy_carrionflight/spr_enemy_carrionflight.yy"}},
+    {"id":{"name":"spr_enemy_carrionscreech","path":"sprites/spr_enemy_carrionscreech/spr_enemy_carrionscreech.yy"}},
     {"id":{"name":"fnt_Arcane_Bold_Bold","path":"fonts/fnt_Arcane_Bold_Bold/fnt_Arcane_Bold_Bold.yy",},},
     {"id":{"name":"fnt_Arcane_Bold","path":"fonts/fnt_Arcane_Bold/fnt_Arcane_Bold.yy",},},
     {"id":{"name":"fnt_Arcane_More_Bold","path":"fonts/fnt_Arcane_More_Bold/fnt_Arcane_More_Bold.yy",},},

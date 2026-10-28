@@ -185,10 +185,12 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 		spell.target_y = _p.y;
 		spell.x = _p.x;
 		spell.y = _p.y - 400;
-		spell.spd = 30;
+		spell.spd = 400 / spell.compiled.strike_cast_frames;
+		spell.strike_elapsed = 0;
 		spell.dir = 270; // straight down
 		spell.landed = false;
-		spell.lifetime = TARGET_ROOM_SPEED * 2;
+		// Lifetime is decremented before on_step; leave a frame for the impact.
+		spell.lifetime = max(TARGET_ROOM_SPEED * 2, spell.compiled.strike_cast_frames + 1);
 		spell.strike_state = "start";
 		spell.strike_sprite = spr_strike_start;
 		spell.strike_frame = 0;
@@ -218,8 +220,11 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 		}
 
 		if (spell.landed) exit;
+		spell.strike_elapsed++;
 		spell.y = min(spell.y + spell.spd, spell.target_y);
-		if (spell.y >= spell.target_y) {
+		// Count frames explicitly to avoid a floating-point extra frame on arrival.
+		if (spell.strike_elapsed >= spell.compiled.strike_cast_frames) {
+			spell.y = spell.target_y;
 			spell.landed = true;
 			spell.lifetime = TARGET_ROOM_SPEED * 0.3; //Impact frames
 			spell.strike_state = "end";

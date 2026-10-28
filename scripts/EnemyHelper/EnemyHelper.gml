@@ -191,19 +191,58 @@ function enemy_initialize_mole_marker(_enemy, _path) {
 	_enemy.emergence_marker = {x: path_get_x(_path, _enemy.pos_to_stop), y: path_get_y(_path, _enemy.pos_to_stop), active: true};
 }
 
+// Distances use columns and lanes. Radius one deliberately includes diagonals.
+function carrion_death_in_range(_source, _target, _radius) {
+	var _from = world_to_grid(_source.x, _source.y);
+	var _to = world_to_grid(_target.x, _target.y);
+	if (_from == undefined || _to == undefined) return false;
+	var _dx = abs(_from.col - _to.col);
+	var _dy = abs(_from.lane - _to.lane);
+	if (_radius == 1) return _dx <= 1 && _dy <= 1;
+	return _dx * _dx + _dy * _dy <= _radius * _radius;
+}
+
+function carrion_begin_frenzy(_enemy) {
+	_enemy.frenzied = true;
+	_enemy.screech_timer = _enemy.screech_duration_frames;
+	_enemy.walk_side_sprite = spr_enemy_carrionscreech;
+	_enemy.sprite_index = spr_enemy_carrionscreech;
+	_enemy.image_index = 0;
+	audio_play_sound(snd_carrion_screech, 10, false);
+}
+
+// Called once per active Begin Step. Pull/status updates still run in parent Step.
+function carrion_update_frenzy(_enemy) {
+	if (_enemy.screech_timer <= 0) return;
+	_enemy.screech_timer -= 1;
+	if (_enemy.screech_timer > 0) return;
+	_enemy.base_speed *= _enemy.frenzy_speed_mult;
+	_enemy.is_rune_immune = true;
+	_enemy.walk_side_sprite = spr_enemy_carrionflight;
+	_enemy.walk_up_sprite = spr_enemy_carrionflight;
+	_enemy.walk_down_sprite = spr_enemy_carrionflight;
+	_enemy.sprite_index = spr_enemy_carrionflight;
+	_enemy.image_index = 0;
+	enemy_update_movement(_enemy);
+}
+
 // Notification comes from combat death, never from Destroy/room cleanup/replacement.
 function enemy_notify_combat_death(_enemy) {
 	if (_enemy.hp > 0 || _enemy.death_notified || enemy_is_bonepile(_enemy)) return;
 	_enemy.death_notified = true;
-	var _radius = max(0, floor(tune_enemy("carrion", "feed_radius_tiles", 1)));
+	var _radius = max(0, floor(tune_enemy("carrion", "death_radius_tiles", 1)));
 	for (var i = 0; i < instance_number(obj_carrion); i++) {
 		var _carrion = instance_find(obj_carrion, i);
 		if (_carrion == _enemy || _carrion.hp <= 0) continue;
-		var _tile = world_to_grid(_carrion.x, _carrion.y);
-		if (_tile == undefined || !enemy_overlaps_region(_enemy, _tile.col - _radius, _tile.col + _radius, _tile.lane - _radius, _tile.lane + _radius)) continue;
-		var _hp = tune_value("enemies", "base_hp", BASE_HP) * _carrion.enrage_hp_mult;
-		var _speed = tune_value("enemies", "base_speed", BASE_SPEED) * _carrion.enrage_spd_mult;
-		_carrion.max_hp += _hp; _carrion.hp += _hp; _carrion.base_speed += _speed;
+		if (!carrion_death_in_range(_carrion, _enemy, _radius)) continue;
+		var _hp = tune_value("enemies", "base_hp", BASE_HP) * _carrion.hp_gain_per_death_mult;
+		_carrion.max_hp += _hp;
+		var _heal = _carrion.max_hp * _carrion.heal_on_nearby_death_pct / 100;
+		_carrion.hp = min(_carrion.max_hp, _carrion.hp + _hp + _heal);
+		_carrion.nearby_deaths += 1;
+		if (!_carrion.frenzied && _carrion.nearby_deaths >= _carrion.deaths_to_frenzy) {
+			carrion_begin_frenzy(_carrion);
+		}
 		_carrion.image_xscale += 0.1; _carrion.image_yscale += 0.1; _carrion.hit_w += 12;
 		enemy_update_movement(_carrion);
 		instance_create_depth(_enemy.x, _enemy.y - 30, _enemy.depth - 1, obj_siphon, {target: _carrion});
@@ -231,7 +270,8 @@ function enemy_advance_lightning(_state, _frames) {
 // Resolve speed once after status updates; Stun/Pull control actual path movement.
 function enemy_update_movement(_enemy, _multiplier = 1) {
 	var _slow = (_enemy.slow_timer > 0) ? clamp(_enemy.slow_amt, 0, 0.6) : 0;
-	_enemy.my_speed = max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
+	var _screeching = variable_instance_exists(_enemy, "screech_timer") && _enemy.screech_timer > 0;
+	_enemy.my_speed = _screeching ? 0 : max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
 	_enemy.path_speed = (_enemy.stun_timer > 0 || _enemy.pull != undefined) ? 0 : _enemy.my_speed;
 }
 

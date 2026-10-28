@@ -122,6 +122,7 @@ function spell_contacted(_spell, _enemy) {
 function enemy_can_receive_spell(_enemy, _compiled) {
 	if (!instance_exists(_enemy) || !_enemy.is_targetable) return false;
 	if (_compiled.form_id == "rune" && _enemy.object_index == obj_swarmer) return false;
+	if (_compiled.form_id == "rune" && variable_instance_exists(_enemy, "is_rune_immune") && _enemy.is_rune_immune) return false;
 	return true;
 }
 
