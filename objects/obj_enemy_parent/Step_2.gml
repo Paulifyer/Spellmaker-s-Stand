@@ -17,6 +17,7 @@ health_bar = (hp / max_hp) * 100;
 // Check if this enemies hp is less than or equal to zero
 if (hp <= 0) 
 {
+	enemy_notify_combat_death(id);
 	// Give the player some money for destroying the enemey.
 	// We do this here, rather than in the destroy event, because we don't want
 	// to give any money anytime the enemy is destroyed, only when the enemy is killed.

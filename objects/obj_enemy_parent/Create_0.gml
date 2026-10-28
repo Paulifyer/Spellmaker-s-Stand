@@ -97,6 +97,7 @@ notes = "";
 mutation = undefined;
 mutation_keys = [];
 is_bonepile = false;
+death_notified = false;
 ward_variant = "narrow";
 ward_visible_since = -1;
 

@@ -21,7 +21,6 @@ hit_w = 48
 
 // This variable holds the base speed for the enemy
 base_speed = base_speed * tune_enemy(name, "spd_mult", 1.1);
-base_speed_original = base_speed;
 
 // This variable holds the current speed for the enemy
 my_speed = base_speed;
@@ -59,11 +58,5 @@ max_attack_delay = tune_enemy(name, "attack_delay", 3);
 attack_delay = max_attack_delay;
 
 // This variables holds the multiplier parameter for enrage
-enrage_hp_mult = tune_enemy(name, "enrange_hp_mult", 0.2);
-enrage_spd_mult = tune_enemy(name, "enrange_spd_mult", 0.1);
-
-// Nearby Enemy list will be filled and emptied
-nearby_list = [];
-nearby_enemy_xys = [];
-
-
+enrage_hp_mult = tune_enemy(name, "enrage_hp_mult", 0.2);
+enrage_spd_mult = tune_enemy(name, "enrage_spd_mult", 0.1);
