@@ -21,13 +21,7 @@ for (var e = 0; e < array_length(effects); e++) {
 // activates at 0, 1, and 2 seconds (with the default one-second Delay).
 // Modifier values and cumulative delays are already resolved by compile_spell().
 
-col = c_white;
-if (array_length(effects) > 0) {
-	col = effects[0].effect.col;
-	for (var i = 1; i < array_length(effects); i++) {
-		col = merge_colour(col, effects[i].effect.col, 0.5);		
-	}	
-}
+col = spell_effect_colour(effects);
 
 // This checks if the form glyph handles effects through collisions or steps
 if (form.uses_mask && form.sprite != undefined) { 

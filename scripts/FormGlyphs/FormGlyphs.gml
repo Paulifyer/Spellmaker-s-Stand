@@ -56,7 +56,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		if (spell_contacted(spell, target)) return;
 		if (spell.projectile_state == "end") return;
 		var _col = floor((target.x - GRID_X0) / TILE_W);
-		spell_deliver(spell, target, _col, enemy_lane(target), spell.area ? 1 : 0);
+		if (!spell_deliver(spell, target, _col, enemy_lane(target), spell.area ? 1 : 0)) return;
 		if (spell.pierce-- <= 0) {
 			spell.projectile_state = "end";
 			spell.projectile_sprite = spr_projectile_end;

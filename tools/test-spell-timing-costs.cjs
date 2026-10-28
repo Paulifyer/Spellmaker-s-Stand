@@ -39,7 +39,7 @@ Object.assign(ctx,{Form_Beam:function(){},noone:null,obj_spells:1,ROWS_PER_LANE:
     is_instanceof:(m,ctor)=>m===ctx.global.spell_glyphs.modifier.amplify,
 });
 const creation=read('objects/obj_spells/Create_0.gml');
-const init=creation.slice(creation.indexOf('form.on_cast(self);'),creation.indexOf('col = c_white;',creation.indexOf('form.on_cast(self);')));
+const init=creation.slice(creation.indexOf('form.on_cast(self);'),creation.indexOf('col = spell_effect_colour(effects);'));
 ctx.instance_create_layer=(x,y,layer,type,data)=>{
     Object.assign(ctx,{self:data,form:data.form,form_mods:data.form_mods,effects:data.effects});
     vm.runInContext(init,ctx);return data;

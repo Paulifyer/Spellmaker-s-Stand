@@ -47,7 +47,7 @@ function makeContext(limit = 8) {
         const part=body.slice(body.indexOf('on_cast = function')).replace('function(','function callback(');
         glyphs.modifier[id].on_cast=vm.runInContext(`(${extract(part,'callback')})`,ctx);
     }
-    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_effect_parameters','spell_form_modifier_penalty','compile_spell','combat_next_id','spell_new_delivery']);
+    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_effect_parameters','spell_form_modifier_penalty','compile_spell','spell_effect_colour','combat_next_id','spell_new_delivery']);
     load(ctx,helper,['spell_slot_count','spell_slot_unlocked','spell_slot_unlock_level','spell_ensure','spell_max_glyphs','spell_glyph_count','spell_catalog_entry','mod_valid_for_form','mod_valid_for_effect','effect_valid_for_form','spell_sequence_valid','spell_can_append_effect','spell_validation_message','spell_addition_message','spell_add_glyph','spell_cost','spell_mana_preview','spellbook_expensive_slots','spellbook_start_message']);
     load(ctx,'scripts/GlyphAccessScripts/GlyphAccessScripts.gml',['is_spell_usable','sanitize_owned']);
     return ctx;

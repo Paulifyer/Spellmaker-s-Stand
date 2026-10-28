@@ -21,6 +21,11 @@ h=makeExecutionContext();c=h.ctx;s=h.spell('projectile',[fx()],['area','chain'])
 root=h.enemy(2);const splash=h.enemy(3),next=h.enemy(4),nextSplash=h.enemy(5);
 c.spell_deliver(s,root,2,0,1);assert.ok([root,splash,next,nextSplash].every(e=>e.hp===99900));
 assert.equal(c.manager.combat_execution.chain_links.length,1);assert.equal(c.manager.combat_execution.chain_links[0].x2,next.x);
+// Location-only payloads may reserve splash victims without a targeted contact record.
+h=makeExecutionContext();c=h.ctx;s=h.spell('projectile',[fx('pull')],['area','pierce','chain']);
+root=h.enemy(2);const pullSplash=h.enemy(3);h.enemy(4);
+c.forms.projectile.on_hit(s,root);const remaining=s.pierce;
+c.forms.projectile.on_hit(s,pullSplash);assert.equal(s.pierce,remaining);
 // Lethal roots keep their recorded position; hidden enemies cannot intercept hops.
 h=makeExecutionContext();c=h.ctx;s=h.spell('projectile',[fx()],['chain']);root=h.enemy(2,0,{hp:50});const hidden=h.enemy(3,0,{is_targetable:false}),valid=h.enemy(4);
 c.spell_deliver(s,root,2,0);assert.equal(root.hp,-50);assert.equal(hidden.hp,100000);assert.equal(valid.hp,99900);

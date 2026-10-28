@@ -83,6 +83,14 @@ function spell_snapshot(_spell) {
 	};
 }
 
+function spell_effect_colour(_effects) {
+	if (array_length(_effects) == 0) return c_white;
+	var _colour = _effects[0].effect.col;
+	for (var i = 1; i < array_length(_effects); i++)
+		_colour = merge_colour(_colour, _effects[i].effect.col, 0.5);
+	return _colour;
+}
+
 // The limit belongs to one exact Rune configuration, across all prepared slots.
 function rune_trim_to_limit(_key, _limit) {
 	var _runes = [];

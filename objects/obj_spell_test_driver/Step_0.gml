@@ -1,4 +1,7 @@
 for (var i = 1; i <= 9; i++) if (keyboard_check_pressed(ord("0") + i)) start_case(i);
+if (keyboard_check_pressed(ord("Q"))) start_case(10);
+if (keyboard_check_pressed(ord("W"))) start_case(11);
+if (keyboard_check_pressed(ord("E"))) start_case(12);
 for (var i = 0; i < 6; i++) if (keyboard_check_pressed(vk_f1 + i)) start_enemy_case(i + 1);
 if (!paused && watched_lineage != undefined && instance_exists(watched_lineage.target)) {
 	var _tracked = watched_lineage.target;
@@ -14,6 +17,7 @@ if (keyboard_check_pressed(ord("P"))) {
 	if (paused) { instance_deactivate_object(obj_enemy_parent); instance_deactivate_object(obj_revive_manager); }
 	else { instance_activate_object(obj_enemy_parent); instance_activate_object(obj_revive_manager); }
 }
+if (!paused && test_case == 12 && enemy_case == 0) plan.form.on_step(plan);
 if (keyboard_check_pressed(vk_escape)) {
 	instance_activate_object(obj_enemy_parent); instance_activate_object(obj_revive_manager);
 	room_goto(rm_menu);
