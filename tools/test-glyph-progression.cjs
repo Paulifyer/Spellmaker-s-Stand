@@ -37,6 +37,7 @@ console.log('Glyph progression checks passed: JSON limits, counting, cumulative/
 
 // Exercise the actual level parser as well as the JSON data.
 Object.assign(ctx, {
+    SPELL_SLOTS:4,
     is_real: x => typeof x === 'number', floor: Math.floor,
     variable_global_exists: () => true,
     EnemyWaveDefinition: function(enemy,weight,min,max,mutation) {Object.assign(this,{enemy,weight,min,max,mutation});},

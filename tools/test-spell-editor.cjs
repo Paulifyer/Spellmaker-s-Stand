@@ -23,7 +23,7 @@ const texts=[], groups=[];
 const noop=()=>{};
 const circle=()=>({clicked:false,rclicked:false,hover:false});
 Object.assign(ctx, {
-    SPELL_SLOTS:3,
+    SPELL_SLOTS:4,
     mutation_description:()=>undefined,
     sel:0,active_group:-1,close_requested:false,naming:false,notice:'',notice_timer:0,
     craft_cx:1142,craft_cy:495,enemies_in_level:[],enemy_view:0,
@@ -51,10 +51,31 @@ const draw=read('objects/obj_spellbook/Draw_64.gml')
 ctx.global.spellbook=[{name:'seven effects',form:'projectile',form_mods:[],effects:[
     {effect:'harm',mods:[]},{effect:'fire',mods:[]},{effect:'ice',mods:[]},
     {effect:'lightning',mods:[]},{effect:'hex',mods:[]},{effect:'pull',mods:[]},{effect:'harm',mods:[]}
-]},undefined,undefined];
+]},undefined,undefined,undefined];
 vm.runInContext(draw,ctx);
 assert.ok(texts.includes('Glyphs: 8 / 8'));
 assert.equal(groups.length,8); // central Form plus seven Effects, including invalid repeats for repair
 assert.ok(groups.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)));
 assert.equal(new Set(groups.map(p=>`${p.x},${p.y}`)).size,8);
 console.log('Spell editor checks passed: all-slot Start validation, empty slots, counter and seven visible effect groups.');
+
+// A retained high-slot selection is reset before Draw or keyboard naming can edit it.
+const retained={name:'Retained fourth',form:'projectile',form_mods:[],effects:[{effect:'harm',mods:[]}]};
+ctx.global.spellbook=[valid(),undefined,undefined,retained];
+ctx.global.level_config.rm_test.spell_slots=2;
+ctx.global.level_array=['rm_test'];
+ctx.sel=3;ctx.naming=true;
+const buttons=[];
+ctx.gui_circle_button=(x,y,r,icon,label,active,enabled=true)=>{
+    if(y===990)buttons.push({x,label,enabled});
+    return {hover:y===990&&label==='4',clicked:y===990&&label==='4'&&enabled,rclicked:false};
+};
+vm.runInContext(draw,ctx);
+assert.equal(ctx.sel,0);assert.equal(ctx.naming,false);
+assert.deepEqual(buttons.map(b=>b.enabled),[true,true,false,false]);
+assert.equal(new Set(buttons.map(b=>b.x)).size,4);
+assert.ok(texts.includes('Locked'));assert.equal(ctx.hover_text,'Slot locked');
+ctx.sel=3;ctx.naming=true;ctx.keyboard_string='Must not overwrite';
+vm.runInContext(read('objects/obj_spellbook/Step_0.gml'),ctx);
+assert.equal(ctx.sel,0);assert.equal(ctx.naming,false);assert.equal(retained.name,'Retained fourth');
+console.log('Spell editor slot checks passed: four distinct buttons, disabled locked slots, stale selection reset and retained naming protection.');

@@ -12,6 +12,7 @@ function extract(source, name) {
 }
 const amplify = {cost: 15, amplify: true};
 const ctx = {
+    min:Math.min, spell_slot_count:()=>4,
     global: {spellbook: [], spell_glyphs: {
         form: {projectile: {cost: 5}}, effect: {harm: {cost: 10}},
         modifier: {amplify, delay: {cost: 5}, pierce: {cost: 15}}
