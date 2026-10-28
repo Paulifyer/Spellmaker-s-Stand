@@ -49,19 +49,9 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		// Overlap events repeat each frame, including for enemies hit by an earlier blast.
 		// Only a new, targetable contact consumes one penetration.
 		if (!instance_exists(target) || !target.is_targetable) return;
-		if (array_contains(spell.hit_list, target)) return;
+		if (spell_contacted(spell, target)) return;
 		var _col = floor((target.x - GRID_X0) / TILE_W);
-		if (!array_contains(spell.hit_list, target)) {
-			if (spell.area) {
-				var _t = world_to_grid(target.x, target.y);
-				var _lane = (_t != undefined) ? _t.lane : floor(spell.target_row / ROWS_PER_LANE);
-				spell_impact(spell, _col, _lane);
-				spell_hit_area(spell, _col - 1, _col + 1, _lane - 1, _lane + 1);
-			} else {
-				spell_impact(spell, _col, enemy_lane(target));
-				spell_hit(spell, target);
-			}
-		}
+		spell_deliver(spell, target, _col, enemy_lane(target), spell.area ? 1 : 0);
 		if (spell.pierce-- <= 0) {
 			instance_destroy(spell);
 		}
@@ -95,7 +85,10 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		_first = max(_first, 0);
 		_last  = min(_last, LANE_COUNT - 1);
 
-		if (++spell.tick mod (TARGET_ROOM_SPEED * 0.25) == 0) spell.hit_list = [];
+		if (++spell.tick mod (TARGET_ROOM_SPEED * 0.25) == 0) {
+			spell.hit_state.contacts = [];
+			spell.hit_state.epoch += 1;
+		}
 
 		spell.beam_lanes = [];
 		for (var l = _first; l <= _last; l++) { // iterate from 1st lane to last lane
@@ -114,7 +107,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 			var _len = max(0, _end - spell.x);
 			array_push(spell.beam_lanes, { lane: l, len: _len });
 			for (var i = 0; i < _hit_count; i++) {
-				spell_hit(spell, _targets[i]);
+				spell_deliver(spell, _targets[i], floor((_targets[i].x - GRID_X0) / TILE_W), l);
 			}
 		}
 	};
@@ -151,14 +144,7 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 			
 			var _c = spell.target_col;
 			var _l = spell.target_row div ROWS_PER_LANE;
-			if (spell.area) {
-				spell_impact(spell, spell.target_col, _l)
-				spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
-			}
-			else {
-				spell_impact(spell, spell.target_col, _l)
-				spell_hit_area(spell, _c, _c, _l, _l);
-			}
+			spell_deliver(spell, noone, _c, _l, spell.area ? 1 : 0);
 		}	
 	};
 	on_draw = function(spell) {
@@ -205,18 +191,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		if (enemy_lane(target) != spell.lane) return; //ignore sprites poking from neighbouring lanes
 		var _c = spell.target_col;
 		var _l = spell.lane;
-		show_debug_message($"{_c}, {_l}, {enemy_lane(target)}");
-		if (spell.area) {
-			spell_impact(spell, _c, _l);
-			spell_hit_area(spell, _c -1, _c + 1, _l -1, _l + 1); // Handles AOE vs non-AOE
-		}
-		else {
-			spell_impact(spell, _c, _l);
-			spell_hit_area(spell, _c, _c, _l, _l);
-		}
-		if (array_length(spell.hit_list) > 0)
-			spell.charges--;
-		spell.hit_list = [];
+		if (spell_deliver(spell, target, _c, _l, spell.area ? 1 : 0)) spell.charges--;
 		if (spell.charges <= 0) instance_destroy(spell);
 	};
 	on_draw = function(spell) {

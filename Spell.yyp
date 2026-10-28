@@ -184,6 +184,7 @@
     {"id":{"name":"MutationScripts","path":"scripts/MutationScripts/MutationScripts.yy",},},
     {"id":{"name":"SpellbookHelperScripts","path":"scripts/SpellbookHelperScripts/SpellbookHelperScripts.yy",},},
     {"id":{"name":"SpellCatalogScripts","path":"scripts/SpellCatalogScripts/SpellCatalogScripts.yy",},},
+    {"id":{"name":"SpellExecution","path":"scripts/SpellExecution/SpellExecution.yy",},},
     {"id":{"name":"TuneScript","path":"scripts/TuneScript/TuneScript.yy",},},
     {"id":{"name":"WaveGeneration","path":"scripts/WaveGeneration/WaveGeneration.yy",},},
     {"id":{"name":"WaveRuntime","path":"scripts/WaveRuntime/WaveRuntime.yy",},},

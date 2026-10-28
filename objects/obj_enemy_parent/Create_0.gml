@@ -95,7 +95,6 @@ notes = "";
 mutation = undefined;
 
 // Delayed Effects
-pending_effects = [];
 combat_lineage = undefined;
 enemy_get_lineage(self);
 

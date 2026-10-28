@@ -13,7 +13,7 @@ function extract(source, name) {
         end++;
         assert.ok(end <= source.length, `Unclosed function ${name}`);
     }
-    return source.slice(start, end).replace(/\[\$\s*([^\]]+)\]/g, '[$1]').replace(/\bmod\b/g,'%');
+    return source.slice(start, end).replace(/\[\$\s*([^\]]+)\]/g, '[$1]').replace(/\bmod\b/g,'%').replace(/([\w.]+) div (\w+)/g,'Math.floor($1 / $2)');
 }
 function load(ctx, file, names) {
     for (const name of names) vm.runInContext(extract(read(file), name), ctx);

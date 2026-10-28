@@ -78,48 +78,12 @@ function LightningWardedMut() : EnemyMutation("lightning-warded", "Lightning-War
 	};
 }
 
-// Copy mutable timers so each stage owns its queue without retaining a dead instance.
-function enemy_capture_status(_enemy) {
-	var _pending = [];
-	for (var i = 0; i < array_length(_enemy.pending_effects); i++) {
-		var _p = _enemy.pending_effects[i];
-		array_push(_pending, { timer: _p.timer, fx: _p.fx, spell: _p.spell });
-	}
-	var _state = combat_status_capture(_enemy);
-	_state.pending_effects = _pending;
-	return _state;
-}
-
-// Time passes while no target exists. Burn ticks in this gap deal no damage.
-function enemy_age_status(_state, _frames) {
-	_frames = max(0, _frames);
-	combat_status_advance(_state, _frames, false);
-	for (var i = 0; i < array_length(_state.pending_effects); i++) {
-		// Negative values preserve which effects became due first during the gap.
-		_state.pending_effects[i].timer -= _frames;
-	}
-}
-
+// Status state is independent from scheduled work; the room queue follows lineage.
+function enemy_capture_status(_enemy) { return combat_status_capture(_enemy); }
+function enemy_age_status(_state, _frames) { combat_status_advance(_state, _frames, false); }
 function enemy_restore_status(_enemy, _state) {
 	combat_status_restore(_enemy, _state);
-	_enemy.pending_effects = _state.pending_effects;
 	_enemy.my_speed = _enemy.base_speed * (1 - _enemy.slow_amt);
-}
-
-// Apply overdue effects once to the new pile, earliest due first; ties keep insertion order.
-function enemy_apply_overdue_effects(_enemy) {
-	while (true) {
-		var _first = -1;
-		for (var i = 0; i < array_length(_enemy.pending_effects); i++) {
-			var _p = _enemy.pending_effects[i];
-			if (_p.timer > 0) continue;
-			if (_first < 0 || _p.timer < _enemy.pending_effects[_first].timer) _first = i;
-		}
-		if (_first < 0) break;
-		var _p = _enemy.pending_effects[_first];
-		array_delete(_enemy.pending_effects, _first, 1);
-		apply_effect_group(_p.spell, _enemy, _p.fx);
-	}
 }
 
 function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) constructor {

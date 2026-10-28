@@ -18,6 +18,7 @@ function EffectGlyph(_name, _cost) constructor {
 	col = c_white
 	desc = "";
 	allowed_forms = undefined;
+	delivery_kind = "target";
 	on_cast = function(spell, fx) {};
 	on_hit = function(spell, target, fx) {};
 	on_impact = function(spell, fx, col, lane) {};
@@ -85,6 +86,7 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
 	icon = spr_glyph_pull;
 	col = c_ltgray;
 	allowed_forms = ["projectile", "strike", "rune"];
+	delivery_kind = "location";
 	desc = "Pulls enemies in a 3x3 area. Form AoE does not enlarge Pull.";
 	pull_sec = tune_params("effects", "pull", "pull_sec", 0.4); // travel time
 	hold_sec = tune_params("effects", "pull", "hold_sec", 1.0); // time held

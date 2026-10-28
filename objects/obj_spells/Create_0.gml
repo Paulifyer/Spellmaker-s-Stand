@@ -6,7 +6,7 @@ landed = false;
 lane = 0;
 target_x = 0; target_y = 0;
 area = compiled.area;
-hit_list = [];
+hit_state = {contacts: [], applications: {}, epoch: 0};
 delivery_index = 0;
 beam_lanes = [];
 

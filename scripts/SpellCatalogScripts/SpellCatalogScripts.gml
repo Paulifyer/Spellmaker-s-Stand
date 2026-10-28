@@ -72,76 +72,14 @@ function apply_effect_group(_spell, _target, _fx) {
 		if (_fx.mods[i].on_hit != undefined) _fx.mods[i].on_hit(_spell, _target, _fx);
 }
 
-/// @description Applies a scheduled effect on an enemy
-/// @param {Struct} _spell A snapshot of a spell
-/// @param {Asset.GMObject} _target Enemy targetted
-/// @param {Struct} _fx effects being passed
-function schedule_effect(_spell, _target, _fx) {
-	for (var i = 0; i < array_length(_target.pending_effects); i++)
-		if (_target.pending_effects[i].fx == _fx) return;
-	array_push(_target.pending_effects, {
-		timer: max(1, round(_fx.delay * TARGET_ROOM_SPEED)),
-		fx: _fx,
-		spell: _spell
-	})
-}
-
-/// @description Creates a spell snapshot struct
+// Snapshots retain immutable compiled values and shared cast hit records, never a projectile.
 function spell_snapshot(_spell) {
 	return {
-		cast_id: _spell.cast_id,
-		caster: _spell.caster,
-		form: { is_channel: _spell.form.is_channel },
-		col: _spell.col,
-		x: _spell.x, y: _spell.y,
-		target_col: _spell.target_col, target_row: _spell.target_row
-	}
-}
-
-function spell_hit(spell, target) {
-	if (!instance_exists(target)) return false;
-	if (array_contains(spell.hit_list, target)) return false;
-	if (!target.is_targetable) return false;
-	array_push(spell.hit_list, target);
-	for (var e = 0; e < array_length(spell.effects); e++) {
-		var _fx = spell.effects[e];
-		if (_fx.delay > 0) {
-			schedule_effect(spell_snapshot(spell), target, _fx);
-		} else {
-			apply_effect_group(spell, target, _fx);
-		}
-	}
-	return true;
-}
-
-function spell_impact(spell, col, lane) {
-	for (var e = 0; e < array_length(spell.effects); e++) {
-		var _fx = spell.effects[e];
-		if (_fx.delay > 0) {
-			var _manager = instance_find(obj_gameplay_manager, 0);
-			if (instance_exists(_manager)) {
-				array_push(_manager.pending_spell_impacts, {
-					timer: max(1, round(_fx.delay * TARGET_ROOM_SPEED)),
-					spell: spell_snapshot(spell), fx: _fx, col: col, lane: lane
-				});
-			}
-		} else {
-			_fx.effect.on_impact(spell, _fx, col, lane);
-		}
-	}
-}
-
-function spell_hit_area(_spell, _col1, _col2, _lane1, _lane2) {
-	_col1 = max(_col1, 0); _col2  = min(_col2, GRID_COLS - 1);
-	_lane1 = max(_lane1, 0); _lane2 = min(_lane2, LANE_COUNT - 1);
-
-	with (obj_enemy_parent) {
-		var _l = enemy_lane(id);
-		var _c = (x - GRID_X0) div TILE_W;
-		if (enemy_overlaps_region(id, _col1, _col2, _lane1, _lane2)) {
-			spell_hit(_spell, id);
-		}
-	}
+		cast_id: _spell.cast_id, caster: _spell.caster,
+		form: {is_channel: _spell.form.is_channel}, col: _spell.col,
+		x: _spell.x, y: _spell.y, target_col: _spell.target_col, target_row: _spell.target_row,
+		hit_state: _spell.hit_state
+	};
 }
 
 // The limit belongs to one exact Rune configuration, across all prepared slots.
@@ -210,7 +148,7 @@ function compile_spell(_loadout) {
 		}
 		_fx.delay = _delay;
 		_delay += _fx.delay_after;
-		_fx.target_policy = (_fx.id == "pull") ? "location" :
+		_fx.target_policy = (_fx.effect[$ "delivery_kind"] == "location") ? "location" :
 			((_compiled.form_id == "strike" || _compiled.form_id == "rune" || _compiled.area) && _compiled.form_id != "beam" ? "area" : "entity");
 	}
 	return _compiled;

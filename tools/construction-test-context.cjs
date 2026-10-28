@@ -11,6 +11,8 @@ function makeContext(limit = 8) {
         const body = effectSource.slice(start,next<0?undefined:next);
         const match = body.match(/allowed_forms = (\[[^\]]*\])/);
         if (match) glyphs.effect[id].allowed_forms=JSON.parse(match[1]);
+        const delivery=body.match(/delivery_kind = "(\w+)"/);
+        glyphs.effect[id].delivery_kind=delivery?delivery[1]:'target';
     }
     const modifiers = read('scripts/ModifierGlyphs/ModifierGlyphs.gml');
     for (const [id, name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {

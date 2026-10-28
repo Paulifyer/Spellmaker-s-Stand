@@ -6,7 +6,7 @@ _bones.wave_owner = wave_owner;
 enemy_bind_lineage(_bones, lineage);
 bones_spawned = true;
 enemy_restore_status(_bones, status_state);
-enemy_apply_overdue_effects(_bones);
+combat_flush_lineage(lineage);
 // A delayed killing blow can destroy the pile immediately on appearance.
 if (_bones.hp <= 0) {
 	instance_destroy(_bones);
