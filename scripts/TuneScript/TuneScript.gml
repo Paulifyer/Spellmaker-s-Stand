@@ -22,6 +22,16 @@ function load_tuning() {
 ///@param {string} _id
 ///@param {string} _key
 ///@param {Real} _default
+// Structured/string settings are validated by their consumer instead of numeric fallback.
+function tune_setting(_group, _id, _key, _default) {
+	var _g = global.tuning[$ _group];
+	if (!is_struct(_g)) return _default;
+	var _entry = _g[$ _id];
+	if (!is_struct(_entry)) return _default;
+	var _value = _entry[$ _key];
+	return (_value == undefined) ? _default : _value;
+}
+
 function tune_params(_group, _id, _key, _default) {
 	var _g = global.tuning[$ _group];
 	if (!is_struct(_g)) return _default;

@@ -591,6 +591,7 @@
             "difficulty_curve": 1
         },
         "unlocked_glyphs": [
+            { "type": "modifier", "id": "chain" },
             {
                 "type": "form",
                 "id": "rune"

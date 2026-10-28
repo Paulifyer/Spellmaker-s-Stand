@@ -2,10 +2,10 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const parse=p=>JSON.parse(read(p).replace(/,\s*([}\]])/g,'$1'));
-const manifest=parse('tools/asset-sources/payoff-glyphs/manifest.json');
+const manifest=[...parse('tools/asset-sources/payoff-glyphs/manifest.json'),...parse('tools/asset-sources/chain-glyph/manifest.json')];
 const project=parse('Spell.yyp');
 const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex');
-assert.equal(manifest.length,3);
+assert.equal(manifest.length,4);
 for(const item of manifest) {
     const dir='sprites/'+item.name,s=parse(dir+'/'+item.name+'.yy');
     assert.equal(project.resources.filter(r=>r.id.name===item.name&&r.id.path===dir+'/'+item.name+'.yy').length,1);
@@ -30,6 +30,8 @@ for(const item of manifest) {
     }
     assert.ok(transparent>0&&opaque>0,item.name+': artwork and transparent background both present');
     const title=item.name.slice('spr_glyph_'.length);const constructor=title[0].toUpperCase()+title.slice(1);
-    assert.match(read('scripts/EffectGlyphs/EffectGlyphs.gml'),new RegExp(`function Elem_${constructor}\\([^]*?icon = ${item.name};`));
+    const file=title==='chain'?'scripts/ModifierGlyphs/ModifierGlyphs.gml':'scripts/EffectGlyphs/EffectGlyphs.gml';
+    const prefix=title==='chain'?'Mod':'Elem';
+    assert.match(read(file),new RegExp(`function ${prefix}_${constructor}\\([^]*?icon = ${item.name};`));
 }
 console.log('Payoff icon checks passed: project registration, glyph bindings, frame references, integer origins, original pixel hashes and transparency.');

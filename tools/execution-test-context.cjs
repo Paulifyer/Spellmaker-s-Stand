@@ -42,7 +42,7 @@ function makeExecutionContext() {
     });
     ctx.global.lane_top=[0,100,200];
     load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage','enemy_update_movement']);
-    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['apply_effect_group','spell_snapshot','cast_spell','rune_trim_to_limit']);
+    load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['apply_effect_group','spell_snapshot','spell_effect_colour','cast_spell','rune_trim_to_limit']);
     const execution=read('scripts/SpellExecution/SpellExecution.gml');
     const names=[...execution.matchAll(/function (\w+)\(/g)].map(m=>m[1]);
     load(ctx,'scripts/SpellExecution/SpellExecution.gml',names);

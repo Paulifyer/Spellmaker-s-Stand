@@ -1,0 +1,44 @@
+[
+  {
+    "name": "spr_enemy_carrionscreech",
+    "source": "spr_enemy_carrionscreech.png",
+    "sha256": "c1ec37a1d847ef6433276fb594a88106ad01640aa1eedbf6f7747f3dac15c1cb",
+    "width": 264,
+    "height": 264,
+    "bounds": [
+      66,
+      10,
+      215,
+      257
+    ],
+    "origin": [
+      122,
+      217
+    ]
+  },
+  {
+    "name": "spr_enemy_carrionflight",
+    "source": "spr_enemy_carrionflight.png",
+    "sha256": "db00144edc899aace3d05010d9074f14816c953268747ad2d7082fca685eabe9",
+    "width": 264,
+    "height": 264,
+    "bounds": [
+      21,
+      17,
+      249,
+      219
+    ],
+    "origin": [
+      122,
+      217
+    ]
+  },
+  {
+    "name": "snd_carrion_screech",
+    "source": "Carrion Screech.mp3",
+    "sha256": "423384b2a8b73c7da62749599e87d9e0f2c7aee57ca4637e723cc55f4bc15850",
+    "frames": 285,
+    "sampleRate": 24000,
+    "duration": 6.84
+  }
+]

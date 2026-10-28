@@ -29,13 +29,15 @@ my_speed = base_speed;
 v_speed = my_speed * 0.7;
 
 // This variable holds the sprite to use when the enemy is moving sideways
-walk_side_sprite = spr_enemy_carrionwalk;
+walk_side_sprite = spr_enemy_carrionwalk_new;
 
 // This variable holds the sprite to use when the enemy is moving up
-walk_up_sprite = spr_frankenstein_walk_up;
+attack_sprite = spr_enemy_carrionpreview;
 
 // This variable holds the sprite to use when the enemy is moving down
 walk_down_sprite = spr_frankenstein_walk_down;
+// Keep gameplay collisions stable while the displayed pose changes.
+mask_index = spr_enemy_carrionwalk;
 
 
 // The defeated enemy to spawn if the enemy is moving sideways
@@ -57,6 +59,14 @@ damage_dealt = tune_enemy(name, "attack_dmg", 3);
 max_attack_delay = tune_enemy(name, "attack_delay", 3);
 attack_delay = max_attack_delay;
 
-// This variables holds the multiplier parameter for enrage
-enrage_hp_mult = tune_enemy(name, "enrage_hp_mult", 0.2);
-enrage_spd_mult = tune_enemy(name, "enrage_spd_mult", 0.1);
+// Nearby deaths grant standard HP; frenzy multiplies this Carrion's speed once.
+hp_gain_per_death_mult = max(0, tune_enemy(name, "hp_gain_per_death_mult", 0.2));
+// Percentage points: 15 heals 15% of the newly increased maximum HP.
+heal_on_nearby_death_pct = clamp(tune_enemy(name, "heal_on_nearby_death_pct", 15), 0, 100);
+deaths_to_frenzy = max(1, floor(tune_enemy(name, "deaths_to_frenzy", 5)));
+frenzy_speed_mult = max(1, tune_enemy(name, "frenzy_speed_mult", 3));
+nearby_deaths = 0;
+frenzied = false;
+screech_duration_frames = max(1, round(tune_enemy(name, "screech_duration", 0.5) * TARGET_ROOM_SPEED));
+screech_timer = 0;
+is_rune_immune = false;

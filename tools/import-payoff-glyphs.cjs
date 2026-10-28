@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.join(__dirname,'..');
 const parse=file=>JSON.parse(fs.readFileSync(path.join(root,file),'utf8').replace(/,\s*([}\]])/g,'$1'));
-const manifest=parse('tools/asset-sources/payoff-glyphs/manifest.json');
+const manifest=parse(process.argv[2]??'tools/asset-sources/payoff-glyphs/manifest.json');
 const prototype=parse('sprites/spr_glyph_fire/spr_glyph_fire.yy');
 let project=fs.readFileSync(path.join(root,'Spell.yyp'),'utf8');
 const resources=JSON.parse(project.replace(/,\s*([}\]])/g,'$1')).resources;

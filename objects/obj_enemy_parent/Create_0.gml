@@ -30,6 +30,9 @@ base_speed = tune_value("enemies", "base_speed", BASE_SPEED);
 // This variable holds the speed for the enemy
 my_speed = base_speed;
 
+// Set animation speed
+image_speed = 1;
+
 // This variable is used for the enemy's hit flash.
 // It is set to 1 when the enemy is hit by something
 flash_alpha = 0;
@@ -46,6 +49,8 @@ v_speed = my_speed * 0.6;
 
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = spr_zombie_walk_side;
+
+attack_sprite = undefined;
 
 // The defeated enemy to spawn if the enemy is moving sideways
 defeat_side_object = obj_zombie_defeat_side;

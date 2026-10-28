@@ -19,6 +19,7 @@ const ctx = {
     }},
     array_length: a => a.length,
     array_contains:(a,v)=>a.includes(v),
+    is_array:Array.isArray,is_string:x=>typeof x==='string',is_real:x=>typeof x==='number',
     array_push:(a,v)=>a.push(v),is_struct:x=>!!x&&typeof x==='object',
     clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
     string: String, is_instanceof: m => !!m.amplify, Mod_Amplify: function(){},
@@ -26,8 +27,9 @@ const ctx = {
     tune_value:(_,__,value)=>value,
 };
 vm.createContext(ctx);
+ctx.tune_setting=(...args)=>ctx.tune_params(...args);
 const source = read('scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml');
-for(const name of ['compile_effect_parameters','compile_spell']) vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),name),ctx);
+for(const name of ['compile_effect_parameters','spell_form_modifier_penalty','compile_spell']) vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),name),ctx);
 for (const name of ['spell_cost', 'spell_mana_preview', 'spellbook_expensive_slots'])
     vm.runInContext(extract(source, name), ctx);
 const spell = (mods = []) => ({form: 'projectile', form_mods: [], effects: [{effect: 'harm', mods}]});

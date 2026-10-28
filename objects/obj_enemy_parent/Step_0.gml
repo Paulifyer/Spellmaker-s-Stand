@@ -15,3 +15,6 @@ enemy_update_movement(id);
 // Save it's current x and y
 x_previous = x;
 y_previous = y;
+
+// Set image_speed as the ratio between my_speed and base_speed
+image_speed = my_speed / base_speed; 

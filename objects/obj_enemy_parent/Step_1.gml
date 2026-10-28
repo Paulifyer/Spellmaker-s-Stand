@@ -2,8 +2,11 @@
 
 // Check if the enemies position on the path is greater than or equal to 1
 // which means that it is at the end of the path
+
+
 if (path_position >= 1)
 {
+	if (attack_sprite != undefined) sprite_index = attack_sprite;
 	if (ready_to_attack && stun_timer <= 0) {
 		reduce_village_hp(damage_dealt);
 		ready_to_attack = false;

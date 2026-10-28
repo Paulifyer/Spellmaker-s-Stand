@@ -24,6 +24,7 @@ global.spell_glyphs = {
 		area : new Mod_Area(),
 		amplify : new Mod_Amplify(),
 		pierce : new Mod_Pierce(),
+		chain: new Mod_Chain(),
 		extend_time : new Mod_Extend_Time(),
 		delay: new Mod_Delay(),
 		none : new Mod_None()
@@ -33,7 +34,7 @@ global.spell_glyphs = {
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike", "rune"],
 	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex", "snap", "combust", "discharge"],
-	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
+	modifier:	["area", "amplify", "pierce", "extend_time", "delay", "chain"]
 };
 
 function validate_glyphs() {
@@ -80,6 +81,14 @@ function spell_snapshot(_spell) {
 		x: _spell.x, y: _spell.y, target_col: _spell.target_col, target_row: _spell.target_row,
 		hit_state: _spell.hit_state
 	};
+}
+
+function spell_effect_colour(_effects) {
+	if (array_length(_effects) == 0) return c_white;
+	var _colour = _effects[0].effect.col;
+	for (var i = 1; i < array_length(_effects); i++)
+		_colour = merge_colour(_colour, _effects[i].effect.col, 0.5);
+	return _colour;
 }
 
 // The limit belongs to one exact Rune configuration, across all prepared slots.
@@ -135,6 +144,26 @@ function compile_effect_parameters(_id) {
 	return _params;
 }
 
+// Only listed Form attachments participate; equal-type stacks never pair together.
+function spell_form_modifier_penalty(_ids) {
+	var _unit = tune_setting("modifiers", "interaction_penalty", "cost_per_pair", 10);
+	var _listed = tune_setting("modifiers", "interaction_penalty", "penalized_modifiers", ["area", "pierce", "chain"]);
+	if (!is_real(_unit) || _unit < 0) throw "interaction_penalty.cost_per_pair must be non-negative";
+	if (!is_array(_listed)) throw "interaction_penalty.penalized_modifiers must be an array";
+	for (var i = 0; i < array_length(_listed); i++) {
+		if (!is_string(_listed[i]) || _listed[i] == "") throw "Penalized modifier IDs must be non-empty strings";
+		for (var j = 0; j < i; j++) if (_listed[i] == _listed[j]) throw "Duplicate penalized modifier ID";
+	}
+	var _pairs = 0;
+	for (var i = 0; i < array_length(_ids); i++) {
+		if (!array_contains(_listed, _ids[i])) continue;
+		for (var j = 0; j < i; j++) {
+			if (_ids[i] != _ids[j] && array_contains(_listed, _ids[j])) _pairs++;
+		}
+	}
+	return _pairs * _unit;
+}
+
 function compile_spell(_loadout) {
 	if (_loadout == undefined || _loadout.form == undefined) return undefined;
 	var _g = global.spell_glyphs;
@@ -142,6 +171,8 @@ function compile_spell(_loadout) {
 	if (!is_struct(_f)) return undefined;
 
 	var _cost = _f.cost;
+	var _form_penalty = spell_form_modifier_penalty(_loadout.form_mods);
+	_cost += _form_penalty;
 
 	var _fmods = [];
 
@@ -175,13 +206,16 @@ function compile_spell(_loadout) {
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
-		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
+
+		form_mods: _fmods, effects: _effects, area: false, pierce: 0, chain_hops: 0, form_modifier_penalty: _form_penalty};
+
 	if (_loadout.form == "strike") {
 		var _cast_time = tune_params("forms", "strike", "cast_time", 0.23);
 		if (!is_real(_cast_time) || _cast_time <= 0)
 			throw "forms.strike.cast_time must be a positive number of seconds";
 		_compiled.strike_cast_frames = max(1, round(_cast_time * TARGET_ROOM_SPEED));
 	}
+
 	if (_loadout.form == "beam") {
 		var _ticks_per_second = tune_params("forms", "beam", "ticks_per_second", 4);
 		var _damage_multiplier = tune_params("forms", "beam", "damage_multiplier_per_tick", 0.25);
@@ -196,6 +230,14 @@ function compile_spell(_loadout) {
 	for (var i = 0; i < array_length(_fmods); i++) {
 		var _fn = _fmods[i][$ "on_cast"];
 		if (_fn != undefined) _fn(_compiled, undefined);
+	}
+	if (_compiled.chain_hops > 0) {
+		var _range = tune_setting("modifiers", "chain", "range_radius_tiles", 2);
+		var _visual_time = tune_setting("modifiers", "chain", "visual_duration", 0.15);
+		if (!is_real(_range) || _range < 0 || floor(_range) != _range) throw "chain.range_radius_tiles must be a non-negative integer";
+		if (!is_real(_visual_time) || _visual_time < 0) throw "chain.visual_duration must be non-negative seconds";
+		_compiled.chain_range_radius = _range;
+		_compiled.chain_visual_frames = max(0, round(_visual_time * TARGET_ROOM_SPEED));
 	}
 	var _delay = 0;
 	var _segment = 0;
