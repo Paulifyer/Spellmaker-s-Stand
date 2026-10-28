@@ -7,8 +7,55 @@ function spell_damage_scale(_spell) {
 	return _spell.form.is_channel ? _spell.compiled.beam_damage_multiplier_per_tick : 1;
 }
 
-function spell_direct_damage(_spell, _enemy, _amount) {
+function spell_direct_damage(_spell, _enemy, _amount, _allow_combust = true) {
+	if (_enemy.hp <= 0) return;
+	var _burning = combat_status_active(_enemy, "burn");
 	deal_damage(_enemy, _amount);
+	if (!_allow_combust || !_burning || _enemy.hp > 0) return;
+	if (!is_struct(_spell) || !variable_struct_exists(_spell, "execution_scope")) return;
+	var _scope = _spell.execution_scope;
+	if (!is_struct(_scope) || _scope.combust == undefined) return;
+	var _eligible = (_scope.combust.target_policy == "entity")
+		? (_scope.lineage == enemy_get_lineage(_enemy))
+		: enemy_overlaps_region(_enemy, _scope.col - _scope.radius, _scope.col + _scope.radius, _scope.lane - _scope.radius, _scope.lane + _scope.radius);
+	if (!_eligible) return;
+	var _key = string(enemy_get_lineage(_enemy).id);
+	if (variable_struct_exists(_scope.exploded, _key)) return;
+	_scope.exploded[$ _key] = true;
+	array_push(_scope.queue, {kind: "combust", fx: _scope.combust, x: _enemy.x, y: _enemy.y});
+	spell_drain_bursts(_spell, _scope);
+}
+
+// Each Delay boundary owns a separate immediate execution context.
+function spell_execution_scope_create(_spell, _segment, _target, _col, _lane, _radius) {
+	var _combust = undefined;
+	for (var i = 0; i < array_length(_spell.effects); i++) {
+		var _fx = _spell.effects[i];
+		if (_fx.execution_segment == _segment && _fx.id == "combust") _combust = _fx;
+	}
+	return {id: combat_next_id(), combust: _combust,
+		lineage: instance_exists(_target) ? enemy_get_lineage(_target) : undefined,
+		col: _col, lane: _lane, radius: _radius, exploded: {}, reactions: {}, queue: [], cursor: 0, processing: false};
+}
+
+function spell_drain_bursts(_spell, _scope) {
+	if (_scope.processing) return;
+	_scope.processing = true;
+	while (_scope.cursor < array_length(_scope.queue)) {
+		var _burst = _scope.queue[_scope.cursor++];
+		var _fx = _burst.fx;
+		var _radius = _fx.area ? _fx.params.area_radius_tiles : _fx.params.radius_tiles;
+		var _targets = spell_reaction_targets(_spell, _burst.x, _burst.y, _radius);
+		for (var i = 0; i < array_length(_targets); i++) {
+			var _target = _targets[i];
+			if (!instance_exists(_target) || _target.hp <= 0) continue;
+			if (_burst.kind == "combust") {
+				spell_direct_damage(_spell, _target, _fx.params.base_damage * _fx.params.explosion_damage_mult * _fx.effect_multiplier * spell_damage_scale(_spell), false);
+				combat_status_apply(_target, "burn", _fx.params.burn_duration * TARGET_ROOM_SPEED, _fx.params.base_damage * _fx.params.burn_damage_mult * _fx.effect_multiplier);
+			}
+		}
+	}
+	_scope.queue = []; _scope.cursor = 0; _scope.processing = false;
 }
 
 // Mutable reaction state belongs to one effect occurrence, not the glyph singleton.
@@ -75,6 +122,7 @@ function spell_apply_once(_event, _enemy) {
 }
 
 function combat_execute_event(_event) {
+	_event.spell.execution_scope = _event.scope;
 	switch (_event.policy) {
 		case "location":
 			_event.fx.effect.on_impact(_event.spell, _event.fx, _event.col, _event.lane);
@@ -140,14 +188,18 @@ function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
 	}
 	var _delivery = spell_new_delivery(_spell);
 	var _snapshot = spell_snapshot(_spell);
+	var _scopes = {};
 	for (var e = 0; e < array_length(_spell.effects); e++) {
 		var _fx = _spell.effects[e];
+		var _segment_key = string(_fx.execution_segment);
+		if (!variable_struct_exists(_scopes, _segment_key))
+			_scopes[$ _segment_key] = spell_execution_scope_create(_spell, _fx.execution_segment, _target, _col, _lane, _radius);
 		var _lineage = (_fx.target_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
 		if (_fx.target_policy == "entity" && _lineage == undefined) continue;
 		var _event = {due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), order: combat_next_id(),
 			cast_id: _delivery.cast_id, delivery_id: _delivery.id, fx: _fx, policy: _fx.target_policy,
 			lineage: _lineage, col: _col, lane: _lane, radius: _radius,
-			epoch: _spell.hit_state.epoch, spell: _snapshot};
+			epoch: _spell.hit_state.epoch, spell: _snapshot, scope: _scopes[$ _segment_key]};
 		array_push(_state.events, _event);
 	}
 	combat_execution_flush(_state);

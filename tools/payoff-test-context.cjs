@@ -8,6 +8,7 @@ function makePayoffContext() {
             on_hit:callback(c,'scripts/EffectGlyphs/EffectGlyphs.gml',`Elem_${name}`,'on_hit')};
     }
     Object.assign(c,{obj_mook:'mook',obj_brute:'brute',HEX_DAMAGE_PER_STATUS:0.1,audio_play_sound(){},
+        enemy_overlaps_region:(e,a,b,l1,l2)=>Math.floor(e.x/100)>=a&&Math.floor(e.x/100)<=b&&e.lane>=l1&&e.lane<=l2,
         world_to_grid:(x,y)=>({col:Math.floor(x/100),lane:Math.floor(y/100)})});
     load(c,'scripts/GameplayScripts/GameplayScripts.gml',['deal_damage']);
     load(c,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_update_movement']);
