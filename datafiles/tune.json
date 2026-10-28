@@ -46,6 +46,8 @@
         "pull": { "cost": 25, "pull_sec": 0.4, "hold_sec": 0.2 }
     },
     "modifiers": {
+        "interaction_penalty": { "cost_per_pair": 10, "penalized_modifiers": ["area", "pierce", "chain"] },
+        "chain": { "cost": 20, "hops_per_stack": 2, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25},
         "pierce": { "cost": 15, "pierce_amt": 2 },
         "amplify": { "cost": 15, "dmg_multplier": 1, "cost_increase_per_stack": 5 },

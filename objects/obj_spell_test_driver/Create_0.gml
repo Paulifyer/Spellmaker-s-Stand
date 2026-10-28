@@ -9,7 +9,7 @@ watched_lineage = undefined; description = "";
 test_plan = function(_form, _effects, _mods = []) {
 	var _compiled = compile_spell({form: _form, form_mods: _mods, effects: _effects});
 	return {compiled: _compiled, form: _compiled.form, effects: _compiled.effects,
-		area: _compiled.area, pierce: _compiled.pierce, caster: noone, col: c_white,
+		area: _compiled.area, pierce: _compiled.pierce, caster: noone, col: spell_effect_colour(_compiled.effects),
 		x: GRID_X0, y: global.lane_top[test_lane], target_col: test_col,
 		target_row: test_lane * ROWS_PER_LANE, cast_id: combat_next_id(), delivery_index: 0,
 		hit_state: {contacts: [], applications: {}, epoch: 0}};
@@ -74,10 +74,39 @@ start_case = function(_case) {
 			_effects = [{effect: "discharge", mods: []}];
 			description = "Discharge: chain through charged neighbors, consume Charged, emit once each and cap damage at 3 bursts.";
 			break;
+		case 10:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			spawn_test_enemy(obj_spell_test_enemy, test_col + 1, test_lane);
+			spawn_test_enemy(obj_spell_test_enemy, test_col + 2, test_lane + 1);
+			_form = "projectile"; _mods = ["chain"];
+			_effects = [{effect: "fire", mods: []}, {effect: "ice", mods: []}];
+			description = "Chain: two nearest sequential hops; links use the mixed Fire/Ice spell colour. R restarts; P freezes links.";
+			break;
+		case 11:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			for (var j = 1; j <= 3; j++) spawn_test_enemy(obj_spell_test_enemy, test_col + j, test_lane);
+			_form = "projectile"; _mods = ["area", "chain"];
+			_effects = [{effect: "harm", mods: []}];
+			description = "Chain + AoE: initial splash skips the adjacent enemy as a hop; next impact splashes again, without repeated Harm.";
+			break;
+		case 12:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			for (var j = 0; j < 3; j++) {
+				if (j > 0) spawn_test_enemy(obj_spell_test_enemy, test_col + 3 * j, test_lane);
+				spawn_test_enemy(obj_spell_test_enemy, test_col + 3 * j, test_lane + 1);
+				spawn_test_enemy(obj_spell_test_enemy, test_col + 3 * j + 1, test_lane + 1);
+			}
+			_form = "beam"; _mods = ["pierce", "chain"];
+			_effects = [{effect: "harm", mods: []}];
+			description = "Beam + Pierce + Chain: three primary hits each receive two hops. New ticks may hit the same enemies again.";
+			break;
 	}
 	plan = test_plan(_form, _effects, _mods);
 	watched_lineage = enemy_get_lineage(_actor);
-	spell_deliver(plan, (_form == "beam" || (_form == "projectile" && !plan.area)) ? _actor : noone,
+	if (_case == 12) {
+		plan.tick = 0; plan.lane = test_lane; plan.beam_frame = 0; plan.beam_lanes = [];
+		plan.form.on_step(plan);
+	} else spell_deliver(plan, (_form == "beam" || _form == "projectile") ? _actor : noone,
 		test_col, test_lane, plan.area ? 1 : 0);
 };
 start_case(2);

@@ -15,6 +15,6 @@ const direct=ctx.compile_spell({form:'projectile',form_mods:[],effects:[{effect:
 assert.equal(direct.effects[0].target_policy,'entity');assert.equal(direct.effects[1].target_policy,'location');
 console.log('Spell compilation checks passed: shared cost, modifier values, independent plans and target policies.');
 const params=a.effects[0].params;
-ctx.tune_value=()=>999;ctx.tune_params=(_,__,___,v)=>v*2;
+ctx.tune_value=()=>999;ctx.tune_params=(_,__,___,v)=>typeof v==='number'?v*2:v;
 assert.equal(a.effects[0].params,params);assert.equal(params.base_damage,100);
 assert.equal(ctx.compile_spell(s).effects[0].params.base_damage,999);

@@ -4,6 +4,7 @@ const path=require('node:path');
 const {read}=require('./gml-test-utils.cjs');
 const parse=p=>JSON.parse(read(p).replace(/,\s*([}\]])/g,'$1'));
 const project=parse('Spell.yyp');
+assert.doesNotMatch(read('scripts/SpellExecution/SpellExecution.gml'),/\b\d+(?:\.\d+)?[eE][+-]?\d+\b/,'Use GameMaker-compatible numeric literals');
 assert.equal(project.RoomOrderNodes[0].roomId.name,'rm_menu');
 for(const name of ['SpellExecution','obj_spell_test_driver','obj_spell_test_enemy','rm_spell_interaction_test']) {
     const entry=project.resources.find(r=>r.id.name===name);assert.ok(entry,name);
@@ -11,6 +12,8 @@ for(const name of ['SpellExecution','obj_spell_test_driver','obj_spell_test_enem
 }
 const manager=parse('objects/obj_gameplay_manager/obj_gameplay_manager.yy');
 for(const num of [1,2])assert.ok(manager.eventList.some(e=>e.eventType===3&&e.eventNum===num));
+assert.ok(manager.eventList.some(e=>e.eventType===8&&e.eventNum===73));
+assert.match(read('objects/obj_gameplay_manager/Draw_73.gml'),/spell_chain_draw_links/);
 for(const name of ['obj_spell_test_driver','obj_spell_test_enemy']) {
     const obj=parse(`objects/${name}/${name}.yy`);
     for(const event of obj.eventList) {

@@ -324,6 +324,7 @@
     {"id":{"name":"spr_glyph_amplify","path":"sprites/spr_glyph_amplify/spr_glyph_amplify.yy",},},
     {"id":{"name":"spr_glyph_aoe","path":"sprites/spr_glyph_aoe/spr_glyph_aoe.yy",},},
     {"id":{"name":"spr_glyph_beam","path":"sprites/spr_glyph_beam/spr_glyph_beam.yy",},},
+    {"id":{"name":"spr_glyph_chain","path":"sprites/spr_glyph_chain/spr_glyph_chain.yy",},},
     {"id":{"name":"spr_glyph_combust","path":"sprites/spr_glyph_combust/spr_glyph_combust.yy",},},
     {"id":{"name":"spr_glyph_delay","path":"sprites/spr_glyph_delay/spr_glyph_delay.yy",},},
     {"id":{"name":"spr_glyph_discharge","path":"sprites/spr_glyph_discharge/spr_glyph_discharge.yy",},},
