@@ -228,6 +228,7 @@
     {"id":{"name":"seq_wave_start_banner","path":"sequences/seq_wave_start_banner/seq_wave_start_banner.yy",},},
     {"id":{"name":"seq_wave_start_button","path":"sequences/seq_wave_start_button/seq_wave_start_button.yy",},},
     {"id":{"name":"sh_hit_flash","path":"shaders/sh_hit_flash/sh_hit_flash.yy",},},
+    {"id":{"name":"sh_spell_recolour","path":"shaders/sh_spell_recolour/sh_spell_recolour.yy",},},
     {"id":{"name":"snd_attack_arc_01","path":"sounds/snd_attack_arc_01/snd_attack_arc_01.yy",},},
     {"id":{"name":"snd_attack_arc_02","path":"sounds/snd_attack_arc_02/snd_attack_arc_02.yy",},},
     {"id":{"name":"snd_attack_arc_03","path":"sounds/snd_attack_arc_03/snd_attack_arc_03.yy",},},
