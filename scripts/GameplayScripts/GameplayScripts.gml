@@ -5,19 +5,13 @@ global.current_level = 0;
 global.level_array = fetch_all_level_rooms();
 
 function fetch_all_level_rooms() {
-	matching_rooms = [];
-	var _all_rooms = asset_get_ids(asset_room);
-	
-	var _target_format = "rm_level_";
-	
-	for (var i = 0; i < array_length(_all_rooms); i++) {
-		var _room_handle = _all_rooms[i];
-		var _room_name = room_get_name(_room_handle);
-		if (string_starts_with(_room_name, _target_format)) {
-			array_push(matching_rooms, _room_handle);
-		}
+	// Keep campaign order independent of GameMaker's asset enumeration order.
+	var _rooms = [];
+	for (var n = 1; n <= 8; n++) {
+		var _room = asset_get_index("rm_level_" + string(n));
+		if (room_exists(_room)) array_push(_rooms, _room);
 	}
-	return matching_rooms;
+	return _rooms;
 }
 
 /// @description Is used by a sequence to lock the menu

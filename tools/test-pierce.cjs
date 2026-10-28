@@ -1,6 +1,34 @@
 const assert=require('node:assert/strict');
 const {makeExecutionContext}=require('./execution-test-context.cjs');
+const vm=require('node:vm');
+const {read}=require('./gml-test-utils.cjs');
 const fx=effect=>({effect,mods:[]});
+// Exercise the collision event itself, including concrete handles passed to methods.
+for(const effects of [['fire'],['ice'],['fire','ice'],['ice','fire']]) {
+    const h=makeExecutionContext();
+    const s=h.spell('projectile',effects.map(fx));
+    const target=h.enemy();
+    target.id=target;
+    let calls=0;
+    h.ctx.id=s;
+    h.ctx.self={}; // A scope reference must not escape into delivery methods.
+    h.ctx.other={id:target,is_targetable:true};
+    h.ctx.form={on_hit:(spell,enemy)=>{
+        calls++;
+        assert.equal(spell,s);
+        assert.equal(enemy,target);
+        h.ctx.forms.projectile.on_hit(spell,enemy);
+    }};
+    vm.runInContext(`(function(){${read('objects/obj_spells/Collision_obj_enemy_parent.gml').replace(/\bexit;/g,'return;')}})()`,h.ctx);
+    assert.equal(calls,1);
+    assert.equal(s.destroyed,true);
+    assert.equal(target.hp,100000); // Status delivery requires no direct Harm damage.
+    assert.equal(target.burn_timer,effects.includes('fire')?180:0);
+    assert.equal(target.burn_dmg,effects.includes('fire')?40:0);
+    assert.equal(target.slow_timer,effects.includes('ice')?180:0);
+    assert.equal(target.slow_amt,effects.includes('ice')?0.2:0);
+    assert.equal(h.ctx.manager.combat_execution.events.length,0);
+}
 let h=makeExecutionContext();
 let s=h.spell('projectile',[fx('fire'),fx('ice')],['pierce']);
 const a=h.enemy(1),b=h.enemy(2),c=h.enemy(3);

@@ -1,270 +1,1320 @@
 {
-  "_readme": "Threat budgets buy enemies plus mutation surcharges. Settings arrays have one entry per wave. Costs are defined in EnemyCatalog.gml, not here.",
-  "rm_level_1": {
-    "max_glyphs": 2,
-    "enemy_roster": [
-      {
-        "enemy": "MOOK",
-        "weight_setting": [
-          8,
-          8,
-          8
+    "_readme": "Threat budgets buy enemies plus mutation surcharges. Settings arrays have one entry per wave. Costs are defined in EnemyCatalog.gml, not here.",
+    "rm_level_1": {
+        "max_glyphs": 2,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    8,
+                    8
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            }
         ],
-        "min_setting": [
-          0,
-          0,
-          0
-        ],
-        "max_setting": [
-          999,
-          999,
-          999
-        ],
-        "mutation": "none"
-      },
-      {
-        "enemy": "RANGER",
-        "weight_setting": [
-          0,
-          5,
-          5
-        ],
-        "min_setting": [
-          0,
-          1,
-          0
-        ],
-        "max_setting": [
-          0,
-          999,
-          999
-        ],
-        "mutation": "none"
-      }
-    ],
-    "level_wave_config": {
-      "wave_count": 3,
-      "starting_budget": 3,
-      "ending_budget": 9,
-      "difficulty_curve": 1
+        "level_wave_config": {
+            "wave_count": 3,
+            "starting_budget": 3,
+            "ending_budget": 9,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "form",
+                "id": "projectile"
+            },
+            {
+                "type": "form",
+                "id": "strike"
+            },
+            {
+                "type": "effect",
+                "id": "harm"
+            }
+        ]
     },
-    "unlocked_glyphs": [
-      {
-        "type": "form",
-        "id": "projectile"
-      },
-      {
-        "type": "form",
-        "id": "strike"
-      },
-      {
-        "type": "effect",
-        "id": "harm"
-      }
-    ]
-  },
-  "rm_level_2": {
-    "max_glyphs": 3,
-    "enemy_roster": [
-      {
-        "enemy": "MOOK",
-        "weight_setting": [
-          0,
-          8,
-          8,
-          8
+    "rm_level_2": {
+        "max_glyphs": 3,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    0,
+                    8,
+                    8,
+                    8
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    6,
+                    6,
+                    6,
+                    6
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    4,
+                    0,
+                    4,
+                    12
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            }
         ],
-        "min_setting": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "max_setting": [
-          0,
-          999,
-          999,
-          999
-        ],
-        "mutation": "none"
-      },
-      {
-        "enemy": "RANGER",
-        "weight_setting": [
-          6,
-          6,
-          6,
-          6
-        ],
-        "min_setting": [
-          1,
-          0,
-          0,
-          0
-        ],
-        "max_setting": [
-          999,
-          999,
-          999,
-          999
-        ],
-        "mutation": "none"
-      },
-      {
-        "enemy": "BRUTE",
-        "weight_setting": [
-          4,
-          0,
-          4,
-          12
-        ],
-        "min_setting": [
-          1,
-          0,
-          0,
-          1
-        ],
-        "max_setting": [
-          999,
-          999,
-          999,
-          999
-        ],
-        "mutation": "none"
-      }
-    ],
-    "level_wave_config": {
-      "wave_count": 4,
-      "starting_budget": 7,
-      "ending_budget": 25,
-      "difficulty_curve": 1.1
+        "level_wave_config": {
+            "wave_count": 4,
+            "starting_budget": 7,
+            "ending_budget": 25,
+            "difficulty_curve": 1.1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "effect",
+                "id": "fire"
+            },
+            {
+                "type": "effect",
+                "id": "ice"
+            },
+            {
+                "type": "modifier",
+                "id": "pierce"
+            },
+            {
+                "type": "modifier",
+                "id": "amplify"
+            }
+        ]
     },
-    "unlocked_glyphs": [
-      {
-        "type": "effect",
-        "id": "fire"
-      },
-      {
-        "type": "effect",
-        "id": "ice"
-      },
-      {
-        "type": "modifier",
-        "id": "pierce"
-      },
-      {
-        "type": "modifier",
-        "id": "amplify"
-      }
-    ]
-  },
-  "rm_level_3": {
-    "max_glyphs": 5,
-    "enemy_roster": [
-      {
-        "enemy": "MOOK",
-        "weight_setting": [
-          6,
-          0,
-          6,
-          6
+    "rm_level_3": {
+        "max_glyphs": 5,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    6,
+                    0,
+                    6,
+                    6
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    6,
+                    6,
+                    0,
+                    6
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    0,
+                    999
+                ],
+                "mutation": "skeletal"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    5,
+                    0,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    999,
+                    0,
+                    999
+                ],
+                "mutation": "skeletal"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    0,
+                    0,
+                    2,
+                    2
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    1,
+                    999
+                ],
+                "mutation": "frost-warded"
+            }
         ],
-        "min_setting": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "max_setting": [
-          999,
-          0,
-          999,
-          999
-        ],
-        "mutation": "none"
-      },
-      {
-        "enemy": "MOOK",
-        "weight_setting": [
-          6,
-          6,
-          0,
-          6
-        ],
-        "min_setting": [
-          0,
-          1,
-          0,
-          0
-        ],
-        "max_setting": [
-          999,
-          999,
-          0,
-          999
-        ],
-        "mutation": "skeletal"
-      },
-      {
-        "enemy": "RANGER",
-        "weight_setting": [
-          0,
-          5,
-          0,
-          5
-        ],
-        "min_setting": [
-          0,
-          1,
-          0,
-          1
-        ],
-        "max_setting": [
-          0,
-          999,
-          0,
-          999
-        ],
-        "mutation": "skeletal"
-      },
-      {
-        "enemy": "BRUTE",
-        "weight_setting": [
-          0,
-          0,
-          2,
-          2
-        ],
-        "min_setting": [
-          0,
-          0,
-          1,
-          1
-        ],
-        "max_setting": [
-          0,
-          0,
-          1,
-          999
-        ],
-        "mutation": "frost-warded"
-      }
-    ],
-    "level_wave_config": {
-      "wave_count": 4,
-      "starting_budget": 8,
-      "ending_budget": 32,
-      "difficulty_curve": 1
+        "level_wave_config": {
+            "wave_count": 4,
+            "starting_budget": 8,
+            "ending_budget": 32,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "modifier",
+                "id": "delay"
+            },
+            {
+                "type": "modifier",
+                "id": "extend_time"
+            }
+        ]
     },
-    "unlocked_glyphs": [
-      {
-        "type": "modifier",
-        "id": "delay"
-      },
-      {
-        "type": "modifier",
-        "id": "extend_time"
-      }
-    ]
-  }
+    "rm_level_4": {
+        "max_glyphs": 6,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    5,
+                    5,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    4,
+                    4,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "lightning-warded"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    5,
+                    5,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "SIEGE_BEAST",
+                "weight_setting": [
+                    0,
+                    3,
+                    3,
+                    3
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    2
+                ],
+                "max_setting": [
+                    0,
+                    1,
+                    1,
+                    2
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "SWARMER",
+                "weight_setting": [
+                    4,
+                    4,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    1
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            }
+        ],
+        "level_wave_config": {
+            "wave_count": 4,
+            "starting_budget": 10,
+            "ending_budget": 35,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "form",
+                "id": "beam"
+            },
+            {
+                "type": "effect",
+                "id": "lightning"
+            }
+        ]
+    },
+    "rm_level_5": {
+        "max_glyphs": 7,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    7,
+                    7,
+                    7,
+                    7,
+                    7
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "skeletal"
+            },
+            {
+                "enemy": "SWARMER",
+                "weight_setting": [
+                    7,
+                    7,
+                    7,
+                    0,
+                    7
+                ],
+                "min_setting": [
+                    2,
+                    0,
+                    2,
+                    0,
+                    2
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    999,
+                    0,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "SWARMER",
+                "weight_setting": [
+                    6,
+                    0,
+                    6,
+                    6,
+                    6
+                ],
+                "min_setting": [
+                    2,
+                    0,
+                    2,
+                    0,
+                    3
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "skeletal"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    5,
+                    0,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    2,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    999,
+                    0,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "MOLE",
+                "weight_setting": [
+                    0,
+                    9,
+                    0,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    2,
+                    0,
+                    2,
+                    2
+                ],
+                "max_setting": [
+                    0,
+                    999,
+                    0,
+                    5,
+                    5
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    0,
+                    0,
+                    7,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    2
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    3,
+                    3,
+                    4
+                ],
+                "mutation": "fire-warded"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    999
+                ],
+                "mutation": "fire-warded"
+            }
+        ],
+        "level_wave_config": {
+            "wave_count": 5,
+            "starting_budget": 15,
+            "ending_budget": 40,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "form",
+                "id": "rune"
+            },
+            {
+                "type": "modifier",
+                "id": "area"
+            }
+        ]
+    },
+    "rm_level_6": {
+        "max_glyphs": 8,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    0,
+                    8,
+                    8,
+                    8
+                ],
+                "min_setting": [
+                    3,
+                    0,
+                    6,
+                    5,
+                    3
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    999,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "SWARMER",
+                "weight_setting": [
+                    7,
+                    7,
+                    0,
+                    7,
+                    7
+                ],
+                "min_setting": [
+                    2,
+                    2,
+                    0,
+                    2,
+                    2
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    0,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    5,
+                    5,
+                    0,
+                    0,
+                    5
+                ],
+                "min_setting": [
+                    1,
+                    1,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    2,
+                    2,
+                    0,
+                    0,
+                    2
+                ],
+                "mutation": "banneret"
+            },
+            {
+                "enemy": "SIEGE_BEAST",
+                "weight_setting": [
+                    0,
+                    4,
+                    0,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    2,
+                    0,
+                    0,
+                    2
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "MOLE",
+                "weight_setting": [
+                    0,
+                    5,
+                    0,
+                    0,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    2,
+                    0,
+                    0,
+                    2
+                ],
+                "mutation": "banneret"
+            },
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    0,
+                    0,
+                    7,
+                    7,
+                    7
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    2,
+                    3,
+                    2
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    5,
+                    6,
+                    6
+                ],
+                "mutation": "banneret"
+            },
+            {
+                "enemy": "CARRION",
+                "weight_setting": [
+                    0,
+                    0,
+                    4,
+                    8,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    2,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    2,
+                    3,
+                    2
+                ],
+                "mutation": "none"
+            }
+        ],
+        "level_wave_config": {
+            "wave_count": 5,
+            "starting_budget": 18,
+            "ending_budget": 50,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "effect",
+                "id": "pull"
+            }
+        ]
+    },
+    "rm_level_7": {
+        "max_glyphs": 8,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    8,
+                    0,
+                    0,
+                    8
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    0,
+                    0,
+                    999
+                ],
+                "mutation": "fire-warded"
+            },
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    8,
+                    0,
+                    0,
+                    8
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    999,
+                    0,
+                    0,
+                    999
+                ],
+                "mutation": "frost-warded"
+            },
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    0,
+                    8,
+                    0,
+                    8
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    3,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    999,
+                    0,
+                    999
+                ],
+                "mutation": "lightning-warded"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    4,
+                    4,
+                    0,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    1,
+                    0,
+                    1,
+                    1
+                ],
+                "max_setting": [
+                    2,
+                    3,
+                    0,
+                    3,
+                    3
+                ],
+                "mutation": "fire-warded"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    4,
+                    4,
+                    0,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    1,
+                    1,
+                    0,
+                    1,
+                    1
+                ],
+                "max_setting": [
+                    2,
+                    3,
+                    0,
+                    3,
+                    3
+                ],
+                "mutation": "frost-warded"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    4,
+                    0,
+                    4,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    1
+                ],
+                "max_setting": [
+                    2,
+                    0,
+                    3,
+                    3,
+                    3
+                ],
+                "mutation": "lightning-warded"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    0,
+                    5,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    999,
+                    6,
+                    999
+                ],
+                "mutation": "lightning-warded"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    6,
+                    999
+                ],
+                "mutation": "fire-warded"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    5,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    6,
+                    999
+                ],
+                "mutation": "frost-warded"
+            },
+            {
+                "enemy": "CARRION",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    2
+                ],
+                "mutation": "none"
+            }
+        ],
+        "level_wave_config": {
+            "wave_count": 5,
+            "starting_budget": 24,
+            "ending_budget": 60,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": [
+            {
+                "type": "effect",
+                "id": "hex"
+            }
+        ]
+    },
+    "rm_level_8": {
+        "max_glyphs": 8,
+        "enemy_roster": [
+            {
+                "enemy": "MOOK",
+                "weight_setting": [
+                    8,
+                    0,
+                    8,
+                    0,
+                    8,
+                    8
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    10,
+                    0,
+                    999,
+                    999
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "RANGER",
+                "weight_setting": [
+                    6,
+                    6,
+                    6,
+                    0,
+                    6,
+                    6
+                ],
+                "min_setting": [
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    2
+                ],
+                "max_setting": [
+                    999,
+                    8,
+                    6,
+                    0,
+                    999,
+                    6
+                ],
+                "mutation": "skeletal"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    4,
+                    0,
+                    9,
+                    4,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    1,
+                    0,
+                    2,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    999,
+                    0,
+                    6,
+                    4,
+                    0,
+                    2
+                ],
+                "mutation": "frost-warded"
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    3
+                ],
+                "mutation": ["banneret", "skeletal"]
+            },
+            {
+                "enemy": "BRUTE",
+                "weight_setting": [
+                    0,
+                    0,
+                    9,
+                    0,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    2,
+                    0,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    6,
+                    0,
+                    0,
+                    2
+                ],
+                "mutation": "fire-warded"
+            },
+            {
+                "enemy": "SWARMER",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    6,
+                    6,
+                    6
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    2
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    7,
+                    999,
+                    6
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "SIEGE_BEAST",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    2,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    3,
+                    0,
+                    3
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "MOLE",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    5,
+                    0,
+                    5
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    2,
+                    0,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    4
+                ],
+                "mutation": "none"
+            },
+            {
+                "enemy": "CARRION",
+                "weight_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    4
+                ],
+                "min_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    1
+                ],
+                "max_setting": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    2
+                ],
+                "mutation": "banneret"
+            }
+        ],
+        "level_wave_config": {
+            "wave_count": 6,
+            "starting_budget": 40,
+            "ending_budget": 100,
+            "difficulty_curve": 1
+        },
+        "unlocked_glyphs": []
+    }
 }

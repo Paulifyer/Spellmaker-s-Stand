@@ -1,5 +1,14 @@
 # Spellmaker's Stand
 
+## Debug level select
+
+Press **F8** on the main menu to open the debug level select screen. Click a
+level or press **1–8** to enter it directly; **Esc** or **Back** returns to the
+menu. The screen shows each level's wave count and planned glyphs that are not
+implemented yet. Returning to the menu after a debug run resets normal Start to
+level 1. Finishing level 8 returns to the menu instead of advancing past the
+campaign.
+
 ## Spell controls
 
 Hover a battlefield tile and press **1**, **2**, or **3** to cast the spell in

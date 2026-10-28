@@ -1,4 +1,15 @@
 // F9 records five seconds of frame intervals, including stalls between frames.
+if (room == rm_menu && variable_global_exists("debug_level_select_active")
+&& global.debug_level_select_active) {
+	global.current_level = 0;
+	global.debug_level_select_active = false;
+}
+
+if (room == rm_menu && keyboard_check_pressed(vk_f8)) {
+	room_goto(rm_debug_level_select);
+	exit;
+}
+
 if (keyboard_check_pressed(vk_f9)) {
 	perf_capture = true;
 	perf_elapsed_us = 0;

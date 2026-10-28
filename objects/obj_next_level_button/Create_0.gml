@@ -4,7 +4,7 @@
 event_inherited();
 
 // Set the button text
-text = "NEXT LEVEL";
+text = global.current_level + 1 < array_length(global.level_array) ? "NEXT LEVEL" : "MENU";
 
 // Set the outline color
 text_outline_color = #185017;
