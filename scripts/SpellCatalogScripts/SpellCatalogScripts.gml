@@ -143,6 +143,17 @@ function compile_spell(_loadout) {
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
+	if (_loadout.form == "beam") {
+		var _ticks_per_second = tune_params("forms", "beam", "ticks_per_second", 4);
+		var _damage_multiplier = tune_params("forms", "beam", "damage_multiplier_per_tick", 0.25);
+		if (!is_real(_ticks_per_second) || _ticks_per_second <= 0
+		|| _ticks_per_second > TARGET_ROOM_SPEED)
+			throw "forms.beam.ticks_per_second must be greater than 0 and no more than room speed";
+		if (!is_real(_damage_multiplier) || _damage_multiplier < 0)
+			throw "forms.beam.damage_multiplier_per_tick must be non-negative";
+		_compiled.beam_ticks_per_second = _ticks_per_second;
+		_compiled.beam_damage_multiplier_per_tick = _damage_multiplier;
+	}
 	for (var i = 0; i < array_length(_fmods); i++) {
 		var _fn = _fmods[i][$ "on_cast"];
 		if (_fn != undefined) _fn(_compiled, undefined);

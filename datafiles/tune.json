@@ -28,7 +28,7 @@
     },
     "forms": {
         "projectile": { "cost": 15, "spd": 15 },
-        "beam": { "cost": 15 },
+        "beam": { "cost": 15, "ticks_per_second": 3, "damage_multiplier_per_tick": 0.2 },
         "strike": { "cost": 25 },
         "rune": { "cost": 25, "max_placed": 6 }
     },

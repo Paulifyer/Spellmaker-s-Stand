@@ -75,8 +75,7 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 	on_hit = function(spell, target, fx) {
 		var _dmg = fx.params.base_damage * fx.effect_multiplier;
 		if (spell.form.is_channel) {
-			var _tmp = _dmg;
-			_dmg = _tmp / 4; // Enemies are hit 4 times every second see Form_Beam for details
+			_dmg *= spell.compiled.beam_damage_multiplier_per_tick;
 		}
 		deal_damage(target, _dmg);
 	}

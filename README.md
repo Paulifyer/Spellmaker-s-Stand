@@ -29,6 +29,13 @@ casts without queuing them. Configure slot durations in seconds with
 fallback when a slot has no configured value. A channel starts its slot cooldown
 when the channel ends.
 
+Beam timing and damage per hit are configured in `datafiles/tune.json` under
+`forms.beam`: `ticks_per_second` defaults to 4 and
+`damage_multiplier_per_tick` defaults to 0.25. Beam hits immediately, then
+repeats at the configured rate. The multiplier scales Harm damage on each hit;
+raising the tick rate without lowering it raises damage per second. Beam mana
+drain remains based on spell cost per second.
+
 Menus block casting; opening the spellbook or losing window focus ends an active
 channel. Pausing freezes gameplay. If the channel key is released while paused,
 the channel ends on the first resumed frame. **Space** still starts mana recovery.

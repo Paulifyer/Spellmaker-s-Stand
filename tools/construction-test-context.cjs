@@ -32,13 +32,13 @@ function makeContext(limit = 8) {
         room:'rm_test', room_get_name: x => x,
         global:{spell_glyphs:glyphs,level_config:{rm_test:{max_glyphs:limit}},spellbook:[]},
         array_length:a=>a.length,array_contains:(a,v)=>a.includes(v),array_push:(a,v)=>a.push(v),array_delete:(a,i,n)=>a.splice(i,n),
-        is_struct:x=>!!x && typeof x==='object', variable_struct_exists:(s,k)=>Object.hasOwn(s,k),
+        is_struct:x=>!!x && typeof x==='object', is_real:x=>typeof x==='number', variable_struct_exists:(s,k)=>Object.hasOwn(s,k),
         variable_global_exists:k=>Object.hasOwn(ctx.global,k),
         string:String,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),
         is_glyph_available:()=>true, is_instanceof:()=>false, Mod_Amplify:function(){},
         enemy_ward_active:()=>false,
         enemy_banner_speed:()=>1,
-        tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
+        tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,TARGET_ROOM_SPEED:60,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
     for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {

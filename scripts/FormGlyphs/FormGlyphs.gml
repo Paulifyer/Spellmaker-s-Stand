@@ -85,7 +85,9 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		_first = max(_first, 0);
 		_last  = min(_last, LANE_COUNT - 1);
 
-		if (++spell.tick mod (TARGET_ROOM_SPEED * 0.25) == 0) {
+		spell.tick += 1;
+		if (floor(spell.tick * spell.compiled.beam_ticks_per_second / TARGET_ROOM_SPEED)
+		> floor((spell.tick - 1) * spell.compiled.beam_ticks_per_second / TARGET_ROOM_SPEED)) {
 			spell.hit_state.contacts = [];
 			spell.hit_state.epoch += 1;
 		}
