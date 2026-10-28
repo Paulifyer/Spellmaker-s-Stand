@@ -176,6 +176,12 @@ function compile_spell(_loadout) {
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
+	if (_loadout.form == "strike") {
+		var _cast_time = tune_params("forms", "strike", "cast_time", 0.23);
+		if (!is_real(_cast_time) || _cast_time <= 0)
+			throw "forms.strike.cast_time must be a positive number of seconds";
+		_compiled.strike_cast_frames = max(1, round(_cast_time * TARGET_ROOM_SPEED));
+	}
 	if (_loadout.form == "beam") {
 		var _ticks_per_second = tune_params("forms", "beam", "ticks_per_second", 4);
 		var _damage_multiplier = tune_params("forms", "beam", "damage_multiplier_per_tick", 0.25);
