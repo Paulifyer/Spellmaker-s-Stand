@@ -56,4 +56,6 @@ attack_delay = max_attack_delay;
 // This variable holds the multiplier parameter for enrage
 enrage_mult = tune_enemy(name, "enrange_mult", 2);
 
+// For area attacks to be able to hit overlapping tiles
+hit_w = 48;
 

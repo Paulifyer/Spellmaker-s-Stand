@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":9,
   "parent":{
-    "name":"Forms",
-    "path":"folders/Sprites/VFX/Forms.yy",
+    "name":"Projectile",
+    "path":"folders/Sprites/VFX/Forms/Projectile.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

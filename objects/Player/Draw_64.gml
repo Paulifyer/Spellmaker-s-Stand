@@ -1,4 +1,6 @@
 
+if (global.menu_lock) exit;
+
 // Draws the hovered target tile
 var _t = world_to_grid(mouse_x, mouse_y);
 if (_t != undefined) {
@@ -23,7 +25,11 @@ draw_rectangle(_x, _y, _x + _w, _y + _h, false);
 draw_set_alpha(1);
 
 // Fills the Mana Bar
-draw_set_colour(c_aqua);
+if (mana_exhausted && (current_time div 500) mod 2 == 0) {
+	draw_set_colour(c_red);
+} else {
+	draw_set_colour(c_aqua);
+}
 draw_set_alpha(mana_exhausted ? 0.5 : 1);
 draw_rectangle(_x, _y + _h * (1 - _pct), _x + _w, _y + _h, false);
 draw_set_alpha(1);
@@ -38,17 +44,20 @@ draw_text(_x + _w / 2, _y + _h + 6, string(floor(mana)));
 draw_set_halign(fa_left);
 
 // Caster Draw GUI
+
+
 for (var i = 0; i < SPELL_SLOTS; i++) {
-    var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 180;
+    var _x2 = 300 + i * 130, _y2 = display_get_gui_height() - 260;
     var _l = global.spellbook[i];
     var _active = i == channel_slot || (i == cast_flash_slot && cast_flash_ticks > 0);
     draw_set_color(_active ? c_aqua : c_white);
-    draw_rectangle(_x2, _y2, _x2 + 70, _y2 + 70, true);
+    draw_rectangle(_x2, _y2, _x2 + 120, _y2 + 120, true);
     draw_set_color(c_white);
     if (_l != undefined && _l.form != undefined) {
-		draw_set_font(-1);
-        draw_text(_x2 + 4, _y2 + 4, string(i + 1) + " " + _l.form);
-        draw_text(_x2 + 4, _y2 + 40, string(spell_cost(_l)));
+		var _spell_name = (_l.name == "" || _l.name == undefined) ? _l.form : _l.name;
+		draw_set_font(fnt_Arcane);
+        draw_text_ext(_x2 + 4, _y2 + 22, string(i + 1) + " " + _spell_name, 18, 112);
+        draw_text_ext(_x2 + 4, _y2 + 40, "cost: " + string(spell_cost(_l)), 18, 112);
         // swap for glyph icons later
     }
 	if (spell_cooldowns[i] > 0 && spell_cooldown_max[i] > 0) {
@@ -60,5 +69,6 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
 	}
 }
 
-draw_set_font(-1);
+draw_set_font(fnt_Arcane);
 draw_text(300, display_get_gui_height() - 95, "Hover a tile + press 1/2/3 to cast");
+draw_set_font(-1);

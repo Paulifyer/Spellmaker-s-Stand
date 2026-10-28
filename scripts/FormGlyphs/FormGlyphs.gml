@@ -39,6 +39,10 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 	cost = tune_params("forms", "projectile", "cost", PROJECTILE_COST);
 	on_cast = function(spell) {
 		spell.spd = tune_params("forms", "projectile", "spd", PROJECTILE_SPD);
+		// Animation belongs to each cast, since the form is shared by spells.
+		spell.projectile_state = "start";
+		spell.projectile_sprite = spr_projectile_start;
+		spell.projectile_frame = 0;
 		spell.lifetime = TARGET_ROOM_SPEED * 5;
 		var _lane = spell.target_row div ROWS_PER_LANE;
 		spell.x = GRID_X0;
@@ -50,15 +54,50 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		// Only a new, targetable contact consumes one penetration.
 		if (!instance_exists(target) || !target.is_targetable) return;
 		if (spell_contacted(spell, target)) return;
+		if (spell.projectile_state == "end") return;
 		var _col = floor((target.x - GRID_X0) / TILE_W);
 		spell_deliver(spell, target, _col, enemy_lane(target), spell.area ? 1 : 0);
 		if (spell.pierce-- <= 0) {
-			instance_destroy(spell);
+			spell.projectile_state = "end";
+			spell.projectile_sprite = spr_projectile_end;
+			spell.projectile_frame = 0;
+			spell.spd = 0;
+			// Let the complete impact animation outlive the flight timer.
+			spell.lifetime = -1;
 		}
 	}
 	on_step = function(spell) { 
-		spell.x += lengthdir_x(spell.spd, spell.dir);
-		spell.y += lengthdir_y(spell.spd, spell.dir);
+		var _sprite = spell.projectile_sprite;
+		var _rate = sprite_get_speed(_sprite);
+		if (sprite_get_speed_type(_sprite) == spritespeed_framespersecond) {
+			_rate /= game_get_speed(gamespeed_fps);
+		}
+		spell.projectile_frame += _rate;
+		var _frames = sprite_get_number(_sprite);
+		if (spell.projectile_frame >= _frames) {
+			switch (spell.projectile_state) {
+				case "start":
+					spell.projectile_state = "mid";
+					spell.projectile_sprite = spr_projectile_mid;
+					spell.projectile_frame = 0;
+					break;
+				case "mid":
+					spell.projectile_frame = spell.projectile_frame mod _frames;
+					break;
+				case "end":
+					instance_destroy(spell);
+					return;
+			}
+		}
+		if (spell.projectile_state != "end") {
+			spell.x += lengthdir_x(spell.spd, spell.dir);
+			spell.y += lengthdir_y(spell.spd, spell.dir);
+		}
+	};
+	on_draw = function(spell) {
+		var _yscale = spell.area ? 2.0 : 1.5;
+		draw_sprite_ext(spell.projectile_sprite, floor(spell.projectile_frame),
+			spell.x, spell.y, 2.0, 1.5, spell.dir, spell.col, 0.5);
 	};
 }
 
@@ -76,9 +115,17 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		spell.y = global.lane_top[_lane] + TILE_H;
 		spell.dir = 0;
 		spell.beam_len = 0;
+		spell.beam_frame = 0;
 		spell.tick = 0;
 	}
 	on_step = function(spell) {
+		// Each channel loops independently at the sprite's configured speed.
+		var _rate = sprite_get_speed(sprite);
+		if (sprite_get_speed_type(sprite) == spritespeed_framespersecond) {
+			_rate /= game_get_speed(gamespeed_fps);
+		}
+		spell.beam_frame = (spell.beam_frame + _rate) mod sprite_get_number(sprite);
+
 		// Handles AOE Modifier
 		var _first = spell.area ? spell.lane - 1 : spell.lane;
 		var _last  = spell.area ? spell.lane + 1 : spell.lane;
@@ -116,8 +163,8 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	on_draw = function(spell) {
 		for (var i = 0; i < array_length(spell.beam_lanes); i++) {
 			var _b = spell.beam_lanes[i];
-			draw_sprite_ext(sprite, 0, spell.x, global.lane_top[_b.lane] + TILE_H,
-				_b.len / sprite_get_width(sprite), 0.5, 0, spell.col, 1);
+			draw_sprite_ext(sprite, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H,
+				_b.len / sprite_get_width(sprite), 1, 0, spell.col, 0.5);
 		}
 	};
 }
@@ -136,13 +183,42 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 		spell.dir = 270; // straight down
 		spell.landed = false;
 		spell.lifetime = TARGET_ROOM_SPEED * 2;
+		spell.strike_state = "start";
+		spell.strike_sprite = spr_strike_start;
+		spell.strike_frame = 0;
 	};
 	on_step = function(spell) {
+		var _sprite = spell.strike_sprite;
+		var _rate = sprite_get_speed(_sprite);
+		if (sprite_get_speed_type(_sprite) == spritespeed_framespersecond) {
+			_rate /= game_get_speed(gamespeed_fps);
+		}
+		spell.strike_frame += _rate;
+		var _frames = sprite_get_number(_sprite);
+		if (spell.strike_frame >= _frames) {
+			switch (spell.strike_state) {
+				case "start":
+					spell.strike_state = "mid";
+					spell.strike_sprite = spr_strike_mid;
+					spell.strike_frame = 0;
+					break;
+				case "mid":
+					spell.strike_frame = spell.strike_frame mod _frames;
+					break;
+				case "end":
+					instance_destroy(spell);
+					return;
+			}
+		}
+
 		if (spell.landed) exit;
 		spell.y = min(spell.y + spell.spd, spell.target_y);
 		if (spell.y >= spell.target_y) {
 			spell.landed = true;
 			spell.lifetime = TARGET_ROOM_SPEED * 0.3; //Impact frames
+			spell.strike_state = "end";
+			spell.strike_sprite = spr_strike_end;
+			spell.strike_frame = 0;
 			
 			var _c = spell.target_col;
 			var _l = spell.target_row div ROWS_PER_LANE;
@@ -158,8 +234,8 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 			draw_ellipse(spell.target_x - _x_offs, spell.target_y - _y_offs, spell.target_x + _x_offs, spell.target_y + _y_offs, false);
 			draw_set_alpha(1); draw_set_color(c_red);
 		}
-		var scale = 0.5 * _size_multiplier;
-		draw_sprite_ext(sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
+		var scale = 1 * _size_multiplier;
+		draw_sprite_ext(spell.strike_sprite, floor(spell.strike_frame), spell.x, spell.y + 10, scale, scale, 0, spell.col, 1);
 	};
 }
 
