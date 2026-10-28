@@ -1,0 +1,23 @@
+[
+  {
+    "name": "spr_glyph_snap",
+    "source_name": "spr_glyph_snap.png",
+    "source_id": "1pRrgtxm4U1jZU2gNJy9N8a5Va1jY4YzJ",
+    "source_url": "https://drive.google.com/file/d/1pRrgtxm4U1jZU2gNJy9N8a5Va1jY4YzJ/view?usp=drivesdk",
+    "path": "tools/asset-sources/payoff-glyphs/spr_glyph_snap.png"
+  },
+  {
+    "name": "spr_glyph_combust",
+    "source_name": "spr_glyph_combust.png",
+    "source_id": "1IHsDrwTRd7u7fn3zy8YDH-f1NuBl4XGQ",
+    "source_url": "https://drive.google.com/file/d/1IHsDrwTRd7u7fn3zy8YDH-f1NuBl4XGQ/view?usp=drivesdk",
+    "path": "tools/asset-sources/payoff-glyphs/spr_glyph_combust.png"
+  },
+  {
+    "name": "spr_glyph_discharge",
+    "source_name": "spr_glyph_discharge.png",
+    "source_id": "1ILtiPrHiVPBNGMPa6186s3OTT8FJMWIL",
+    "source_url": "https://drive.google.com/file/d/1ILtiPrHiVPBNGMPa6186s3OTT8FJMWIL/view?usp=drivesdk",
+    "path": "tools/asset-sources/payoff-glyphs/spr_glyph_discharge.png"
+  }
+]

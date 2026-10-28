@@ -14,7 +14,7 @@ One Discharge occurrence shares its budget across targets of one area delivery. 
 
 All three support Amplify and Delay. Combust/Discharge also support Effect AoE; Snap does not. Extend Time is incompatible with all three. Form AoE affects initial selection; Effect AoE separately expands bursts. Default bursts cover three columns by three lanes, using existing regional targeting; Effect AoE expands that to five by five. Rune-origin reactions respect Swarmer immunity. Burrowing Moles remain untargetable. Piles retain their real statuses and lineage, so they can participate if eligible.
 
-All direct damage follows `deal_damage`, including live ward reduction and Hex. Beam direct damage/burst damage uses the existing captured Beam damage multiplier per tick. Burn follows the existing Fire convention: it is a timed per-second status, not repeated direct Beam damage. No bespoke explosion/chain artwork is added; damage uses existing hit feedback and new glyphs use text labels until artwork is supplied.
+All direct damage follows `deal_damage`, including live ward reduction and Hex. Beam direct damage/burst damage uses the existing captured Beam damage multiplier per tick. Burn follows the existing Fire convention: it is a timed per-second status, not repeated direct Beam damage. No bespoke explosion/chain artwork is added; damage uses existing hit feedback. The three glyphs use their supplied PNG icons in crafting and unlock previews.
 
 ## JSON tuning
 
@@ -85,10 +85,22 @@ Reaction objects hold explicit IDs, emitter sets and hit counts keyed by stable 
 | `notes/level-campaign-import.md`, `notes/spell-execution-refactor.md` | Replace obsolete missing-glyph/propagation notes with current implementation guidance. |
 | `notes/payoff-glyphs.md` | This behavior, tuning, architecture, inventory and verification guide. |
 
+### Supplied glyph icon import on main
+
+- `sprites/spr_glyph_snap/`, `sprites/spr_glyph_combust/`, `sprites/spr_glyph_discharge/`: each contains one `.yy` sprite resource, a composite PNG and its layer PNG. All are 264x264 RGBA with a single frame, centered integer origins (132,132), and the existing Glyphs folder/texture settings. The source PNG bytes and transparency are preserved.
+- `Spell.yyp`: register the three sprite resources once each.
+- `scripts/EffectGlyphs/EffectGlyphs.gml`: set each new Effect's `icon` to its corresponding sprite, replacing its temporary label automatically wherever glyph icons are displayed.
+- `tools/asset-sources/payoff-glyphs/`: keep the three original PNG files and `manifest.json` recording canonical Drive source IDs/URLs.
+- `tools/import-payoff-glyphs.cjs`: reproducible importer based on the existing Fire glyph sprite format. Reuses frame/layer/key IDs when rerun and inserts only missing project registrations.
+- `tools/test-payoff-glyph-assets.cjs`: check registration, effect bindings, frame/layer references, integer origins, source hashes and actual transparent/opaque pixels.
+- `notes/payoff-glyphs.md`: update the artwork status and add this import inventory.
+
+Source folder: https://drive.google.com/drive/folders/1EH65FOOAtnWcNEBBtXoz1V5vlhVsp-Is
+
 ## Verification and native playtest
 
 Run `node tools/run-regressions.cjs` for all simulated-engine/static checks. GameMaker compilation and native visual playtesting have not been performed here.
 
 Open `rm_spell_interaction_test` and press 7 (Snap on a Frost-Warded enemy with three stacks), 8 (Harm kills before Combust and ignites a neighbor), or 9 (charged chain with consumed statuses). R restarts. Existing cases 1–6 and F1–F6 remain available.
 
-In campaign play, check levels 3/4/7 for unlocks and the text placeholders. Try `Ice + Snap`, `Fire + Harm + Combust`, `Combust + Delay + Harm`, and `Lightning + Delay + Discharge` (the Delay must allow Stun to finish). Compare Form AoE against Effect AoE, verify narrowed/widened burst coverage and inspect the restored fourth-slot key hint at level 5 onward.
+In campaign play, check levels 3/4/7 for unlocks and the supplied glyph icons. Try `Ice + Snap`, `Fire + Harm + Combust`, `Combust + Delay + Harm`, and `Lightning + Delay + Discharge` (the Delay must allow Stun to finish). Compare Form AoE against Effect AoE, verify narrowed/widened burst coverage and inspect the restored fourth-slot key hint at level 5 onward.

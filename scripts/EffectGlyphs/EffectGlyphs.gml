@@ -108,6 +108,7 @@ function Elem_None() : EffectGlyph("none", 0) constructor {
 }
 
 function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
+	icon = spr_glyph_combust;
 	col = c_orange;
 	cost = tune_params("effects", "combust", "cost", 15);
 	desc = "Damages burning enemies. A direct kill in this immediate spell sequence causes an explosion and spreads Burn.";
@@ -118,6 +119,7 @@ function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
 }
 
 function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
+	icon = spr_glyph_discharge;
 	col = c_yellow;
 	cost = tune_params("effects", "discharge", "cost", 20);
 	desc = "Charged enemies emit area damage and consume Charged. Nearby charged enemies react; each enemy takes at most three burst hits per reaction.";
@@ -127,6 +129,7 @@ function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
 }
 
 function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
+	icon = spr_glyph_snap;
 	col = c_teal;
 	cost = tune_params("effects", "snap", "cost", 15);
 	desc = "Deals damage per Frost stack, then consumes all Frost. No Frost means no damage.";
