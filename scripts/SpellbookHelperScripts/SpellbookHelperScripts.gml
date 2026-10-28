@@ -38,6 +38,7 @@ function spell_glyph_count(_s) {
 }
 
 function spell_ensure(_i) {
+    if (!spell_slot_unlocked(_i)) return undefined;
     if (global.spellbook[_i] == undefined)
         global.spellbook[_i] = { name: "", form: undefined, form_mods: [], effects: [] };
     return global.spellbook[_i];
@@ -223,7 +224,7 @@ function spell_mana_preview(_s, _max_mana) {
 
 function spellbook_expensive_slots(_max_mana) {
     var _slots = "";
-    for (var i = 0; i < array_length(global.spellbook); i++) {
+    for (var i = 0; i < min(spell_slot_count(), array_length(global.spellbook)); i++) {
         if (!spell_mana_preview(global.spellbook[i], _max_mana).too_expensive) continue;
         if (_slots != "") _slots += ", ";
         _slots += string(i + 1);
@@ -233,7 +234,7 @@ function spellbook_expensive_slots(_max_mana) {
 
 function spellbook_start_message(_max_mana) {
     var _message = "";
-    for (var i = 0; i < array_length(global.spellbook); i++) {
+    for (var i = 0; i < min(spell_slot_count(), array_length(global.spellbook)); i++) {
         var _s = global.spellbook[i];
         // Empty and name-only slots are unused, not incomplete prepared spells.
         if (_s == undefined || _s.form == undefined) continue;

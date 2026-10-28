@@ -38,7 +38,7 @@ if (_input_enabled && keyboard_check_pressed(vk_space)) {
 if (_input_enabled && channel == noone) {
 	var _t = world_to_grid(mouse_x, mouse_y);
 	if (_t != undefined) {
-		for (var k = 0; k < SPELL_SLOTS; k++) {
+		for (var k = 0; k < spell_slot_count(); k++) {
 			var _key = -1;
 			if (keyboard_check_pressed(ord("1") + k)) _key = ord("1") + k;
 			else if (keyboard_check_pressed(vk_numpad1 + k)) _key = vk_numpad1 + k;
@@ -74,7 +74,7 @@ if (_input_enabled && channel == noone) {
 
 // Handling Channeling
 if (channel != noone) {
-	var _release = !_input_enabled || !keyboard_check(channel_key) || !instance_exists(channel);
+	var _release = !_input_enabled || !spell_slot_unlocked(channel_slot) || !keyboard_check(channel_key) || !instance_exists(channel);
 	
 	if (!_release) {
 		// Draining mana while held

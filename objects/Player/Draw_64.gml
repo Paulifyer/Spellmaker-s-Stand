@@ -45,6 +45,12 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     draw_set_color(_active ? c_aqua : c_white);
     draw_rectangle(_x2, _y2, _x2 + 70, _y2 + 70, true);
     draw_set_color(c_white);
+    if (!spell_slot_unlocked(i)) {
+        draw_set_font(-1);
+        draw_text(_x2 + 4, _y2 + 4, string(i + 1));
+        draw_text(_x2 + 4, _y2 + 30, "Locked");
+        continue;
+    }
     if (_l != undefined && _l.form != undefined) {
 		draw_set_font(-1);
         draw_text(_x2 + 4, _y2 + 4, string(i + 1) + " " + _l.form);
@@ -61,4 +67,6 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
 }
 
 draw_set_font(-1);
-draw_text(300, display_get_gui_height() - 95, "Hover a tile + press 1/2/3 to cast");
+var _slot_keys = "1";
+for (var i = 1; i < spell_slot_count(); i++) _slot_keys += "/" + string(i + 1);
+draw_text(300, display_get_gui_height() - 95, "Hover a tile + press " + _slot_keys + " to cast");
