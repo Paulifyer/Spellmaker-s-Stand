@@ -95,6 +95,7 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
         var _list = enemies_in_region_list(col - 1, col + 1, lane - 1, lane + 1);
 		
 		 for (var i = 0; i < array_length(_list); i++) {
+			if (!enemy_can_receive_spell(_list[i], spell.compiled)) continue;
             // small random offset so pulled enemies don't stack on one pixel
             var _a = random(360), _r = random(28);
             enemy_begin_pull(_list[i], _tx + lengthdir_x(_r, _a), _ty + lengthdir_y(_r, _a),

@@ -5,6 +5,7 @@ const {makeContext}=require('./construction-test-context.cjs');
 const ctx=makeContext();
 const tuning=JSON.parse(read('datafiles/tune.json'));
 loadStatuses(ctx);
+load(ctx,'scripts/SpellExecution/SpellExecution.gml',['enemy_can_receive_spell']);
 Object.assign(ctx,{
     TARGET_ROOM_SPEED:60,BASE_DAMAGE:100,FIRE_MULT:0.4,FIRE_DURATION:3,FROST_DURATION:3,FROST_SLOW:0.2,
     LIGHTNING_DURATION:1,HEX_DURATION:5,max:Math.max,min:Math.min,floor:Math.floor,round:Math.round,
@@ -59,8 +60,8 @@ assert.equal(result.spell.effects[1].delay,1);
 const pull=callback(effectFile,'Elem_Pull','on_impact');let hold;
 Object.assign(ctx,{GRID_X0:0,TILE_W:100,LANE_H:100,pull_sec:0.4,hold_sec:0.2,
     show_debug_message(){},random:()=>0,point_distance:()=>0,lengthdir_x:()=>0,lengthdir_y:()=>0,
-    enemies_in_region_list:()=>[{}],enemy_begin_pull:(e,x,y,lane,frames,value)=>{hold=value;}});
-ctx.global.lane_top=[0];pull({},{duration:0,params:{pull_sec:0.4,hold_sec:0.2}},0,0);assert.equal(hold,12);
+    instance_exists:()=>true,enemies_in_region_list:()=>[{is_targetable:true}],enemy_begin_pull:(e,x,y,lane,frames,value)=>{hold=value;}});
+ctx.global.lane_top=[0];pull({compiled:{form_id:'strike'}},{duration:0,params:{pull_sec:0.4,hold_sec:0.2}},0,0);assert.equal(hold,12);
 // A three-second burn delivers three ticks, none on the first frame.
 let ticks=0;ctx.deal_damage=()=>ticks++;
 const burning={burn_timer:180,burn_dmg:40,slow_timer:0,slow_amt:0,stun_timer:0,stun_immune_timer:0,hex_timer:0};

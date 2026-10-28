@@ -12,13 +12,19 @@ function spell_contacted(_spell, _enemy) {
 	return array_contains(_spell.hit_state.contacts, enemy_get_lineage(_enemy).id);
 }
 
+function enemy_can_receive_spell(_enemy, _compiled) {
+	if (!instance_exists(_enemy) || !_enemy.is_targetable) return false;
+	if (_compiled.form_id == "rune" && _enemy.object_index == obj_swarmer) return false;
+	return true;
+}
+
 function spell_record_contact(_spell, _enemy) {
 	var _id = enemy_get_lineage(_enemy).id;
 	if (!array_contains(_spell.hit_state.contacts, _id)) array_push(_spell.hit_state.contacts, _id);
 }
 
 function spell_apply_once(_event, _enemy) {
-	if (!instance_exists(_enemy) || !_enemy.is_targetable) return;
+	if (!enemy_can_receive_spell(_enemy, _event.spell.compiled)) return;
 	var _lineage = enemy_get_lineage(_enemy);
 	var _key = string(_event.fx.index) + ":" + string(_event.epoch) + ":" + string(_lineage.id);
 	if (variable_struct_exists(_event.spell.hit_state.applications, _key)) return;
@@ -89,7 +95,7 @@ function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
 	var _state = combat_execution_state();
 	if (!is_struct(_state)) return false;
 	if (instance_exists(_target)) {
-		if (!_target.is_targetable || spell_contacted(_spell, _target)) return false;
+		if (!enemy_can_receive_spell(_target, _spell.compiled) || spell_contacted(_spell, _target)) return false;
 		spell_record_contact(_spell, _target);
 	}
 	var _delivery = spell_new_delivery(_spell);

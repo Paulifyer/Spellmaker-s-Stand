@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict');
+const {makeEnemyContext}=require('./enemy-test-context.cjs');
+const h=makeEnemyContext(),ctx=h.ctx;const fx=(effect,mods=[])=>({effect,mods});
+const swarm=h.enemy(2,0,{object_index:'swarmer'}),other=h.enemy(2);
+const rune=h.spell('rune',[fx('harm')],['area']);Object.assign(rune,{armed:true,lane:0,charges:1});
+ctx.forms.rune.on_hit(rune,swarm);assert.equal(rune.charges,1);assert.equal(rune.destroyed,undefined);
+ctx.forms.rune.on_hit(rune,other);assert.equal(other.hp,99900);assert.equal(swarm.hp,100000);
+const delayed=h.spell('rune',[fx('fire',['delay']),fx('harm')],['area']);
+ctx.spell_deliver(delayed,other,2,0,1);h.tick(60);assert.equal(swarm.burn_timer,0);assert.equal(swarm.hp,100000);
+const pull=h.spell('rune',[fx('pull')]);ctx.spell_deliver(pull,other,2,0);
+assert.equal(swarm.pull,undefined);assert.ok(other.pull);
+const strike=h.spell('strike',[fx('harm')]);ctx.spell_deliver(strike,null,2,0);assert.equal(swarm.hp,99900);
+console.log('Swarmer checks passed: Rune trigger, Area, Delay and Pull immunity with other Forms unaffected.');

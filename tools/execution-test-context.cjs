@@ -14,6 +14,7 @@ function makeExecutionContext() {
     Object.assign(ctx,{
         variable_instance_exists:(o,k)=>Object.hasOwn(o,k),array_sort:(a,f)=>a.sort(f),
         noone:null,obj_enemy_parent:'enemy',obj_gameplay_manager:'manager',obj_spells:'spell',
+        obj_swarmer:'swarmer',
         GRID_X0:0,GRID_COLS:20,TILE_W:100,LANE_H:100,LANE_COUNT:3,ROWS_PER_LANE:1,TILE_H:50,
         BASE_DAMAGE:100,FIRE_MULT:0.4,FIRE_DURATION:3,FROST_DURATION:3,FROST_SLOW:0.2,LIGHTNING_DURATION:1,HEX_DURATION:5,
         max:Math.max,min:Math.min,floor:Math.floor,round:Math.round,
