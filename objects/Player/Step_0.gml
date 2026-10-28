@@ -55,6 +55,7 @@ if (_input_enabled && channel == noone) {
 					channel = _s.spell;
 					channel_key = _key;
 					channel_slot = k;
+					channel_cooldown_penalty = _s.spell.compiled.cooldown_penalty;
 					cost = _s.cost;
 				} else {
 					var _cooldown_seconds = tune_value("player", "spell_cd", SPELL_CD);
@@ -62,7 +63,7 @@ if (_input_enabled && channel == noone) {
 					if (is_array(_slot_cooldowns) && k < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[k])) {
 						_cooldown_seconds = _slot_cooldowns[k];
 					}
-					spell_cooldowns[k] = max(0, _cooldown_seconds) * TARGET_ROOM_SPEED;
+					spell_cooldowns[k] = max(0, _cooldown_seconds + _s.spell.compiled.cooldown_penalty) * TARGET_ROOM_SPEED;
 					spell_cooldown_max[k] = spell_cooldowns[k];
 				}
 				// At most one successful cast per frame, even for simultaneous presses.
@@ -106,8 +107,9 @@ if (channel != noone) {
 			if (is_array(_slot_cooldowns) && _finished_channel_slot < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[_finished_channel_slot])) {
 				_cooldown_seconds = _slot_cooldowns[_finished_channel_slot];
 			}
-			spell_cooldowns[_finished_channel_slot] = max(0, _cooldown_seconds) * TARGET_ROOM_SPEED;
+			spell_cooldowns[_finished_channel_slot] = max(0, _cooldown_seconds + channel_cooldown_penalty) * TARGET_ROOM_SPEED;
 			spell_cooldown_max[_finished_channel_slot] = spell_cooldowns[_finished_channel_slot];
 		}
+		channel_cooldown_penalty = 0;
 	}
 }

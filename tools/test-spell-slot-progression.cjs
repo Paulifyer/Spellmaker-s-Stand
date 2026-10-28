@@ -63,14 +63,14 @@ function playerHarness(count,key,channelled=false,slotCooldowns=[0.4,0.4,0.4]) {
     c.global.menu_lock=false;c.global.tuning={player:{spell_cd_by_slot:slotCooldowns}};
     c.global.spellbook=Array.from({length:4},(_,i)=>({name:`Slot ${i+1}`,form:channelled?'beam':'projectile',form_mods:[],effects:[{effect:'harm',mods:[]}]}));
     const calls=[],pressed=new Set([key]),held=new Set([key]);
-    const p={channel:null,channel_key:-1,channel_slot:-1,cast_flash_slot:-1,cast_flash_ticks:0,
+    const p={channel:null,channel_key:-1,channel_slot:-1,channel_cooldown_penalty:0,cast_flash_slot:-1,cast_flash_ticks:0,
         cost:0,mana:100,max_mana:100,mana_ticks:6,mana_regen_rate:0.5,mana_exhausted:false,mana_exhausted_regen_multiplier:8,
         spell_cooldowns:[0,0,0,0],spell_cooldown_max:[0,0,0,0]};p.id=p;
     Object.assign(c,{p,mouse_x:0,mouse_y:0,obj_spellbook:'editor',noone:null,SPELL_CD:0.8,vk_space:32,vk_numpad1:97,
         window_has_focus:()=>true,instance_exists:o=>!!o&&typeof o==='object'&&!o.destroyed,
         keyboard_check_pressed:k=>pressed.has(k),keyboard_check:k=>held.has(k),ord:s=>s.charCodeAt(0),
         world_to_grid:()=>({col:2,row:0}),max:Math.max,round:Math.round,is_array:Array.isArray,
-        cast_spell:(caster,spell)=>{calls.push(spell);return {spell:{form:{is_channel:channelled}},cost:15};},
+        cast_spell:(caster,spell)=>{calls.push(spell);return {spell:{form:{is_channel:channelled},compiled:{cooldown_penalty:0}},cost:15};},
         instance_destroy:o=>{o.destroyed=true;},
     });
     const run=()=>vm.runInContext(`(function(){with(p){${step}}})()`,c);
