@@ -94,12 +94,18 @@ function rune_trim_to_limit(_key, _limit) {
 function compile_effect_parameters(_id) {
 	var _duration = 0;
 	switch (_id) { case "fire": case "ice": _duration = 3; break; case "lightning": _duration = 1; break; case "hex": _duration = 5; break; }
-	return {base_damage: tune_value("combat", "base_dmg", 100),
+	var _params = {base_damage: tune_value("combat", "base_dmg", 100),
 		duration: tune_params("effects", _id, "duration", _duration),
 		fire_mult: tune_params("effects", "fire", "fire_dmg_mult", 0.4),
 		slow_per_stack: tune_params("effects", "ice", "slow_amt_per_stack", 0.2),
 		pull_sec: tune_params("effects", "pull", "pull_sec", 0.4),
 		hold_sec: tune_params("effects", "pull", "hold_sec", 1.0)};
+	if (_id == "snap") {
+		_params.damage_per_stack_mult = tune_params("effects", "snap", "damage_per_stack_mult", 1.2);
+		if (!is_real(_params.damage_per_stack_mult) || _params.damage_per_stack_mult < 0)
+			throw "effects.snap.damage_per_stack_mult must be non-negative";
+	}
+	return _params;
 }
 
 function compile_spell(_loadout) {

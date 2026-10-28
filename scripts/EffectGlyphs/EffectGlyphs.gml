@@ -106,3 +106,17 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
 
 function Elem_None() : EffectGlyph("none", 0) constructor {
 }
+
+function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
+	col = c_teal;
+	cost = tune_params("effects", "snap", "cost", 15);
+	desc = "Deals damage per Frost stack, then consumes all Frost. No Frost means no damage.";
+	on_hit = function(spell, target, fx) {
+		var _stacks = combat_status_frost_stacks(target);
+		if (_stacks <= 0) return;
+		var _damage = fx.params.base_damage * fx.params.damage_per_stack_mult * _stacks * fx.effect_multiplier * spell_damage_scale(spell);
+		spell_direct_damage(spell, target, _damage);
+		combat_status_clear(target, "frost");
+		enemy_update_movement(target);
+	};
+}

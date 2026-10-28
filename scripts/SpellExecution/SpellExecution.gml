@@ -7,6 +7,10 @@ function spell_damage_scale(_spell) {
 	return _spell.form.is_channel ? _spell.compiled.beam_damage_multiplier_per_tick : 1;
 }
 
+function spell_direct_damage(_spell, _enemy, _amount) {
+	deal_damage(_enemy, _amount);
+}
+
 // Mutable reaction state belongs to one effect occurrence, not the glyph singleton.
 function spell_reaction_create() {
 	return {id: combat_next_id(), emitted: {}, hits: {}};
