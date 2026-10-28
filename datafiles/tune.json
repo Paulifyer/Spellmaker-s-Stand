@@ -5,7 +5,7 @@
 
     "player":   { 
         "max_mana": 100, 
-        "max_mana_increase_by_level": [0, 50, 50, 50, 50, 50, 50, 50, 50],
+        "max_mana_increase_by_level": [0, 25, 25, 25, 25, 25, 25, 25, 25],
         "mana_regen_rate": 0.5, 
         "mana_exhaust_regen_mult": 8,
         "spell_cd": 0.8,
@@ -36,7 +36,7 @@
     },
     "effects": {
         "snap": { "cost": 15, "damage_per_stack_mult": 1.2 },
-        "discharge": { "cost": 20, "damage_mult": 1, "radius_tiles": 1, "area_radius_tiles": 2, "max_hits_per_enemy": 3 },
+        "discharge": { "cost": 20, "damage_mult": 0.5, "radius_tiles": 1, "area_radius_tiles": 2, "max_hits_per_enemy": 3 },
         "combust": { "cost": 15, "damage_mult": 1, "explosion_damage_mult": 1, "radius_tiles": 1, "area_radius_tiles": 2, "burn_duration": 3, "burn_damage_mult": 0.4 },
         "harm": {"cost": 10},
         "fire": {"cost": 10, "fire_dmg_mult": 0.4,"duration": 3},

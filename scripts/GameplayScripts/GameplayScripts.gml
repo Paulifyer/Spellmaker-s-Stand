@@ -128,7 +128,7 @@ function deal_damage(_id, _amount)
 	}
 
 	// Apply Hex amplification and mutation damage reduction.
-	var _ward_multiplier = enemy_ward_active(_id) ? 0.5 : 1;
+	var _ward_multiplier = enemy_ward_active(_id) ? tune_params("mutations", "warded", "damage_mult", 0.5) : 1;
 	_id.hp -= (_amount * _hex_multiplier * (1 - _id.dmg_reduction) * _ward_multiplier);
 	
 	// Set the enemy flash_alpha to 1 so that the hit flash will activate
