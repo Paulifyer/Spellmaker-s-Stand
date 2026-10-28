@@ -61,9 +61,12 @@ attack_delay = max_attack_delay;
 
 // Nearby deaths grant standard HP; frenzy multiplies this Carrion's speed once.
 hp_gain_per_death_mult = max(0, tune_enemy(name, "hp_gain_per_death_mult", 0.2));
+// Percentage points: 15 heals 15% of the newly increased maximum HP.
+heal_on_nearby_death_pct = clamp(tune_enemy(name, "heal_on_nearby_death_pct", 15), 0, 100);
 deaths_to_frenzy = max(1, floor(tune_enemy(name, "deaths_to_frenzy", 5)));
 frenzy_speed_mult = max(1, tune_enemy(name, "frenzy_speed_mult", 3));
 nearby_deaths = 0;
 frenzied = false;
 screech_duration_frames = max(1, round(tune_enemy(name, "screech_duration", 0.5) * TARGET_ROOM_SPEED));
 screech_timer = 0;
+is_rune_immune = false;

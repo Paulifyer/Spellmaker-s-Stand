@@ -217,6 +217,7 @@ function carrion_update_frenzy(_enemy) {
 	_enemy.screech_timer -= 1;
 	if (_enemy.screech_timer > 0) return;
 	_enemy.base_speed *= _enemy.frenzy_speed_mult;
+	_enemy.is_rune_immune = true;
 	_enemy.walk_side_sprite = spr_enemy_carrionflight;
 	_enemy.walk_up_sprite = spr_enemy_carrionflight;
 	_enemy.walk_down_sprite = spr_enemy_carrionflight;
@@ -235,7 +236,9 @@ function enemy_notify_combat_death(_enemy) {
 		if (_carrion == _enemy || _carrion.hp <= 0) continue;
 		if (!carrion_death_in_range(_carrion, _enemy, _radius)) continue;
 		var _hp = tune_value("enemies", "base_hp", BASE_HP) * _carrion.hp_gain_per_death_mult;
-		_carrion.max_hp += _hp; _carrion.hp += _hp;
+		_carrion.max_hp += _hp;
+		var _heal = _carrion.max_hp * _carrion.heal_on_nearby_death_pct / 100;
+		_carrion.hp = min(_carrion.max_hp, _carrion.hp + _hp + _heal);
 		_carrion.nearby_deaths += 1;
 		if (!_carrion.frenzied && _carrion.nearby_deaths >= _carrion.deaths_to_frenzy) {
 			carrion_begin_frenzy(_carrion);
