@@ -42,7 +42,8 @@ for(const spec of specs){
   frames.push({'$Keyframe<SpriteFrameKeyframe>':'',Channels:{'0':{'$SpriteFrameKeyframe':'',Id:{name:frame,path:'sprites/'+spec.name+'/'+spec.name+'.yy'},resourceType:'SpriteFrameKeyframe',resourceVersion:'2.0'}},Disabled:false,id:crypto.randomUUID(),IsCreationKey:false,Key:i,Length:1,resourceType:'Keyframe<SpriteFrameKeyframe>',resourceVersion:'2.0',Stretch:false});
  }
  const seq=s.sequence;seq.name=spec.name;seq['%Name']=spec.name;seq.length=spec.assets.length;seq.playbackSpeed=spec.fps;
- seq.xorigin=(bounds.left+bounds.right)/2;seq.yorigin=(bounds.top+bounds.bottom)/2;
+ // GameMaker's sprite schema requires integer origins, even for half-pixel bounds centres.
+ seq.xorigin=Math.round((bounds.left+bounds.right)/2);seq.yorigin=Math.round((bounds.top+bounds.bottom)/2);
  seq.tracks[0].keyframes.Keyframes=frames;
  fs.writeFileSync(path.join(dir,spec.name+'.yy'),JSON.stringify(s,null,2)+'\n');
  if(!project.resources.some(r=>r.id.name===spec.name))project.resources.push({id:{name:spec.name,path:'sprites/'+spec.name+'/'+spec.name+'.yy'}});
