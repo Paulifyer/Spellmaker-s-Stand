@@ -103,8 +103,8 @@ function validate_wave_config(_config)
 			return wave_config_error(_enemy_name + " must have a positive cost");
 		}
 		
-		if (_definition.mutation != undefined && !variable_struct_exists(global.mutations, _definition.mutation))
-			return wave_config_error("Roster entry " + string(i) + " uses unknown mutation '" + string(_definition.mutation) + "'");
+		try { normalize_mutation_keys(_definition.mutation); }
+		catch (_error) { return wave_config_error("Roster entry " + string(i) + ": " + string(_error)); }
 
 		if (!validate_wave_setting(
 			_definition.weight_setting,

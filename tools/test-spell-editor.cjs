@@ -24,6 +24,7 @@ const noop=()=>{};
 const circle=()=>({clicked:false,rclicked:false,hover:false});
 Object.assign(ctx, {
     SPELL_SLOTS:3,
+    mutation_description:()=>undefined,
     sel:0,active_group:-1,close_requested:false,naming:false,notice:'',notice_timer:0,
     craft_cx:1142,craft_cy:495,enemies_in_level:[],enemy_view:0,
     column_keys:['form','effect','modifier'],glyph_row_y:[265,490,835],

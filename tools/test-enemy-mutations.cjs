@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const {makeEnemyContext}=require('./enemy-test-context.cjs');
+const {ctx}=makeEnemyContext();
+assert.deepEqual(Array.from(ctx.normalize_mutation_keys('none')),[]);
+assert.deepEqual(Array.from(ctx.normalize_mutation_keys('skeletal')),['skeletal']);
+assert.equal(ctx.mutation_total_cost(['skeletal','banneret','fire-warded']),5);
+assert.throws(()=>ctx.normalize_mutation_keys(['skeletal','skeletal']),/Duplicate/);
+assert.throws(()=>ctx.normalize_mutation_keys(['fire-warded','frost-warded']),/one elemental ward/);
+assert.throws(()=>ctx.normalize_mutation_keys('missing'),/Unknown/);
+const hooks=[];ctx.global.mutations.skeletal.on_spawn=()=>hooks.push('skeletal');ctx.global.mutations.banneret.on_spawn=()=>hooks.push('banneret');
+const enemy={};ctx.enemy_apply_mutations(enemy,['skeletal','banneret']);
+assert.equal(ctx.enemy_has_mutation(enemy,'skeletal'),true);assert.deepEqual(hooks,['skeletal','banneret']);
+assert.equal(enemy.image_blend,ctx.c_gray);ctx.enemy_apply_mutations(enemy,[]);assert.equal(enemy.mutation,undefined);
+console.log('Enemy mutation checks passed: legacy/list syntax, costs, duplicates, ward exclusivity and composition.');

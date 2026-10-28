@@ -15,6 +15,59 @@ function init_mutations() {
 	register_mutation(_mut.key, _mut);
 	_mut = new SkeletalMut();
 	register_mutation(_mut.key, _mut);
+	_mut = new BanneretMut();
+	register_mutation(_mut.key, _mut);
+}
+
+function normalize_mutation_keys(_setting) {
+	if (_setting == undefined) return [];
+	if (is_string(_setting) && _setting == "none") return [];
+	var _input = is_array(_setting) ? _setting : [_setting];
+	var _keys = []; var _wards = 0;
+	for (var i = 0; i < array_length(_input); i++) {
+		var _key = _input[i];
+		if (!is_string(_key) || !variable_struct_exists(global.mutations, _key)) throw "Unknown mutation: " + string(_key);
+		if (array_contains(_keys, _key)) throw "Duplicate mutation: " + _key;
+		if (string_pos("-warded", _key) > 0) _wards++;
+		if (_wards > 1) throw "An enemy may have at most one elemental ward";
+		array_push(_keys, _key);
+	}
+	return _keys;
+}
+
+function mutation_total_cost(_setting) {
+	var _keys = normalize_mutation_keys(_setting); var _cost = 0;
+	for (var i = 0; i < array_length(_keys); i++) _cost += global.mutations[$ _keys[i]].cost;
+	return _cost;
+}
+
+function enemy_has_mutation(_enemy, _key) {
+	return variable_instance_exists(_enemy, "mutation_keys") && array_contains(_enemy.mutation_keys, _key);
+}
+
+function EnemyMutationSet(_setting) constructor {
+	keys = normalize_mutation_keys(_setting); name = ""; cost = mutation_total_cost(keys);
+	tint = array_contains(keys, "skeletal") ? c_gray : c_white;
+	for (var i = 0; i < array_length(keys); i++) {
+		if (i > 0) name += " "; name += global.mutations[$ keys[i]].name;
+	}
+	on_spawn = function(enemy) { for (var i = 0; i < array_length(keys); i++) global.mutations[$ keys[i]].on_spawn(enemy); };
+	on_step = function(enemy) { for (var i = 0; i < array_length(keys); i++) global.mutations[$ keys[i]].on_step(enemy); };
+	on_death = function(enemy) { for (var i = 0; i < array_length(keys); i++) global.mutations[$ keys[i]].on_death(enemy); };
+}
+
+function enemy_apply_mutations(_enemy, _setting) {
+	_enemy.mutation_keys = normalize_mutation_keys(_setting);
+	_enemy.mutation = undefined; _enemy.image_blend = c_white;
+	if (array_length(_enemy.mutation_keys) == 0) return;
+	_enemy.mutation = new EnemyMutationSet(_enemy.mutation_keys);
+	_enemy.image_blend = _enemy.mutation.tint;
+	_enemy.mutation.on_spawn(_enemy);
+}
+
+function mutation_description(_setting) {
+	var _keys = normalize_mutation_keys(_setting);
+	return array_length(_keys) > 0 ? new EnemyMutationSet(_keys) : undefined;
 }
 
 
@@ -89,10 +142,13 @@ function enemy_restore_status(_enemy, _state) {
 function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) constructor {
 	tint = c_gray;
 	on_death = function(enemy) {
+		var _retained = [];
+		for (var i = 0; i < array_length(enemy.mutation_keys); i++) if (enemy.mutation_keys[i] != "skeletal") array_push(_retained, enemy.mutation_keys[i]);
 		var _lineage = enemy_get_lineage(enemy);
 		_lineage.gap = true;
 		_lineage.target = noone;
 		var _e_struct = {
+			revived_mutations: _retained,
 			lineage: _lineage,
 			e_path_index : enemy.path_index,
 			e_path_position : enemy.path_position,

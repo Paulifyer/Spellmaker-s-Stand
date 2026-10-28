@@ -27,7 +27,7 @@ function EnemyWaveDefinition(_enemy, _weight_setting, _min_setting, _max_setting
 	min_setting = _min_setting;
 	max_setting = _max_setting;
 	mutation = _mutation;
-	cost += (_mutation != undefined) ? global.mutations[$ _mutation].cost : 0;
+	cost += mutation_total_cost(_mutation);
 }
 
 /// @description Resolve a scalar setting or one entry from a per-wave array

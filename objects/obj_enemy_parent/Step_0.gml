@@ -7,6 +7,7 @@ sprite_index = walk_side_sprite;
 if (pull != undefined) enemy_update_pull(id);
 
 combat_status_advance(self, 1);
+if (mutation != undefined) mutation.on_step(self);
 
 
 enemy_update_movement(self);

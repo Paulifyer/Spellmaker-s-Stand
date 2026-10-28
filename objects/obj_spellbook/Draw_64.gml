@@ -199,7 +199,7 @@ var _n = array_length(enemies_in_level);
 if (_n > 0) {
     var _entry = enemies_in_level[enemy_view];
 	var _info = global.enemy_info[$ object_get_name(_entry.enemy)];
-	var _mut = (_entry.mutation != undefined) ? global.mutations[$ _entry.mutation] : undefined;
+	var _mut = mutation_description(_entry.mutation);
     if (_info != undefined) {
         if (_info.icon != undefined) draw_sprite_ext(_info.icon, 0, 1714, 400, 0.75, 0.75, 0, (_mut != undefined) ? _mut.tint : c_white, 1);   // centered origin assumed
         draw_set_halign(fa_center);

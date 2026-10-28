@@ -22,7 +22,8 @@ enemy_bind_lineage(_enemy, lineage);
 enemy_restore_status(_enemy, _status);
 
 // The revived enemy is no longer skeletal and must not create another revive.
-_enemy.mutation = undefined;
+var _retained = variable_instance_exists(id, "revived_mutations") ? revived_mutations : [];
+enemy_apply_mutations(_enemy, _retained);
 
 if (instance_exists(wave_owner))
 {

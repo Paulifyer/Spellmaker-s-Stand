@@ -65,13 +65,7 @@ if (position < array_length(current_wave_groups))
 		_enemy.my_speed = _enemy.base_speed;
 		_enemy.v_speed *= _speed_multiplier;
 	
-		_enemy.mutation = undefined;
-		if (_entry.mutation != undefined) {
-			var _mutation = global.mutations[$ _entry.mutation];
-			_enemy.mutation = _mutation;
-			_mutation.on_spawn(_enemy);
-			_enemy.image_blend = _mutation.tint;
-		}
+		enemy_apply_mutations(_enemy, _entry.mutation);
 
 		with (_enemy)
 		{

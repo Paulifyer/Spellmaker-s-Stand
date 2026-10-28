@@ -44,7 +44,7 @@ start_case = function(_case) {
 			next_beam_tick = 15;
 			break;
 		case 6:
-			_form = "projectile"; _actor.hp = 50; _actor.mutation = global.mutations.skeletal;
+			_form = "projectile"; _actor.hp = 50; enemy_apply_mutations(_actor, "skeletal");
 			_effects = [{effect: "harm", mods: ["delay"]}, {effect: "harm", mods: []}];
 			description = "Skeletal direct hit: lethal Harm, then queued Harm follows the lineage and destroys its pile.";
 			break;

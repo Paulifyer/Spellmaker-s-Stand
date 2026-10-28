@@ -95,6 +95,7 @@ notes = "";
 
 //mutation_key
 mutation = undefined;
+mutation_keys = [];
 
 // Stable identity used by the room's scheduled enemy-following work.
 combat_lineage = undefined;
