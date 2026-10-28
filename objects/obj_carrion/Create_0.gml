@@ -29,10 +29,10 @@ my_speed = base_speed;
 v_speed = my_speed * 0.7;
 
 // This variable holds the sprite to use when the enemy is moving sideways
-walk_side_sprite = spr_enemy_carrionwalk;
+walk_side_sprite = spr_enemy_carrionwalk_new;
 
 // This variable holds the sprite to use when the enemy is moving up
-walk_up_sprite = spr_frankenstein_walk_up;
+attack_sprite = spr_enemy_carrionpreview;
 
 // This variable holds the sprite to use when the enemy is moving down
 walk_down_sprite = spr_frankenstein_walk_down;
