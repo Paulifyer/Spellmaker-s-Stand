@@ -77,7 +77,7 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 		if (spell.form.is_channel) {
 			_dmg *= spell.compiled.beam_damage_multiplier_per_tick;
 		}
-		deal_damage(target, _dmg);
+		spell_direct_damage(spell, target, _dmg);
 	}
 }
 
@@ -105,4 +105,37 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
 }
 
 function Elem_None() : EffectGlyph("none", 0) constructor {
+}
+
+function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
+	col = c_orange;
+	cost = tune_params("effects", "combust", "cost", 15);
+	desc = "Damages burning enemies. A direct kill in this immediate spell sequence causes an explosion and spreads Burn.";
+	on_hit = function(spell, target, fx) {
+		if (!combat_status_active(target, "burn")) return;
+		spell_direct_damage(spell, target, fx.params.base_damage * fx.params.damage_mult * fx.effect_multiplier * spell_damage_scale(spell));
+	};
+}
+
+function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
+	col = c_yellow;
+	cost = tune_params("effects", "discharge", "cost", 20);
+	desc = "Charged enemies emit area damage and consume Charged. Nearby charged enemies react; each enemy takes at most three burst hits per reaction.";
+	on_hit = function(spell, target, fx) {
+		spell_discharge(spell, target, fx);
+	};
+}
+
+function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
+	col = c_teal;
+	cost = tune_params("effects", "snap", "cost", 15);
+	desc = "Deals damage per Frost stack, then consumes all Frost. No Frost means no damage.";
+	on_hit = function(spell, target, fx) {
+		var _stacks = combat_status_frost_stacks(target);
+		if (_stacks <= 0) return;
+		var _damage = fx.params.base_damage * fx.params.damage_per_stack_mult * _stacks * fx.effect_multiplier * spell_damage_scale(spell);
+		spell_direct_damage(spell, target, _damage);
+		combat_status_clear(target, "frost");
+		enemy_update_movement(target);
+	};
 }

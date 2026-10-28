@@ -7,7 +7,7 @@ function combat_status_definitions() {
 	if (!variable_global_exists("combat_status_registry") || !is_array(global.combat_status_registry)) {
 		global.combat_status_registry = [
 			{key: "burn", timer: "burn_timer", fields: ["burn_timer", "burn_dmg"], colour: c_red},
-			{key: "frost", timer: "slow_timer", fields: ["slow_timer", "slow_amt"], colour: c_teal},
+			{key: "frost", timer: "slow_timer", fields: ["slow_timer", "slow_amt", "frost_stacks"], colour: c_teal},
 			{key: "lightning", timer: "stun_timer", fields: ["stun_timer", "stun_immune_timer"], colour: c_yellow},
 			{key: "hex", timer: "hex_timer", fields: ["hex_timer"], colour: c_fuchsia}
 		];
@@ -53,7 +53,11 @@ function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
 	_frames = max(0, round(_frames));
 	switch (_key) {
 		case "burn": _enemy.burn_timer = _frames; _enemy.burn_dmg = _strength; break;
-		case "frost": _enemy.slow_timer = _frames; _enemy.slow_amt = clamp(_enemy.slow_amt + _strength, 0, 0.6); break;
+		case "frost":
+			_enemy.frost_stacks = min(3, combat_status_frost_stacks(_enemy) + 1);
+			_enemy.slow_amt = clamp(_enemy.frost_stacks * _strength, 0, 0.6);
+			_enemy.slow_timer = _frames;
+			break;
 		case "lightning":
 			if (!combat_status_active(_enemy, "lightning")) {
 				_enemy.stun_timer = _frames;
@@ -64,6 +68,36 @@ function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
 	}
 }
 
+function combat_status_frost_stacks(_subject) {
+	if (!combat_status_active(_subject, "frost")) return 0;
+	var _stacks = combat_status_get(_subject, "frost_stacks");
+	// Compatibility for older snapshots/fixtures that only stored slow intensity.
+	if (_stacks == undefined) {
+		var _per_stack = max(0.0001, tune_params("effects", "ice", "slow_amt_per_stack", 0.2));
+		_stacks = round(combat_status_get(_subject, "slow_amt") / _per_stack);
+	}
+	return clamp(_stacks, 0, 3);
+}
+
+function combat_status_clear(_subject, _key) {
+	var _defs = combat_status_definitions();
+	for (var i = 0; i < array_length(_defs); i++) {
+		if (_defs[i].key != _key) continue;
+		for (var j = 0; j < array_length(_defs[i].fields); j++)
+			combat_status_set(_subject, _defs[i].fields[j], 0);
+	}
+}
+
+function combat_status_charged(_subject) {
+	return combat_status_get(_subject, "stun_timer") <= 0 && combat_status_get(_subject, "stun_immune_timer") > 0;
+}
+
+function combat_status_consume_charge(_subject) {
+	if (!combat_status_charged(_subject)) return false;
+	combat_status_set(_subject, "stun_immune_timer", 0);
+	return true;
+}
+
 function combat_status_capture(_subject) {
 	var _state = {};
 	var _defs = combat_status_definitions();
@@ -71,7 +105,9 @@ function combat_status_capture(_subject) {
 		var _fields = _defs[i].fields;
 		for (var j = 0; j < array_length(_fields); j++) {
 			var _field = _fields[j];
-			_state[$ _field] = max(0, combat_status_get(_subject, _field));
+			var _value = combat_status_get(_subject, _field);
+			if (_field == "frost_stacks" && _value == undefined) _value = combat_status_frost_stacks(_subject);
+			_state[$ _field] = (_value == undefined) ? 0 : max(0, _value);
 		}
 	}
 	return _state;
@@ -81,9 +117,14 @@ function combat_status_restore(_subject, _state) {
 	var _defs = combat_status_definitions();
 	for (var i = 0; i < array_length(_defs); i++) {
 		var _fields = _defs[i].fields;
-		for (var j = 0; j < array_length(_fields); j++) combat_status_set(_subject, _fields[j], _state[$ _fields[j]]);
+		for (var j = 0; j < array_length(_fields); j++) {
+			var _field = _fields[j];
+			var _value = _state[$ _field];
+			if (_field == "frost_stacks" && _value == undefined) _value = combat_status_frost_stacks(_state);
+			combat_status_set(_subject, _field, (_value == undefined) ? 0 : _value);
+		}
 	}
-	if (!combat_status_active(_subject, "frost")) combat_status_set(_subject, "slow_amt", 0);
+	if (!combat_status_active(_subject, "frost")) combat_status_clear(_subject, "frost");
 }
 
 function combat_status_advance(_subject, _frames, _live = true) {
@@ -100,7 +141,7 @@ function combat_status_advance(_subject, _frames, _live = true) {
 		}
 		combat_status_set(_subject, _def.timer, max(0, _before - _frames));
 	}
-	if (!combat_status_active(_subject, "frost")) combat_status_set(_subject, "slow_amt", 0);
+	if (!combat_status_active(_subject, "frost")) combat_status_clear(_subject, "frost");
 }
 
 function enemy_get_lineage(_enemy) {

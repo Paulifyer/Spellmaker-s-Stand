@@ -61,8 +61,10 @@ by enemy abilities; no parallel status bag needs synchronization.
   projectile or mutable tuning data when a delayed callback finally runs.
 - Register new status fields/counting/display metadata and implement its application
   rule in the status interface. Add transfer, expiry and refresh tests.
-- Chain/Link/Discharge are not implemented here. Their future propagation needs
-  explicit reaction IDs and hit budgets; do not use callback identity as a substitute.
+- Discharge now uses explicit reaction IDs, lineage-based hit budgets and an iterative
+  burst work list. Combust attribution belongs to one delivery/Delay segment. See
+  `payoff-glyphs.md` for the implementation and tuning. Future Chain/Link propagation
+  should reuse these identities and budgets rather than callback identity.
 - Keep compiled plans read-only; mutable delivery/contact state belongs to a cast.
 
 ## Native test room

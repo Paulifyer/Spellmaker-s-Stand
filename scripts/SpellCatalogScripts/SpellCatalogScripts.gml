@@ -15,6 +15,9 @@ global.spell_glyphs = {
 		hex : new Elem_Hex(),
 		harm: new Elem_Harm(),
 		pull: new Elem_Pull(),
+		snap: new Elem_Snap(),
+		combust: new Elem_Combust(),
+		discharge: new Elem_Discharge(),
 		none : new Elem_None()
 	},
 	modifier : {
@@ -29,7 +32,7 @@ global.spell_glyphs = {
 
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike", "rune"],
-	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex"],
+	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex", "snap", "combust", "discharge"],
 	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
 };
 
@@ -94,12 +97,42 @@ function rune_trim_to_limit(_key, _limit) {
 function compile_effect_parameters(_id) {
 	var _duration = 0;
 	switch (_id) { case "fire": case "ice": _duration = 3; break; case "lightning": _duration = 1; break; case "hex": _duration = 5; break; }
-	return {base_damage: tune_value("combat", "base_dmg", 100),
+	var _params = {base_damage: tune_value("combat", "base_dmg", 100),
 		duration: tune_params("effects", _id, "duration", _duration),
 		fire_mult: tune_params("effects", "fire", "fire_dmg_mult", 0.4),
 		slow_per_stack: tune_params("effects", "ice", "slow_amt_per_stack", 0.2),
 		pull_sec: tune_params("effects", "pull", "pull_sec", 0.4),
 		hold_sec: tune_params("effects", "pull", "hold_sec", 1.0)};
+	if (_id == "snap") {
+		_params.damage_per_stack_mult = tune_params("effects", "snap", "damage_per_stack_mult", 1.2);
+		if (!is_real(_params.damage_per_stack_mult) || _params.damage_per_stack_mult < 0)
+			throw "effects.snap.damage_per_stack_mult must be non-negative";
+	}
+	if (_id == "combust" || _id == "discharge") {
+		_params.damage_mult = tune_params("effects", _id, "damage_mult", 1);
+		_params.radius_tiles = tune_params("effects", _id, "radius_tiles", 1);
+		_params.area_radius_tiles = tune_params("effects", _id, "area_radius_tiles", 2);
+		if (!is_real(_params.damage_mult) || _params.damage_mult < 0)
+			throw "Effect damage_mult must be non-negative";
+		if (!is_real(_params.radius_tiles) || _params.radius_tiles < 0 || floor(_params.radius_tiles) != _params.radius_tiles
+		|| !is_real(_params.area_radius_tiles) || _params.area_radius_tiles < 0 || floor(_params.area_radius_tiles) != _params.area_radius_tiles)
+			throw "Effect radii must be non-negative integers";
+	}
+	if (_id == "combust") {
+		_params.explosion_damage_mult = tune_params("effects", _id, "explosion_damage_mult", 1);
+		_params.burn_duration = tune_params("effects", _id, "burn_duration", 3);
+		_params.burn_damage_mult = tune_params("effects", _id, "burn_damage_mult", 0.4);
+		if (!is_real(_params.explosion_damage_mult) || _params.explosion_damage_mult < 0
+		|| !is_real(_params.burn_duration) || _params.burn_duration < 0
+		|| !is_real(_params.burn_damage_mult) || _params.burn_damage_mult < 0)
+			throw "Combust explosion and burn parameters must be non-negative";
+	}
+	if (_id == "discharge") {
+		_params.max_hits_per_enemy = tune_params("effects", _id, "max_hits_per_enemy", 3);
+		if (!is_real(_params.max_hits_per_enemy) || _params.max_hits_per_enemy < 1 || floor(_params.max_hits_per_enemy) != _params.max_hits_per_enemy)
+			throw "Discharge max_hits_per_enemy must be a positive integer";
+	}
+	return _params;
 }
 
 function compile_spell(_loadout) {
@@ -139,7 +172,7 @@ function compile_spell(_loadout) {
 			}
 		}
 
-		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, duration: 0, delay: 0, delay_after: 0});
+		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
@@ -159,6 +192,7 @@ function compile_spell(_loadout) {
 		if (_fn != undefined) _fn(_compiled, undefined);
 	}
 	var _delay = 0;
+	var _segment = 0;
 	for (var e = 0; e < array_length(_effects); e++) {
 		var _fx = _effects[e];
 		for (var i = 0; i < array_length(_fx.mods); i++) {
@@ -166,7 +200,9 @@ function compile_spell(_loadout) {
 			if (_fn != undefined) _fn(_compiled, _fx);
 		}
 		_fx.delay = _delay;
+		_fx.execution_segment = _segment;
 		_delay += _fx.delay_after;
+		if (array_contains(_loadout.effects[e].mods, "delay")) _segment++;
 		_fx.target_policy = (_fx.effect[$ "delivery_kind"] == "location") ? "location" :
 			((_compiled.form_id == "strike" || _compiled.form_id == "rune" || _compiled.area) && _compiled.form_id != "beam" ? "area" : "entity");
 	}

@@ -32,9 +32,16 @@ function makeExecutionContext() {
         json_stringify:JSON.stringify,Form_Beam:function(){},
         deal_damage:(e,amount)=>{e.hp-=amount;},
         spr_vfx_rune_complete:1,PROJECTILE_SPD:15,
+        sprite:1,spr_projectile_start:'projectile_start',spr_projectile_mid:'projectile_mid',spr_projectile_end:'projectile_end',
+        spr_strike_start:'strike_start',spr_strike_mid:'strike_mid',spr_strike_end:'strike_end',
+        sprite_get_speed:()=>60,sprite_get_speed_type:()=>0,sprite_get_number:()=>4,
+        spritespeed_framespersecond:0,gamespeed_fps:0,game_get_speed:()=>60,
+        grid_to_world_center:(col,row)=>({x:(col+0.5)*100,y:(row+0.5)*50}),
+        world_to_grid:(x,y)=>({col:Math.floor(x/100),lane:Math.floor(y/100)}),
+        enemy_overlaps_region:(e,a,b,l1,l2)=>Math.floor(e.x/100)>=a&&Math.floor(e.x/100)<=b&&e.lane>=l1&&e.lane<=l2,
     });
     ctx.global.lane_top=[0,100,200];
-    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage']);
+    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage','enemy_update_movement']);
     load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['apply_effect_group','spell_snapshot','cast_spell','rune_trim_to_limit']);
     const execution=read('scripts/SpellExecution/SpellExecution.gml');
     const names=[...execution.matchAll(/function (\w+)\(/g)].map(m=>m[1]);
@@ -49,21 +56,22 @@ function makeExecutionContext() {
         }
         ctx.forms[id]=form;
     }
-    for(const [id,name]of Object.entries({harm:'Harm',fire:'Fire',ice:'Ice',lightning:'Lightning',hex:'Hex',pull:'Pull'})) {
+    for(const [id,name]of Object.entries({harm:'Harm',fire:'Fire',ice:'Ice',lightning:'Lightning',hex:'Hex',pull:'Pull',snap:'Snap',combust:'Combust',discharge:'Discharge'})) {
         const fx=ctx.global.spell_glyphs.effect[id];fx.on_cast=()=>{};
         fx.on_hit=(spell,e,group)=>{log.push(id);if(id!=='pull')callback(ctx,'scripts/EffectGlyphs/EffectGlyphs.gml',`Elem_${name}`,'on_hit')(spell,e,group);};
         fx.on_impact=(spell,group,col,lane)=>{log.push(id);if(id==='pull')callback(ctx,'scripts/EffectGlyphs/EffectGlyphs.gml','Elem_Pull','on_impact')(spell,group,col,lane);};
     }
     function enemy(col=2,lane=0,extra={}) {
         const e={x:col*100+50,y:lane*100,lane,hp:100000,base_speed:1,my_speed:1,is_targetable:true,
-            burn_timer:0,burn_dmg:0,slow_timer:0,slow_amt:0,stun_timer:0,stun_immune_timer:0,hex_timer:0,pull:undefined,...extra};
+            burn_timer:0,burn_dmg:0,slow_timer:0,slow_amt:0,frost_stacks:0,stun_timer:0,stun_immune_timer:0,hex_timer:0,pull:undefined,...extra};
         enemies.push(e);ctx.enemy_get_lineage(e);return e;
     }
     function spell(form,effects,mods=[]) {
         const compiled=ctx.compile_spell({form,form_mods:mods,effects});
         const s={compiled,form:compiled.form,effects:compiled.effects,form_mods:compiled.form_mods,
             area:compiled.area,pierce:compiled.pierce,cast_id:ctx.combat_next_id(),delivery_index:0,
-            hit_state:{contacts:[],applications:{},epoch:0},x:0,y:0,col:0,target_col:2,target_row:0,caster:{}};
+            hit_state:{contacts:[],applications:{},epoch:0},x:0,y:0,col:0,target_col:2,target_row:0,caster:{},
+            projectile_state:'mid',projectile_sprite:'projectile_mid',projectile_frame:0,beam_frame:0};
         spells.push(s);return s;
     }
     function tick(n=1,paused=false){for(let i=0;i<n;i++)if(!paused){ctx.manager.combat_execution.clock++;ctx.combat_execution_flush(ctx.manager.combat_execution);}}

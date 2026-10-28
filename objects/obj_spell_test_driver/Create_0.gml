@@ -49,6 +49,31 @@ start_case = function(_case) {
 			_effects = [{effect: "harm", mods: ["delay"]}, {effect: "harm", mods: []}];
 			description = "Skeletal direct hit: lethal Harm, then queued Harm follows the lineage and destroys its pile.";
 			break;
+		case 7:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			enemy_apply_mutations(_actor, "frost-warded");
+			for (var j = 0; j < 3; j++) combat_status_apply(_actor, "frost", 180, 0.2);
+			_effects = [{effect: "snap", mods: []}];
+			description = "Snap: 3 Frost stacks take 3.6x damage before consumption. Frost disappears and the ward returns.";
+			break;
+		case 8:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			_actor.hp = tune_value("combat", "base_dmg", 100) * 0.75;
+			combat_status_apply(_actor, "burn", 180, 1);
+			spawn_test_enemy(obj_spell_test_enemy, test_col + 1, test_lane);
+			_effects = [{effect: "harm", mods: []}, {effect: "combust", mods: []}];
+			description = "Harm before Combust: burning target dies, neighbor takes one explosion and receives fresh Burn.";
+			break;
+		case 9:
+			_actor.x = GRID_X0 + (test_col + 0.5) * TILE_W;
+			_actor.stun_immune_timer = 180;
+			for (var j = 1; j <= 2; j++) {
+				var _neighbor = spawn_test_enemy(obj_spell_test_enemy, test_col + j, test_lane);
+				_neighbor.stun_immune_timer = 180;
+			}
+			_effects = [{effect: "discharge", mods: []}];
+			description = "Discharge: chain through charged neighbors, consume Charged, emit once each and cap damage at 3 bursts.";
+			break;
 	}
 	plan = test_plan(_form, _effects, _mods);
 	watched_lineage = enemy_get_lineage(_actor);

@@ -210,15 +210,26 @@ if (mouse_check_button_pressed(mb_left)) {
 }
 draw_set_font(fnt_Arcane);
 
-// ---- Spell slots 1-3 ----
+// ---- Four spell slots; campaign configuration determines availability. ----
 draw_set_font(fnt_Arcane_Bold);
 draw_text_ext(850, 900, "Slots:", 200, 200);
 draw_set_font(fnt_Arcane);
-var _slot_x = [1023, 1141, 1256];
+var _slot_x = [965, 1080, 1195, 1310];
 for (var i = 0; i < SPELL_SLOTS; i++) {
+    var _unlocked = spell_slot_unlocked(i);
     var _sp = global.spellbook[i];
-    var _ic = (_sp != undefined && _sp.form != undefined) ? global.spell_glyphs.form[$ _sp.form].icon : undefined;
-    var _b = gui_circle_button(_slot_x[i], 990, 30, _ic, string(i + 1), i == sel, true, _mouse);
+    var _ic = (_unlocked && _sp != undefined && _sp.form != undefined) ? global.spell_glyphs.form[$ _sp.form].icon : undefined;
+    var _b = gui_circle_button(_slot_x[i], 990, 30, _ic, string(i + 1), i == sel, _unlocked, _mouse);
+    if (!_unlocked) {
+        draw_set_halign(fa_center);
+        draw_text(_slot_x[i], 1025, "Locked");
+        draw_set_halign(fa_left);
+        if (_b.hover) {
+            var _level = spell_slot_unlock_level(i);
+            hover_text = (_level == undefined) ? "Slot locked" : "Unlocks at level " + string(_level);
+        }
+        continue;
+    }
 	var _too_expensive = spell_mana_preview(_sp, _max_mana).too_expensive;
 	var _bad_spell = (_sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) || _too_expensive;
 	if (_bad_spell) {
@@ -229,7 +240,7 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
     if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) hover_text = spell_validation_message(_sp);
     if (_b.hover && _too_expensive) hover_text = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
-    if (_b.clicked) { sel = i; naming = false; }
+    if (_b.clicked) { sel = i; naming = false; active_group = -1; }
 }
 
 // ---- Crystal ball: enemies (click to cycle) ----

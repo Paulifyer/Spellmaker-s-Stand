@@ -101,14 +101,16 @@ for(const count of [2,3,4]) {
     Object.assign(h.c,{
         world_to_grid:()=>undefined,display_get_gui_height:()=>1080,
         lerp:(a,b,t)=>a+(b-a)*t,floor:Math.floor,
-        c_black:0,c_aqua:1,c_white:2,c_gray:3,fa_center:1,fa_left:0,
+        c_black:0,c_aqua:1,c_white:2,c_gray:3,c_red:4,fa_center:1,fa_left:0,fnt_Arcane:1,current_time:0,
         draw_set_alpha:noop,draw_rectangle:noop,draw_set_colour:noop,draw_set_color:noop,
         draw_set_halign:noop,draw_set_font:noop,draw_text:(x,y,text)=>labels.push(String(text)),
+        draw_text_ext:(x,y,text)=>labels.push(String(text)),
     });
     h.p.mana_display=100;
-    vm.runInContext(`(function(){with(p){${read('objects/Player/Draw_64.gml')}}})()`,h.c);
+    const hud=read('objects/Player/Draw_64.gml').replace('current_time div 500','Math.floor(current_time / 500)').replace(/\bmod\b/g,'%');
+    vm.runInContext(`(function(){with(p){${hud}}})()`,h.c);
     assert.ok(labels.includes(`Hover a tile + press ${Array.from({length:count},(_,i)=>i+1).join('/')} to cast`));
     assert.equal(labels.filter(x=>x==='Locked').length,4-count);
-    assert.equal(labels.includes('4 projectile'),count===4);
+    assert.equal(labels.includes('4 Slot 4'),count===4);
 }
 console.log('Spell slot checks passed: eight-level JSON progression, parsing, locks, retained spells, Start validation, fourth-slot keys, cooldown overrides/defaults and channel release.');

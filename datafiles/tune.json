@@ -35,6 +35,9 @@
         "rune": { "cost": 25, "max_placed": 6 }
     },
     "effects": {
+        "snap": { "cost": 15, "damage_per_stack_mult": 1.2 },
+        "discharge": { "cost": 20, "damage_mult": 1, "radius_tiles": 1, "area_radius_tiles": 2, "max_hits_per_enemy": 3 },
+        "combust": { "cost": 15, "damage_mult": 1, "explosion_damage_mult": 1, "radius_tiles": 1, "area_radius_tiles": 2, "burn_duration": 3, "burn_damage_mult": 0.4 },
         "harm": {"cost": 10},
         "fire": {"cost": 10, "fire_dmg_mult": 0.4,"duration": 3},
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 3},

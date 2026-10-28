@@ -25,11 +25,11 @@ function Mod_Area() : ModifierGlyph("Area", AREA_COST) constructor {
 	icon = spr_glyph_aoe;
 	scope = "both";
 	allowed_forms = ["projectile", "beam", "strike", "rune"];
-	allowed_effects = [];
-	desc = "Attach to a Form to expand its delivery area. Pull keeps its normal 3x3 area.";
+	allowed_effects = ["combust", "discharge"];
+	desc = "Expand a Form's delivery area or a compatible Effect's burst area. Pull keeps its normal 3x3 area.";
 	cost = tune_params("modifiers", "area", "cost", AREA_COST);
 	on_cast = function(spell, fx) {
-		spell.area = true;
+		if (fx == undefined) spell.area = true; else fx.area = true;
 	}
 	on_hit = function(spell, target) {};
 }
@@ -39,7 +39,7 @@ function Mod_Amplify() : ModifierGlyph("Amplify", AMPLIFY_COST) constructor {
 	cost = tune_params("modifiers", "amplify", "cost", AMPLIFY_COST);
 	is_stacks = true;
 	scope = "effect";
-	allowed_effects = ["harm", "fire"];
+	allowed_effects = ["harm", "fire", "snap", "combust", "discharge"];
 	on_cast = function(spell, fx) {
 		fx.effect_multiplier += tune_params("modifiers", "amplify", "dmg_multplier", AMPLIFY_ADD_MULT);
 	}

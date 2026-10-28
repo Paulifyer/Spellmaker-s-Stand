@@ -3,6 +3,113 @@ function combat_execution_create() {
 	return {clock: 0, events: [], processing: false};
 }
 
+function spell_damage_scale(_spell) {
+	return _spell.form.is_channel ? _spell.compiled.beam_damage_multiplier_per_tick : 1;
+}
+
+function spell_direct_damage(_spell, _enemy, _amount, _allow_combust = true) {
+	if (_enemy.hp <= 0) return;
+	var _burning = combat_status_active(_enemy, "burn");
+	deal_damage(_enemy, _amount);
+	if (!_allow_combust || !_burning || _enemy.hp > 0) return;
+	if (!is_struct(_spell) || !variable_struct_exists(_spell, "execution_scope")) return;
+	var _scope = _spell.execution_scope;
+	if (!is_struct(_scope) || _scope.combust == undefined) return;
+	var _eligible = (_scope.combust.target_policy == "entity")
+		? (_scope.lineage == enemy_get_lineage(_enemy))
+		: enemy_overlaps_region(_enemy, _scope.col - _scope.radius, _scope.col + _scope.radius, _scope.lane - _scope.radius, _scope.lane + _scope.radius);
+	if (!_eligible) return;
+	var _key = string(enemy_get_lineage(_enemy).id);
+	if (variable_struct_exists(_scope.exploded, _key)) return;
+	_scope.exploded[$ _key] = true;
+	array_push(_scope.queue, {kind: "combust", fx: _scope.combust, x: _enemy.x, y: _enemy.y});
+	spell_drain_bursts(_spell, _scope);
+}
+
+// Each Delay boundary owns a separate immediate execution context.
+function spell_execution_scope_create(_spell, _segment, _target, _col, _lane, _radius, _shared_reactions = undefined) {
+	var _combust = undefined;
+	for (var i = 0; i < array_length(_spell.effects); i++) {
+		var _fx = _spell.effects[i];
+		if (_fx.execution_segment == _segment && _fx.id == "combust") _combust = _fx;
+	}
+	return {id: combat_next_id(), combust: _combust,
+		lineage: instance_exists(_target) ? enemy_get_lineage(_target) : undefined,
+		col: _col, lane: _lane, radius: _radius, exploded: {}, reactions: (_shared_reactions == undefined) ? {} : _shared_reactions, queue: [], cursor: 0, processing: false};
+}
+
+function spell_discharge_enqueue(_scope, _fx, _source, _reaction) {
+	if (!combat_status_charged(_source) || !spell_reaction_claim_emitter(_reaction, _source)) return;
+	array_push(_scope.queue, {kind: "discharge", fx: _fx, source: _source, x: _source.x, y: _source.y, reaction: _reaction});
+}
+
+function spell_discharge(_spell, _target, _fx) {
+	if (_target.hp <= 0 || !combat_status_charged(_target)) return;
+	var _scope = _spell.execution_scope;
+	var _key = string(_fx.index);
+	if (!variable_struct_exists(_scope.reactions, _key)) _scope.reactions[$ _key] = spell_reaction_create();
+	spell_discharge_enqueue(_scope, _fx, _target, _scope.reactions[$ _key]);
+	spell_drain_bursts(_spell, _scope);
+}
+
+function spell_drain_bursts(_spell, _scope) {
+	if (_scope.processing) return;
+	_scope.processing = true;
+	while (_scope.cursor < array_length(_scope.queue)) {
+		var _burst = _scope.queue[_scope.cursor++];
+		var _fx = _burst.fx;
+		if (_burst.kind == "discharge" && instance_exists(_burst.source)) combat_status_consume_charge(_burst.source);
+		var _radius = _fx.area ? _fx.params.area_radius_tiles : _fx.params.radius_tiles;
+		var _targets = spell_reaction_targets(_spell, _burst.x, _burst.y, _radius);
+		for (var i = 0; i < array_length(_targets); i++) {
+			var _target = _targets[i];
+			if (!instance_exists(_target) || _target.hp <= 0) continue;
+			if (_burst.kind == "combust") {
+				spell_direct_damage(_spell, _target, _fx.params.base_damage * _fx.params.explosion_damage_mult * _fx.effect_multiplier * spell_damage_scale(_spell), false);
+				combat_status_apply(_target, "burn", _fx.params.burn_duration * TARGET_ROOM_SPEED, _fx.params.base_damage * _fx.params.burn_damage_mult * _fx.effect_multiplier);
+			} else if (_burst.kind == "discharge") {
+				if (!spell_reaction_claim_hit(_burst.reaction, _target, _fx.params.max_hits_per_enemy)) continue;
+				// Reserve a charged victim's emission before lethal damage can remove it.
+				spell_discharge_enqueue(_scope, _fx, _target, _burst.reaction);
+				spell_direct_damage(_spell, _target, _fx.params.base_damage * _fx.params.damage_mult * _fx.effect_multiplier * spell_damage_scale(_spell));
+			}
+		}
+	}
+	_scope.queue = []; _scope.cursor = 0; _scope.processing = false;
+}
+
+// Mutable reaction state belongs to one effect occurrence, not the glyph singleton.
+function spell_reaction_create() {
+	return {id: combat_next_id(), emitted: {}, hits: {}};
+}
+
+function spell_reaction_claim_emitter(_reaction, _enemy) {
+	var _key = string(enemy_get_lineage(_enemy).id);
+	if (variable_struct_exists(_reaction.emitted, _key)) return false;
+	_reaction.emitted[$ _key] = true;
+	return true;
+}
+
+function spell_reaction_claim_hit(_reaction, _enemy, _limit) {
+	var _key = string(enemy_get_lineage(_enemy).id);
+	var _count = variable_struct_exists(_reaction.hits, _key) ? _reaction.hits[$ _key] : 0;
+	if (_count >= _limit) return false;
+	_reaction.hits[$ _key] = _count + 1;
+	return true;
+}
+
+function spell_reaction_targets(_spell, _x, _y, _radius) {
+	var _tile = world_to_grid(_x, _y);
+	if (_tile == undefined) return [];
+	var _candidates = enemies_in_region_list(_tile.col - _radius, _tile.col + _radius, _tile.lane - _radius, _tile.lane + _radius);
+	var _targets = [];
+	for (var i = 0; i < array_length(_candidates); i++) {
+		var _enemy = _candidates[i];
+		if (_enemy.hp > 0 && enemy_can_receive_spell(_enemy, _spell.compiled)) array_push(_targets, _enemy);
+	}
+	return _targets;
+}
+
 function combat_execution_state() {
 	var _manager = instance_find(obj_gameplay_manager, 0);
 	return instance_exists(_manager) ? _manager.combat_execution : undefined;
@@ -35,6 +142,7 @@ function spell_apply_once(_event, _enemy) {
 }
 
 function combat_execute_event(_event) {
+	_event.spell.execution_scope = _event.scope;
 	switch (_event.policy) {
 		case "location":
 			_event.fx.effect.on_impact(_event.spell, _event.fx, _event.col, _event.lane);
@@ -100,14 +208,27 @@ function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {
 	}
 	var _delivery = spell_new_delivery(_spell);
 	var _snapshot = spell_snapshot(_spell);
+	var _scopes = {};
+	var _shared_reactions = undefined;
+	if (_spell.form.is_channel) {
+		var _has_epoch = is_struct(_spell) ? variable_struct_exists(_spell, "reaction_epoch") : variable_instance_exists(_spell, "reaction_epoch");
+		if (!_has_epoch || _spell.reaction_epoch != _spell.hit_state.epoch) {
+			_spell.reaction_epoch = _spell.hit_state.epoch;
+			_spell.discharge_reactions = {};
+		}
+		_shared_reactions = _spell.discharge_reactions;
+	}
 	for (var e = 0; e < array_length(_spell.effects); e++) {
 		var _fx = _spell.effects[e];
+		var _segment_key = string(_fx.execution_segment);
+		if (!variable_struct_exists(_scopes, _segment_key))
+			_scopes[$ _segment_key] = spell_execution_scope_create(_spell, _fx.execution_segment, _target, _col, _lane, _radius, _shared_reactions);
 		var _lineage = (_fx.target_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
 		if (_fx.target_policy == "entity" && _lineage == undefined) continue;
 		var _event = {due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), order: combat_next_id(),
 			cast_id: _delivery.cast_id, delivery_id: _delivery.id, fx: _fx, policy: _fx.target_policy,
 			lineage: _lineage, col: _col, lane: _lane, radius: _radius,
-			epoch: _spell.hit_state.epoch, spell: _snapshot};
+			epoch: _spell.hit_state.epoch, spell: _snapshot, scope: _scopes[$ _segment_key]};
 		array_push(_state.events, _event);
 	}
 	combat_execution_flush(_state);

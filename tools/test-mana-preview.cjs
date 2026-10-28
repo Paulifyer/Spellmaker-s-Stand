@@ -18,6 +18,7 @@ const ctx = {
         modifier: {amplify, delay: {cost: 5}, pierce: {cost: 15}}
     }},
     array_length: a => a.length,
+    array_contains:(a,v)=>a.includes(v),
     array_push:(a,v)=>a.push(v),is_struct:x=>!!x&&typeof x==='object',
     clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
     string: String, is_instanceof: m => !!m.amplify, Mod_Amplify: function(){},

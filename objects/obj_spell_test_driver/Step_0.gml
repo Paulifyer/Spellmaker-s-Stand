@@ -1,4 +1,4 @@
-for (var i = 1; i <= 6; i++) if (keyboard_check_pressed(ord("0") + i)) start_case(i);
+for (var i = 1; i <= 9; i++) if (keyboard_check_pressed(ord("0") + i)) start_case(i);
 for (var i = 0; i < 6; i++) if (keyboard_check_pressed(vk_f1 + i)) start_enemy_case(i + 1);
 if (!paused && watched_lineage != undefined && instance_exists(watched_lineage.target)) {
 	var _tracked = watched_lineage.target;
