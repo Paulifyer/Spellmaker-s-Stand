@@ -117,6 +117,15 @@ function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
 	};
 }
 
+function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
+	col = c_yellow;
+	cost = tune_params("effects", "discharge", "cost", 20);
+	desc = "Charged enemies emit area damage and consume Charged. Nearby charged enemies react; each enemy takes at most three burst hits per reaction.";
+	on_hit = function(spell, target, fx) {
+		spell_discharge(spell, target, fx);
+	};
+}
+
 function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
 	col = c_teal;
 	cost = tune_params("effects", "snap", "cost", 15);

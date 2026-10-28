@@ -124,6 +124,11 @@ function compile_effect_parameters(_id) {
 		|| !is_real(_params.burn_damage_mult) || _params.burn_damage_mult < 0)
 			throw "Combust explosion and burn parameters must be non-negative";
 	}
+	if (_id == "discharge") {
+		_params.max_hits_per_enemy = tune_params("effects", _id, "max_hits_per_enemy", 3);
+		if (!is_real(_params.max_hits_per_enemy) || _params.max_hits_per_enemy < 1 || floor(_params.max_hits_per_enemy) != _params.max_hits_per_enemy)
+			throw "Discharge max_hits_per_enemy must be a positive integer";
+	}
 	return _params;
 }
 
