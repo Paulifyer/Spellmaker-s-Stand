@@ -25,6 +25,6 @@ function loadStatuses(ctx) {
         c_red:1,c_teal:2,c_yellow:3,c_fuchsia:4,TARGET_ROOM_SPEED:60,tune_params:(_,__,___,v)=>v,
         variable_instance_exists:(o,k)=>Object.hasOwn(o,k)};
     for(const [k,v] of Object.entries(defaults))if(ctx[k]===undefined)ctx[k]=v;
-    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['combat_status_definitions','combat_status_get','combat_status_set','combat_status_initialize','combat_status_active','combat_status_count','combat_status_apply','combat_status_capture','combat_status_restore','combat_status_advance','enemy_advance_lightning','enemy_interrupt_charge']);
+    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['combat_status_definitions','combat_status_get','combat_status_set','combat_status_initialize','combat_status_active','combat_status_count','combat_status_apply','combat_status_frost_stacks','combat_status_clear','combat_status_charged','combat_status_consume_charge','combat_status_capture','combat_status_restore','combat_status_advance','enemy_advance_lightning','enemy_interrupt_charge']);
 }
 module.exports = {read, extract, load, loadStatuses};

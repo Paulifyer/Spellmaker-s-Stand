@@ -3,6 +3,42 @@ function combat_execution_create() {
 	return {clock: 0, events: [], processing: false};
 }
 
+function spell_damage_scale(_spell) {
+	return _spell.form.is_channel ? _spell.compiled.beam_damage_multiplier_per_tick : 1;
+}
+
+// Mutable reaction state belongs to one effect occurrence, not the glyph singleton.
+function spell_reaction_create() {
+	return {id: combat_next_id(), emitted: {}, hits: {}};
+}
+
+function spell_reaction_claim_emitter(_reaction, _enemy) {
+	var _key = string(enemy_get_lineage(_enemy).id);
+	if (variable_struct_exists(_reaction.emitted, _key)) return false;
+	_reaction.emitted[$ _key] = true;
+	return true;
+}
+
+function spell_reaction_claim_hit(_reaction, _enemy, _limit) {
+	var _key = string(enemy_get_lineage(_enemy).id);
+	var _count = variable_struct_exists(_reaction.hits, _key) ? _reaction.hits[$ _key] : 0;
+	if (_count >= _limit) return false;
+	_reaction.hits[$ _key] = _count + 1;
+	return true;
+}
+
+function spell_reaction_targets(_spell, _x, _y, _radius) {
+	var _tile = world_to_grid(_x, _y);
+	if (_tile == undefined) return [];
+	var _candidates = enemies_in_region_list(_tile.col - _radius, _tile.col + _radius, _tile.lane - _radius, _tile.lane + _radius);
+	var _targets = [];
+	for (var i = 0; i < array_length(_candidates); i++) {
+		var _enemy = _candidates[i];
+		if (_enemy.hp > 0 && enemy_can_receive_spell(_enemy, _spell.compiled)) array_push(_targets, _enemy);
+	}
+	return _targets;
+}
+
 function combat_execution_state() {
 	var _manager = instance_find(obj_gameplay_manager, 0);
 	return instance_exists(_manager) ? _manager.combat_execution : undefined;
