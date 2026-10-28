@@ -50,7 +50,10 @@ defeat_down_object = obj_frankenstein_defeat_down;
 health_offset_y = -190;
 
 // This variable shows that the enemy is ready to attack
-ready_to_attack = true;
+ready_to_attack = false;
+charge_active = true;
+charge_interrupt_reason = "";
+siege_attack_timer = -1;
 
 // This variable is the damage this enemy does each attack
 damage_dealt = tune_enemy(name, "attack_dmg", 5);

@@ -64,6 +64,8 @@ if (position < array_length(current_wave_groups))
 		_enemy.base_speed *= _speed_multiplier;
 		_enemy.my_speed = _enemy.base_speed;
 		_enemy.v_speed *= _speed_multiplier;
+		if (variable_instance_exists(_enemy, "normal_speed")) _enemy.normal_speed *= _speed_multiplier;
+		if (variable_instance_exists(_enemy, "charge_speed")) _enemy.charge_speed *= _speed_multiplier;
 	
 		enemy_apply_mutations(_enemy, _entry.mutation);
 

@@ -40,7 +40,7 @@ mover.base_speed=0;ctx.enemy_update_movement(mover);assert.equal(mover.path_spee
 function child(file,enemy){ctx.enemy=enemy;ctx.event_inherited=()=>{};vm.runInContext(`(function(){with(enemy){${read(file)}}})()`,ctx);}
 Object.assign(mover,{self:mover,hp:20,max_hp:100,attack_delay:2,max_attack_delay:2,enrage_mult:2,base_speed:1.1,slow_timer:60,slow_amt:0.6});
 child('objects/obj_brute/Step_0.gml',mover);assert.ok(Math.abs(mover.path_speed-0.88)<1e-9);assert.equal(mover.attack_delay,1);
-Object.assign(mover,{base_speed:4,normal_speed:0.6,stun_timer:1});
+Object.assign(mover,{id:mover,charge_active:true,ready_to_attack:false,siege_attack_timer:-1,base_speed:4,normal_speed:0.6,stun_timer:1});
 ctx.enemy=mover;ctx.event_inherited=()=>{mover.stun_timer=0;};
 vm.runInContext(`(function(){with(enemy){${read('objects/obj_siege_beast/Step_0.gml')}}})()`,ctx);
 assert.equal(mover.base_speed,0.6);assert.ok(Math.abs(mover.path_speed-0.24)<1e-9);

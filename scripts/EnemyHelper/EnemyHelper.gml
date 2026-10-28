@@ -54,7 +54,10 @@ function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
 		case "burn": _enemy.burn_timer = _frames; _enemy.burn_dmg = _strength; break;
 		case "frost": _enemy.slow_timer = _frames; _enemy.slow_amt = clamp(_enemy.slow_amt + _strength, 0, 0.6); break;
 		case "lightning":
-			if (!combat_status_active(_enemy, "lightning")) _enemy.stun_timer = _frames;
+			if (!combat_status_active(_enemy, "lightning")) {
+				_enemy.stun_timer = _frames;
+				if (_frames > 0) enemy_interrupt_charge(_enemy, "stun");
+			}
 			break;
 		case "hex": _enemy.hex_timer = _frames; break;
 	}
@@ -104,6 +107,41 @@ function enemy_get_lineage(_enemy) {
 		_enemy.combat_lineage = {id: combat_next_id(), target: _enemy, alive: true, gap: false};
 	}
 	return _enemy.combat_lineage;
+}
+
+// Barricades can call this same hook when Earth/obstacle delivery is implemented.
+function enemy_interrupt_charge(_enemy, _reason) {
+	if (!variable_instance_exists(_enemy, "charge_active") || !_enemy.charge_active) return;
+	_enemy.charge_active = false;
+	_enemy.charge_interrupt_reason = _reason;
+	_enemy.base_speed = _enemy.normal_speed;
+	_enemy.ready_to_attack = false;
+	_enemy.siege_attack_timer = -1;
+	enemy_update_movement(_enemy);
+}
+
+function enemy_siege_attack(_enemy) {
+	if (_enemy.hp <= 0) return;
+	if (_enemy.stun_timer > 0) { enemy_interrupt_charge(_enemy, "stun"); return; }
+	if (_enemy.pull != undefined) return;
+	if (_enemy.path_position < 1) { _enemy.siege_attack_timer = -1; return; }
+	var _windup = max(1, round(_enemy.attack_delay * TARGET_ROOM_SPEED));
+	if (_enemy.charge_active) {
+		reduce_village_hp(_enemy.damage_dealt * tune_enemy("siege_beast", "charge_attack_mult", 2));
+		enemy_interrupt_charge(_enemy, "impact");
+		_enemy.siege_attack_timer = _windup;
+		return;
+	}
+	if (_enemy.siege_attack_timer < 0) { _enemy.siege_attack_timer = _windup; return; }
+	_enemy.siege_attack_timer--;
+	if (_enemy.siege_attack_timer <= 0) {
+		reduce_village_hp(_enemy.damage_dealt);
+		_enemy.siege_attack_timer = _windup;
+	}
+}
+
+function enemy_resolve_siege_attacks() {
+	for (var i = 0; i < instance_number(obj_siege_beast); i++) enemy_siege_attack(instance_find(obj_siege_beast, i));
 }
 
 function enemy_bind_lineage(_enemy, _lineage) {
