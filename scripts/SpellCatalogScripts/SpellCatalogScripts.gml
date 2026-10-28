@@ -135,6 +135,26 @@ function compile_effect_parameters(_id) {
 	return _params;
 }
 
+// Only listed Form attachments participate; equal-type stacks never pair together.
+function spell_form_modifier_penalty(_ids) {
+	var _unit = tune_setting("modifiers", "interaction_penalty", "cost_per_pair", 10);
+	var _listed = tune_setting("modifiers", "interaction_penalty", "penalized_modifiers", ["area", "pierce", "chain"]);
+	if (!is_real(_unit) || _unit < 0) throw "interaction_penalty.cost_per_pair must be non-negative";
+	if (!is_array(_listed)) throw "interaction_penalty.penalized_modifiers must be an array";
+	for (var i = 0; i < array_length(_listed); i++) {
+		if (!is_string(_listed[i]) || _listed[i] == "") throw "Penalized modifier IDs must be non-empty strings";
+		for (var j = 0; j < i; j++) if (_listed[i] == _listed[j]) throw "Duplicate penalized modifier ID";
+	}
+	var _pairs = 0;
+	for (var i = 0; i < array_length(_ids); i++) {
+		if (!array_contains(_listed, _ids[i])) continue;
+		for (var j = 0; j < i; j++) {
+			if (_ids[i] != _ids[j] && array_contains(_listed, _ids[j])) _pairs++;
+		}
+	}
+	return _pairs * _unit;
+}
+
 function compile_spell(_loadout) {
 	if (_loadout == undefined || _loadout.form == undefined) return undefined;
 	var _g = global.spell_glyphs;
@@ -142,6 +162,8 @@ function compile_spell(_loadout) {
 	if (!is_struct(_f)) return undefined;
 
 	var _cost = _f.cost;
+	var _form_penalty = spell_form_modifier_penalty(_loadout.form_mods);
+	_cost += _form_penalty;
 
 	var _fmods = [];
 
@@ -175,7 +197,7 @@ function compile_spell(_loadout) {
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
-		form_mods: _fmods, effects: _effects, area: false, pierce: 0};
+		form_mods: _fmods, effects: _effects, area: false, pierce: 0, form_modifier_penalty: _form_penalty};
 	if (_loadout.form == "beam") {
 		var _ticks_per_second = tune_params("forms", "beam", "ticks_per_second", 4);
 		var _damage_multiplier = tune_params("forms", "beam", "damage_multiplier_per_tick", 0.25);
