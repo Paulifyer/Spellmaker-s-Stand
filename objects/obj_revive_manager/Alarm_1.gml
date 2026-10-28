@@ -34,5 +34,6 @@ with (_enemy) {
 	path_start(other.e_path_index, (stun_timer > 0) ? 0 : my_speed, path_action_stop, true);
 	path_position = other.e_path_position;
 }
+enemy_initialize_mole_marker(_enemy, e_path_index);
 
 instance_destroy(id);

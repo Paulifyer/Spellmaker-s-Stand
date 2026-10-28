@@ -73,6 +73,7 @@ if (position < array_length(current_wave_groups))
 		{
 			path_start(other.level_paths[_lane_index], my_speed, path_action_stop, true);
 		}
+		enemy_initialize_mole_marker(_enemy, level_paths[_lane_index]);
 	}
 
 	group_enemy_position += 1;

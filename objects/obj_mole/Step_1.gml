@@ -4,6 +4,15 @@
 // which means that it is at the end of the path
 if (path_position >= pos_to_stop)
 {
+	if (!emerged) {
+		emerged = true;
+		path_position = pos_to_stop;
+		path_speed = 0;
+		if (is_struct(emergence_marker)) {
+			x = emergence_marker.x; y = emergence_marker.y;
+			emergence_marker.active = false;
+		}
+	}
 	my_speed = 0;
 	base_speed = 0;
 	is_targetable = true;

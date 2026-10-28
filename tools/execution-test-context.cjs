@@ -11,6 +11,7 @@ function makeExecutionContext() {
     const enemies=[],spells=[],log=[];
     ctx.enemy_apply_mutations=(e,keys)=>{e.mutation_keys=keys;e.mutation=undefined;};
     ctx.mutation_description=()=>undefined;
+    ctx.enemy_initialize_mole_marker=()=>{};
     Object.assign(ctx,{
         variable_instance_exists:(o,k)=>Object.hasOwn(o,k),array_sort:(a,f)=>a.sort(f),
         noone:null,obj_enemy_parent:'enemy',obj_gameplay_manager:'manager',obj_spells:'spell',
