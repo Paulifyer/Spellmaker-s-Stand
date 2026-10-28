@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict');
+const {load}=require('./gml-test-utils.cjs');
+const {makeEnemyContext}=require('./enemy-test-context.cjs');
+const h=makeEnemyContext(),ctx=h.ctx;
+load(ctx,'scripts/MutationScripts/MutationScripts.gml',['enemy_is_bonepile','enemy_banner_source_active','enemy_banner_speed']);
+load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_update_movement']);
+const carrier=h.enemy(2),ally=h.enemy(3);carrier.mutation_keys=['banneret'];
+assert.equal(ctx.enemy_banner_speed(carrier),1);assert.equal(ctx.enemy_banner_speed(ally),1.3);
+const second=h.enemy(2,1);second.mutation_keys=['banneret'];assert.equal(ctx.enemy_banner_speed(ally),1.3);
+ally.x=800;assert.equal(ctx.enemy_banner_speed(ally),1);ally.x=350;
+carrier.is_targetable=false;second.is_targetable=false;assert.equal(ctx.enemy_banner_speed(ally),1);
+assert.equal(ctx.enemy_banner_source_active(carrier),false);
+carrier.is_targetable=true;ally.is_bonepile=true;assert.equal(ctx.enemy_banner_speed(ally),1);
+ally.is_bonepile=false;carrier.hp=0;assert.equal(ctx.enemy_banner_speed(ally),1);
+carrier.hp=100;ally.slow_timer=10;ally.slow_amt=0.6;ally.base_speed=2;
+ctx.enemy_update_movement(ally,2);assert.ok(Math.abs(ally.my_speed-2*2*1.3*0.4)<1e-9);
+console.log('Banner checks passed: no self buff/stacking, area removal, burrowing suppression, pile exclusion and movement composition.');

@@ -127,7 +127,7 @@ function enemy_advance_lightning(_state, _frames) {
 // Resolve speed once after status updates; Stun/Pull control actual path movement.
 function enemy_update_movement(_enemy, _multiplier = 1) {
 	var _slow = (_enemy.slow_timer > 0) ? clamp(_enemy.slow_amt, 0, 0.6) : 0;
-	_enemy.my_speed = max(0, _enemy.base_speed * _multiplier * (1 - _slow));
+	_enemy.my_speed = max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
 	_enemy.path_speed = (_enemy.stun_timer > 0 || _enemy.pull != undefined) ? 0 : _enemy.my_speed;
 }
 

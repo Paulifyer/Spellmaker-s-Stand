@@ -96,6 +96,7 @@ notes = "";
 //mutation_key
 mutation = undefined;
 mutation_keys = [];
+is_bonepile = false;
 ward_variant = "narrow";
 ward_visible_since = -1;
 

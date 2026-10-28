@@ -1,4 +1,5 @@
 event_inherited();
+is_bonepile = true;
 
 max_hp = 15; //idk
 

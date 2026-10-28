@@ -6,6 +6,8 @@ function makeEnemyContext(){
  ctx.global.mutations={skeletal:{cost:1},banneret:{cost:3},'fire-warded':{cost:1},'frost-warded':{cost:1},'lightning-warded':{cost:1}};
  for(const [key,m]of Object.entries(ctx.global.mutations))Object.assign(m,{name:key,on_spawn(){},on_step(){},on_death(){}});
  load(ctx,'scripts/MutationScripts/MutationScripts.gml',['normalize_mutation_keys','mutation_total_cost','enemy_has_mutation','enemy_apply_mutations']);
+ Object.assign(ctx,{world_to_grid:(x,y)=>({col:Math.floor(x/100),lane:Math.floor(y/100)}),
+  enemy_overlaps_region:(e,a,b,c,d)=>Math.floor(e.x/100)>=a&&Math.floor(e.x/100)<=b&&e.lane>=c&&e.lane<=d});
  // Engine constructor binding is represented here; normalization/cost/hook calls are actual GML.
  ctx.EnemyMutationSet=function(keys){this.keys=Array.from(keys);this.tint=this.keys.includes('skeletal')?ctx.c_gray:ctx.c_white;
   this.on_spawn=e=>{for(const k of this.keys)ctx.global.mutations[k].on_spawn(e);};};

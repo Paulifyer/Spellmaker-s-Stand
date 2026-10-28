@@ -176,5 +176,36 @@ function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) co
 function BanneretMut() : EnemyMutation("banneret", "Banneret", BANNERET_COST) constructor {
 }
 
+function enemy_is_bonepile(_enemy) {
+	return variable_instance_exists(_enemy, "is_bonepile") && _enemy.is_bonepile;
+}
+
+function enemy_banner_source_active(_enemy) {
+	return _enemy.hp > 0 && _enemy.is_targetable && !enemy_is_bonepile(_enemy) && enemy_has_mutation(_enemy, "banneret");
+}
+
+function enemy_banner_speed(_target) {
+	if (_target.hp <= 0 || enemy_is_bonepile(_target)) return 1;
+	var _best = 1;
+	var _radius = max(0, floor(tune_params("mutations", "banneret", "radius_tiles", 1)));
+	for (var i = 0; i < instance_number(obj_enemy_parent); i++) {
+		var _source = instance_find(obj_enemy_parent, i);
+		if (_source == _target || !enemy_banner_source_active(_source)) continue;
+		var _tile = world_to_grid(_source.x, _source.y);
+		if (_tile == undefined) continue;
+		if (enemy_overlaps_region(_target, _tile.col - _radius, _tile.col + _radius, _tile.lane - _radius, _tile.lane + _radius))
+			_best = max(_best, tune_params("mutations", "banneret", "speed_mult", 1.3));
+	}
+	return _best;
+}
+
+function enemy_draw_banner(_enemy) {
+	if (!enemy_banner_source_active(_enemy)) return;
+	var _bounds = enemy_visual_bounds(_enemy);
+	var _height = sprite_get_bbox_bottom(spr_banneret_speed) - sprite_get_bbox_top(spr_banneret_speed) + 1;
+	var _scale = _bounds.height * 1.15 / max(1, _height);
+	draw_sprite_ext(spr_banneret_speed, 0, _bounds.x + _bounds.width * 0.3, _bounds.y - _bounds.height * 0.15, _scale, _scale, 0, c_white, 1);
+}
+
 function NoneMut() : EnemyMutation("None", "none", 0) constructor {
 }

@@ -1,6 +1,7 @@
 /// @description Enemy Parent
 
 // Draw the enemy itself
+enemy_draw_banner(id);
 draw_self();
 
 // Check if flash_alpha is greater than zero (which means the enemy has been hit and we should draw the hit flash)

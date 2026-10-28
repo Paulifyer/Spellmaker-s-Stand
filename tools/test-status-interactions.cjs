@@ -5,6 +5,7 @@ const ctx=vm.createContext({max:Math.max,round:Math.round,clamp:(v,a,b)=>Math.ma
     tune_params:(_,__,___,fallback)=>fallback});
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning']);
 loadStatuses(ctx);
+ctx.enemy_banner_speed=()=>1;
 ctx.tune_value=(_,__,v)=>v;
 load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['compile_effect_parameters']);
 function hit(name){
