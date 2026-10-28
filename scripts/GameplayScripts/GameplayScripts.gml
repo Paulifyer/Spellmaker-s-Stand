@@ -338,7 +338,7 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 }
 
 /// @description helper function to draw glpyhs to be unlocked
-/// @param {Array<Asset.GMSprite>} glyph_icon_array, array holding icons of glyphs to be drawn
+/// @param {Array} glyph_icon_array, sprites or temporary text labels
 function draw_unlocked_glyphs(glyph_icon_array) {
 	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
 	draw_set_font(fnt_Arcane);
@@ -348,7 +348,11 @@ function draw_unlocked_glyphs(glyph_icon_array) {
 	var _num_glyphs = array_length(glyph_icon_array);
 	for (var i = 0; i < _num_glyphs; i++) {
 		var _offs = ((_num_glyphs - 1) * -70) + (i * 140);
-		draw_sprite_ext(glyph_icon_array[i], 0, x + _offs, y - 100, _s, _s, image_angle, image_blend, image_alpha);
+		if (is_string(glyph_icon_array[i])) {
+			draw_set_halign(fa_center);
+			draw_text(x + _offs, y - 100, glyph_icon_array[i]);
+			draw_set_halign(fa_left);
+		} else draw_sprite_ext(glyph_icon_array[i], 0, x + _offs, y - 100, _s, _s, image_angle, image_blend, image_alpha);
 	}
 	
 }
@@ -366,8 +370,8 @@ function handle_next_level_glyphs(_room, _unlock = true) {
 		var _type = _glyph[$ "type"];
 		var _name = _glyph[$ "id"];
 		if (_unlock) unlock_glyph(_type, _name);
-		var _glyph_icon = global.spell_glyphs[$ _type][$ _name].icon;
-		array_push(glyph_icon_array, _glyph_icon);
+		var _glyph_data = global.spell_glyphs[$ _type][$ _name];
+		array_push(glyph_icon_array, (_glyph_data.icon == undefined) ? _glyph_data.name : _glyph_data.icon);
 	}
 	return glyph_icon_array;
 }

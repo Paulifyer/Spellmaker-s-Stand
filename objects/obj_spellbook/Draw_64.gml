@@ -35,7 +35,8 @@ for (var c = 0; c < 3; c++) {
 		var _per_row = 4;
 		
 		var _px = 140 + (g mod _per_row) * 150;
-		var _py = glyph_row_y[c] + (g div _per_row) *130;
+		var _row_spacing = (_key == "effect") ? 110 : 130;
+		var _py = glyph_row_y[c] + (g div _per_row) * _row_spacing;
 		
         var _b = gui_circle_button(_px, _py, 55, _display_icon, _display_label, _current, _enabled);
 

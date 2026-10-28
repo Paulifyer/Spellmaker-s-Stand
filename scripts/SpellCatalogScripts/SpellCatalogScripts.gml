@@ -15,6 +15,9 @@ global.spell_glyphs = {
 		hex : new Elem_Hex(),
 		harm: new Elem_Harm(),
 		pull: new Elem_Pull(),
+		snap: new Elem_Snap(),
+		combust: new Elem_Combust(),
+		discharge: new Elem_Discharge(),
 		none : new Elem_None()
 	},
 	modifier : {
@@ -29,7 +32,7 @@ global.spell_glyphs = {
 
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike", "rune"],
-	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex"],
+	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex", "snap", "combust", "discharge"],
 	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
 };
 

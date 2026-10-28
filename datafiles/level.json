@@ -260,6 +260,7 @@
             "difficulty_curve": 1
         },
         "unlocked_glyphs": [
+            { "type": "effect", "id": "combust" },
             {
                 "type": "modifier",
                 "id": "delay"
@@ -392,6 +393,7 @@
             "difficulty_curve": 1
         },
         "unlocked_glyphs": [
+            { "type": "effect", "id": "snap" },
             {
                 "type": "form",
                 "id": "beam"
@@ -1054,6 +1056,7 @@
             "difficulty_curve": 1
         },
         "unlocked_glyphs": [
+            { "type": "effect", "id": "discharge" },
             {
                 "type": "effect",
                 "id": "hex"
