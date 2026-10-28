@@ -165,6 +165,7 @@ var _expensive_slots = spellbook_expensive_slots(_max_mana);
 var _start_message = spellbook_start_message(_max_mana);
 var _spell_message = _has_form ? spell_validation_message(_spell) : "";
 draw_set_font(fnt_Arcane_More_Bold);
+draw_set_colour(c_black);
 draw_text_ext(850, 63, "Mana Cost:", 200, 200);
 draw_set_font(fnt_Arcane);
 draw_text(960, 110, "Glyphs: " + string(spell_glyph_count(_spell)) + " / " + string(spell_max_glyphs()));
