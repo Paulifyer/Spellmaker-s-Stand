@@ -2,6 +2,10 @@
 
 var _is_dead = hp <= 0;
 var _is_skeletal = is_instanceof(mutation, SkeletalMut);
+if (combat_lineage != undefined && !combat_lineage.gap && combat_lineage.target == id) {
+	combat_lineage.alive = false;
+	combat_lineage.target = noone;
+}
 
 // Always notify the spawning manager, including when this enemy reaches a base.
 // Skeletal deaths are excluded because their replacement is still active.

@@ -15,8 +15,10 @@ if (_bones.hp <= 0)
 var _status = enemy_capture_status(_bones);
 // Hand the same active-enemy slot to the replacement instead of counting a death.
 _bones.wave_owner = noone;
+_bones.combat_lineage = undefined;
 instance_destroy(_bones);
 var _enemy = instance_create_layer(ex, ey, "Instances", held_enemy);
+enemy_bind_lineage(_enemy, lineage);
 enemy_restore_status(_enemy, _status);
 
 // The revived enemy is no longer skeletal and must not create another revive.

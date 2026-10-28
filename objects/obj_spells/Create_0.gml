@@ -7,6 +7,7 @@ lane = 0;
 target_x = 0; target_y = 0;
 area = compiled.area;
 hit_list = [];
+delivery_index = 0;
 beam_lanes = [];
 
 // This stores the form of the spell

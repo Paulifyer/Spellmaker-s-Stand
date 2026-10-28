@@ -96,6 +96,8 @@ mutation = undefined;
 
 // Delayed Effects
 pending_effects = [];
+combat_lineage = undefined;
+enemy_get_lineage(self);
 
 // offsets for overlapping tiles
 hit_x = 0;

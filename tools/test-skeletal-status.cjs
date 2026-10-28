@@ -7,8 +7,10 @@ const ctx = vm.createContext({
     max:Math.max,round:Math.round,TARGET_ROOM_SPEED:60,
     tune_params:(_,__,___,fallback)=>fallback,
     noone:null,obj_bonepile:'bone',obj_revive_manager:'manager',path_action_stop:0,
+    global:{},variable_global_exists:k=>Object.hasOwn(ctx.global,k),variable_instance_exists:(o,k)=>Object.hasOwn(o,k),
 });
-load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning']);
+load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['combat_next_id']);
+load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_advance_lightning','enemy_get_lineage','enemy_bind_lineage']);
 load(ctx,'scripts/MutationScripts/MutationScripts.gml',[
     'enemy_capture_status','enemy_age_status','enemy_restore_status','enemy_apply_overdue_effects'
 ]);
@@ -67,7 +69,7 @@ function runAlarm(file, manager) {
     vm.runInContext(`(function(){with(manager){${event}\n}})()`,ctx);
 }
 function managerFor(source) {
-    const m={status_state:ctx.enemy_capture_status(source),spawn_delay:1,revive_delay:3,
+    const m={lineage:ctx.enemy_get_lineage(source),status_state:ctx.enemy_capture_status(source),spawn_delay:1,revive_delay:3,
         ex:source.x,ey:source.y,held_enemy:'brute',wave_owner:source.wave_owner,
         e_path_index:source.path_index,e_path_position:source.path_position,alarm:[],_bones:null,bones_spawned:false};
     m.id=m;

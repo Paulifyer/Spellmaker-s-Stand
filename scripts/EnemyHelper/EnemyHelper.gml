@@ -1,5 +1,18 @@
 
 // Advance the same stun/charged clock for live enemies and skeletal spawn gaps.
+function enemy_get_lineage(_enemy) {
+	if (!variable_instance_exists(_enemy, "combat_lineage") || _enemy.combat_lineage == undefined) {
+		_enemy.combat_lineage = {id: combat_next_id(), target: _enemy, alive: true, gap: false};
+	}
+	return _enemy.combat_lineage;
+}
+
+function enemy_bind_lineage(_enemy, _lineage) {
+	_enemy.combat_lineage = _lineage;
+	_lineage.target = _enemy;
+	_lineage.gap = false;
+}
+
 function enemy_advance_lightning(_state, _frames) {
 	_frames = max(0, _frames);
 	var _stun = max(0, _state.stun_timer);

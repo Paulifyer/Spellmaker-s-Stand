@@ -139,7 +139,11 @@ function enemy_apply_overdue_effects(_enemy) {
 function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) constructor {
 	tint = c_gray;
 	on_death = function(enemy) {
+		var _lineage = enemy_get_lineage(enemy);
+		_lineage.gap = true;
+		_lineage.target = noone;
 		var _e_struct = {
+			lineage: _lineage,
 			e_path_index : enemy.path_index,
 			e_path_position : enemy.path_position,
 			ex : enemy.x,

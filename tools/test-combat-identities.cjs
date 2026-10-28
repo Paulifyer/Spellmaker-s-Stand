@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const {load}=require('./gml-test-utils.cjs');
+const {makeContext}=require('./construction-test-context.cjs');
+const ctx=makeContext();ctx.variable_instance_exists=(o,k)=>Object.hasOwn(o,k);
+load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage']);
+const enemy={},pile={},revived={};
+const lineage=ctx.enemy_get_lineage(enemy);
+assert.equal(ctx.enemy_get_lineage(enemy),lineage);
+lineage.gap=true;lineage.target=null;
+ctx.enemy_bind_lineage(pile,lineage);assert.equal(lineage.target,pile);
+ctx.enemy_bind_lineage(revived,lineage);assert.equal(lineage.target,revived);
+const spell={cast_id:ctx.combat_next_id(),delivery_index:0};
+const a=ctx.spell_new_delivery(spell),b=ctx.spell_new_delivery(spell);
+assert.equal(a.cast_id,b.cast_id);assert.notEqual(a.id,b.id);assert.equal(b.index,2);
+assert.notEqual(ctx.enemy_get_lineage({}).id,lineage.id);
+console.log('Combat identity checks passed: stable skeletal lineage, unique casts and independent delivery events.');

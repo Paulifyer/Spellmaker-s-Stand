@@ -55,6 +55,17 @@ function validate_glyphs() {
 /// @param {Struct|Asset.GMObject} _spell A snapshot of a spell
 /// @param {Asset.GMObject} _target Enemy targetted
 /// @param {Struct} _fx effects being passed
+function combat_next_id() {
+	if (!variable_global_exists("combat_id")) global.combat_id = 0;
+	global.combat_id += 1;
+	return global.combat_id;
+}
+
+function spell_new_delivery(_spell) {
+	_spell.delivery_index += 1;
+	return {cast_id: _spell.cast_id, id: combat_next_id(), index: _spell.delivery_index};
+}
+
 function apply_effect_group(_spell, _target, _fx) {
 	_fx.effect.on_hit(_spell, _target, _fx);
 	for (var i = 0; i < array_length(_fx.mods); i++)
@@ -78,6 +89,7 @@ function schedule_effect(_spell, _target, _fx) {
 /// @description Creates a spell snapshot struct
 function spell_snapshot(_spell) {
 	return {
+		cast_id: _spell.cast_id,
 		caster: _spell.caster,
 		form: { is_channel: _spell.form.is_channel },
 		col: _spell.col,
@@ -253,6 +265,7 @@ function cast_spell(_caster, _loadout, _col, _row) {
 	}
 
 	var _spell = instance_create_layer(_caster.x, _caster.y, "Instances", obj_spells, {
+			cast_id     : combat_next_id(),
 			compiled    : _compiled,
 			caster		: _caster,
 			form		: _f,
