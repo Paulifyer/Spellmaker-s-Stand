@@ -5,6 +5,7 @@ event_inherited();
 
 // This variable stores the name of the enemy as a string for tune
 name = "siege_beast";
+ward_variant = "wide";
 
 // This variable stores the enemies max health and is used to scale the health bar
 max_hp = max_hp * tune_enemy(name, "hp_mult", 4);

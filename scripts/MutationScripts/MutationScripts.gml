@@ -89,46 +89,57 @@ function EnemyMutation(_key, _name, _cost) constructor {
 	on_death = function(enemy) {};
 }
 
-function FrostWardedMut() : EnemyMutation("frost-warded", "Frost-Warded", WARDED_COST) constructor {
-	tint = c_purple;
-	on_spawn = function(enemy) {
-		enemy.dmg_reduction = 0.5;	
-	};
-	on_step = function(enemy) {
-		if (enemy.slow_amt > 0) {
-			enemy.dmg_reduction = 0;
-		} else {
-			enemy.dmg_reduction = 0.5;
-		}
+function FrostWardedMut() : EnemyMutation("frost-warded", "Frost-Warded", WARDED_COST) constructor {}
+function FireWardedMut() : EnemyMutation("fire-warded", "Fire-Warded", WARDED_COST) constructor {}
+function LightningWardedMut() : EnemyMutation("lightning-warded", "Lightning-Warded", WARDED_COST) constructor {}
+
+// One predicate drives both protection and the visible shield.
+function enemy_ward_key(_enemy) {
+	var _keys = ["fire-warded", "frost-warded", "lightning-warded"];
+	for (var i = 0; i < array_length(_keys); i++) if (enemy_has_mutation(_enemy, _keys[i])) return _keys[i];
+	return "";
+}
+
+function enemy_ward_active(_enemy) {
+	var _key = enemy_ward_key(_enemy);
+	if (_key == "" || _enemy.hp <= 0) return false;
+	var _status = (_key == "fire-warded") ? "burn" : ((_key == "frost-warded") ? "frost" : "lightning");
+	return !combat_status_active(_enemy, _status);
+}
+
+function enemy_ward_sprite(_enemy) {
+	var _wide = _enemy.ward_variant == "wide";
+	switch (enemy_ward_key(_enemy)) {
+		case "fire-warded": return _wide ? spr_ward_fire_wide : spr_ward_fire_narrow;
+		case "frost-warded": return _wide ? spr_ward_frost_wide : spr_ward_frost_narrow;
+		case "lightning-warded": return _wide ? spr_ward_lightning_wide : spr_ward_lightning_narrow;
+	}
+	return -1;
+}
+
+function enemy_visual_bounds(_enemy) {
+	var _sprite = _enemy.sprite_index;
+	return {
+		x: _enemy.x + ((sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)) / 2 - sprite_get_xoffset(_sprite)) * _enemy.image_xscale,
+		y: _enemy.y + ((sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)) / 2 - sprite_get_yoffset(_sprite)) * _enemy.image_yscale,
+		width: max(1, (sprite_get_bbox_right(_sprite) - sprite_get_bbox_left(_sprite) + 1) * abs(_enemy.image_xscale)),
+		height: max(1, (sprite_get_bbox_bottom(_sprite) - sprite_get_bbox_top(_sprite) + 1) * abs(_enemy.image_yscale))
 	};
 }
 
-function FireWardedMut() : EnemyMutation("fire-warded", "Fire-Warded", WARDED_COST) constructor {
-	tint = c_purple;
-	on_spawn = function(enemy) {
-		enemy.dmg_reduction = 0.5;	
-	};
-	on_step = function(enemy) {
-		if (enemy.burn_timer > 0) {
-			enemy.dmg_reduction = 0;
-		} else {
-			enemy.dmg_reduction = 0.5;
-		}
-	};
-}
-
-function LightningWardedMut() : EnemyMutation("lightning-warded", "Lightning-Warded", WARDED_COST) constructor {
-	tint = c_purple;
-	on_spawn = function(enemy) {
-		enemy.dmg_reduction = 0.5;	
-	};
-	on_step = function(enemy) {
-		if (enemy.stun_timer > 0) {
-			enemy.dmg_reduction = 0;
-		} else {
-			enemy.dmg_reduction = 0.5;
-		}
-	};
+function enemy_draw_ward(_enemy) {
+	if (!enemy_ward_active(_enemy)) { _enemy.ward_visible_since = -1; return; }
+	var _sprite = enemy_ward_sprite(_enemy);
+	if (_sprite < 0) return;
+	var _execution = combat_execution_state();
+	var _clock = is_struct(_execution) ? _execution.clock : 0;
+	if (_enemy.ward_visible_since < 0) _enemy.ward_visible_since = _clock;
+	var _elapsed = (_clock - _enemy.ward_visible_since) * sprite_get_speed(_sprite) / TARGET_ROOM_SPEED;
+	// The supplied references use frame 1 as appearance, then loop frames 2 onward.
+	var _frame = (_elapsed < 1) ? 0 : 1 + (floor(_elapsed - 1) mod (sprite_get_number(_sprite) - 1));
+	var _bounds = enemy_visual_bounds(_enemy);
+	var _scale = _bounds.width * 1.15 / max(1, sprite_get_bbox_right(_sprite) - sprite_get_bbox_left(_sprite) + 1);
+	draw_sprite_ext(_sprite, _frame, _bounds.x, _bounds.y, _scale, _scale, 0, c_white, 1);
 }
 
 // Status state is independent from scheduled work; the room queue follows lineage.

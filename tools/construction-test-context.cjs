@@ -36,6 +36,7 @@ function makeContext(limit = 8) {
         variable_global_exists:k=>Object.hasOwn(ctx.global,k),
         string:String,clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),
         is_glyph_available:()=>true, is_instanceof:()=>false, Mod_Amplify:function(){},
+        enemy_ward_active:()=>false,
         tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';

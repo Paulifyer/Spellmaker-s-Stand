@@ -17,9 +17,10 @@ if (flash_alpha > 0)
 }
 
 var _statuses = combat_status_definitions();
+enemy_draw_ward(id);
 for (var i = 0; i < array_length(_statuses); i++) {
 	var _status = _statuses[i];
-	if (combat_status_active(self, _status.key)) {
+	if (combat_status_active(id, _status.key)) {
 		draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, _status.colour, 0.3);
 	}
 }

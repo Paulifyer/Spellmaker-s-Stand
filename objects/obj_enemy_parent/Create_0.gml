@@ -96,10 +96,13 @@ notes = "";
 //mutation_key
 mutation = undefined;
 mutation_keys = [];
+ward_variant = "narrow";
+ward_visible_since = -1;
 
 // Stable identity used by the room's scheduled enemy-following work.
 combat_lineage = undefined;
-enemy_get_lineage(self);
+// Scheduled effects must retain the instance handle across method scopes.
+enemy_get_lineage(id);
 
 // offsets for overlapping tiles
 hit_x = 0;

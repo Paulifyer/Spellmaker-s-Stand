@@ -1,0 +1,93 @@
+[
+  {
+    "name": "spr_ward_fire_narrow",
+    "frames": 8,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 44,
+      "right": 224,
+      "top": 80,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_ward_fire_wide",
+    "frames": 7,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 28,
+      "right": 257,
+      "top": 79,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_ward_frost_narrow",
+    "frames": 8,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 44,
+      "right": 224,
+      "top": 80,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_ward_frost_wide",
+    "frames": 7,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 28,
+      "right": 257,
+      "top": 79,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_ward_lightning_narrow",
+    "frames": 8,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 44,
+      "right": 224,
+      "top": 80,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_ward_lightning_wide",
+    "frames": 7,
+    "fps": 5,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 28,
+      "right": 257,
+      "top": 79,
+      "bottom": 184
+    }
+  },
+  {
+    "name": "spr_banneret_speed",
+    "frames": 1,
+    "fps": 1,
+    "bounds": {
+      "w": 264,
+      "h": 264,
+      "left": 85,
+      "right": 159,
+      "top": 32,
+      "bottom": 229
+    }
+  }
+]

@@ -81,6 +81,13 @@
   },
   "name":"Spell",
   "resources":[
+    {"id":{"name":"spr_ward_fire_narrow","path":"sprites/spr_ward_fire_narrow/spr_ward_fire_narrow.yy",},},
+    {"id":{"name":"spr_ward_fire_wide","path":"sprites/spr_ward_fire_wide/spr_ward_fire_wide.yy",},},
+    {"id":{"name":"spr_ward_frost_narrow","path":"sprites/spr_ward_frost_narrow/spr_ward_frost_narrow.yy",},},
+    {"id":{"name":"spr_ward_frost_wide","path":"sprites/spr_ward_frost_wide/spr_ward_frost_wide.yy",},},
+    {"id":{"name":"spr_ward_lightning_narrow","path":"sprites/spr_ward_lightning_narrow/spr_ward_lightning_narrow.yy",},},
+    {"id":{"name":"spr_ward_lightning_wide","path":"sprites/spr_ward_lightning_wide/spr_ward_lightning_wide.yy",},},
+    {"id":{"name":"spr_banneret_speed","path":"sprites/spr_banneret_speed/spr_banneret_speed.yy",},},
     {"id":{"name":"obj_spell_test_driver","path":"objects/obj_spell_test_driver/obj_spell_test_driver.yy",},},
     {"id":{"name":"obj_spell_test_enemy","path":"objects/obj_spell_test_enemy/obj_spell_test_enemy.yy",},},
     {"id":{"name":"rm_spell_interaction_test","path":"rooms/rm_spell_interaction_test/rm_spell_interaction_test.yy",},},

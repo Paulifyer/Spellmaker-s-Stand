@@ -1,0 +1,410 @@
+[
+  {
+    "id": "1Kn3DrVE6W7SM1ZCv1DawcJVrQsQYu8Yh",
+    "url": "https://drive.google.com/file/d/1Kn3DrVE6W7SM1ZCv1DawcJVrQsQYu8Yh/view?usp=drivesdk",
+    "name": "Wide ward gif ref - loop frames 2-7.gif",
+    "mime": "image/gif",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-Wide_ward_gif_ref_-_loop_frames_2-7.gif"
+  },
+  {
+    "id": "1yMLCz-hWuUwopPbl0Yx97qHkPQO68Fd_",
+    "url": "https://drive.google.com/file/d/1yMLCz-hWuUwopPbl0Yx97qHkPQO68Fd_/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide7.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide7.png"
+  },
+  {
+    "id": "1J0vgwJL6IEJWKYOmJTkOT5bSAyEU-KI2",
+    "url": "https://drive.google.com/file/d/1J0vgwJL6IEJWKYOmJTkOT5bSAyEU-KI2/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide6.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide6.png"
+  },
+  {
+    "id": "1VUJ9Ia0D0H1y-t77icIEUsy2dU6D2n7Q",
+    "url": "https://drive.google.com/file/d/1VUJ9Ia0D0H1y-t77icIEUsy2dU6D2n7Q/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide5.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide5.png"
+  },
+  {
+    "id": "1Nk7oWzlbjM7iBs52mB7hmYI1y0qZyJl5",
+    "url": "https://drive.google.com/file/d/1Nk7oWzlbjM7iBs52mB7hmYI1y0qZyJl5/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide4.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide4.png"
+  },
+  {
+    "id": "1jta0ZLusWZehoBMvT4kxpbsZ8S7DX9vz",
+    "url": "https://drive.google.com/file/d/1jta0ZLusWZehoBMvT4kxpbsZ8S7DX9vz/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide3.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide3.png"
+  },
+  {
+    "id": "15w-wJ6MHtn48r-FSJQHezHT6yG9xntAf",
+    "url": "https://drive.google.com/file/d/15w-wJ6MHtn48r-FSJQHezHT6yG9xntAf/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide2.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide2.png"
+  },
+  {
+    "id": "1zwzYtxlF5bHD3IVy3Ob5A2dJETqKsjmM",
+    "url": "https://drive.google.com/file/d/1zwzYtxlF5bHD3IVy3Ob5A2dJETqKsjmM/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardwide1.png",
+    "mime": "image/png",
+    "group": "Frost Wide",
+    "path": "tools/asset-sources/enemy-modifiers/frost-wide-spr_vfx_frostwardwide1.png"
+  },
+  {
+    "id": "1mdaVJjmZTaEFWhJINOv0vchMSQSCEsiP",
+    "url": "https://drive.google.com/file/d/1mdaVJjmZTaEFWhJINOv0vchMSQSCEsiP/view?usp=drivesdk",
+    "name": "narrow ward gif ref - loop frames 2-8.gif",
+    "mime": "image/gif",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-narrow_ward_gif_ref_-_loop_frames_2-8.gif"
+  },
+  {
+    "id": "1dYzdUaDoAY7l1_eVExM8Aw1blw6DdkJo",
+    "url": "https://drive.google.com/file/d/1dYzdUaDoAY7l1_eVExM8Aw1blw6DdkJo/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow8.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow8.png"
+  },
+  {
+    "id": "1vyv3efB-6iRal-NXdyzlVdf-D-R5svLO",
+    "url": "https://drive.google.com/file/d/1vyv3efB-6iRal-NXdyzlVdf-D-R5svLO/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow7.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow7.png"
+  },
+  {
+    "id": "138LfIZdCiDNprO2WK3PDm1QHmKbQ2aiJ",
+    "url": "https://drive.google.com/file/d/138LfIZdCiDNprO2WK3PDm1QHmKbQ2aiJ/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow6.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow6.png"
+  },
+  {
+    "id": "1zvWLUh5b2RaQHe_Mv0xwqCBrwvJ3pPaV",
+    "url": "https://drive.google.com/file/d/1zvWLUh5b2RaQHe_Mv0xwqCBrwvJ3pPaV/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow5.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow5.png"
+  },
+  {
+    "id": "198C_iBYXVgdlj5FWK1ouMgu1CbbJyvYW",
+    "url": "https://drive.google.com/file/d/198C_iBYXVgdlj5FWK1ouMgu1CbbJyvYW/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow4.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow4.png"
+  },
+  {
+    "id": "1Fr0-bPfyNWDgC0yYPra8oj5sg3YDwKYP",
+    "url": "https://drive.google.com/file/d/1Fr0-bPfyNWDgC0yYPra8oj5sg3YDwKYP/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow3.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow3.png"
+  },
+  {
+    "id": "1UVYaY2qW3cmaGd2jO4v2rMPKftprhnrg",
+    "url": "https://drive.google.com/file/d/1UVYaY2qW3cmaGd2jO4v2rMPKftprhnrg/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow2.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow2.png"
+  },
+  {
+    "id": "1ztl0ZHUv8DJL2Z57TyEgNrjThsnG3klL",
+    "url": "https://drive.google.com/file/d/1ztl0ZHUv8DJL2Z57TyEgNrjThsnG3klL/view?usp=drivesdk",
+    "name": "spr_vfx_frostwardnarrow1.png",
+    "mime": "image/png",
+    "group": "Frost Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/frost-narrow-spr_vfx_frostwardnarrow1.png"
+  },
+  {
+    "id": "14O4VnPKjGw_q4l7krXULpE7MikHBrq9P",
+    "url": "https://drive.google.com/file/d/14O4VnPKjGw_q4l7krXULpE7MikHBrq9P/view?usp=drivesdk",
+    "name": "Gif ref loop frames 2-7.gif",
+    "mime": "image/gif",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-Gif_ref_loop_frames_2-7.gif"
+  },
+  {
+    "id": "131kCmAy2x4aikMCcr5tT8hQFFPQE7-Lg",
+    "url": "https://drive.google.com/file/d/131kCmAy2x4aikMCcr5tT8hQFFPQE7-Lg/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide7.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide7.png"
+  },
+  {
+    "id": "12lSofZIrWc8gGRuZd9HIF4WU38wvnV5t",
+    "url": "https://drive.google.com/file/d/12lSofZIrWc8gGRuZd9HIF4WU38wvnV5t/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide6.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide6.png"
+  },
+  {
+    "id": "1WrPMyzzfvKE9HlluHWk9JjWNA6uT-4x5",
+    "url": "https://drive.google.com/file/d/1WrPMyzzfvKE9HlluHWk9JjWNA6uT-4x5/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide5.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide5.png"
+  },
+  {
+    "id": "11ZBct-yIn17qXqCKtDnzQllGw59jIpUS",
+    "url": "https://drive.google.com/file/d/11ZBct-yIn17qXqCKtDnzQllGw59jIpUS/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide4.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide4.png"
+  },
+  {
+    "id": "17QpUO_W4LH5PIiq0snEa3N--3gyNXac1",
+    "url": "https://drive.google.com/file/d/17QpUO_W4LH5PIiq0snEa3N--3gyNXac1/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide3.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide3.png"
+  },
+  {
+    "id": "1dVQZk8UU1NFQ9H1BDPDel48PZXW8qeHF",
+    "url": "https://drive.google.com/file/d/1dVQZk8UU1NFQ9H1BDPDel48PZXW8qeHF/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide2.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide2.png"
+  },
+  {
+    "id": "1fS-rNZ8WLU4IFeXS1Wp079JqJuY2mr39",
+    "url": "https://drive.google.com/file/d/1fS-rNZ8WLU4IFeXS1Wp079JqJuY2mr39/view?usp=drivesdk",
+    "name": "spr_vfx_firewardwide1.png",
+    "mime": "image/png",
+    "group": "Fire Wide",
+    "path": "tools/asset-sources/enemy-modifiers/fire-wide-spr_vfx_firewardwide1.png"
+  },
+  {
+    "id": "1ECdklN_r-203n88ZW8lGpugjLMVMcaO4",
+    "url": "https://drive.google.com/file/d/1ECdklN_r-203n88ZW8lGpugjLMVMcaO4/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow8.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow8.png"
+  },
+  {
+    "id": "11TzEETleCKVRDSaL-1kAFMZLGhaydba2",
+    "url": "https://drive.google.com/file/d/11TzEETleCKVRDSaL-1kAFMZLGhaydba2/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow7.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow7.png"
+  },
+  {
+    "id": "1AYjti1iUx9ANB7Hq6p3W4tLxa4bBQY87",
+    "url": "https://drive.google.com/file/d/1AYjti1iUx9ANB7Hq6p3W4tLxa4bBQY87/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow6.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow6.png"
+  },
+  {
+    "id": "1X36oKO7q8vTuT8UuGYUPSAnv9kVUXWH5",
+    "url": "https://drive.google.com/file/d/1X36oKO7q8vTuT8UuGYUPSAnv9kVUXWH5/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow5.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow5.png"
+  },
+  {
+    "id": "16fIroGx-2zUjCAP0_tf-TOqTjlal9JY5",
+    "url": "https://drive.google.com/file/d/16fIroGx-2zUjCAP0_tf-TOqTjlal9JY5/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow4.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow4.png"
+  },
+  {
+    "id": "1hTbTz-oRZmeaseoX1pEU5UgkePNS80ny",
+    "url": "https://drive.google.com/file/d/1hTbTz-oRZmeaseoX1pEU5UgkePNS80ny/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow3.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow3.png"
+  },
+  {
+    "id": "1Qs6EwO5U0XG0isMXLWnz1oYXke3beddU",
+    "url": "https://drive.google.com/file/d/1Qs6EwO5U0XG0isMXLWnz1oYXke3beddU/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow2.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow2.png"
+  },
+  {
+    "id": "19PoGBubTwo1Hy3kPlubPXWKzqBGdaNWl",
+    "url": "https://drive.google.com/file/d/19PoGBubTwo1Hy3kPlubPXWKzqBGdaNWl/view?usp=drivesdk",
+    "name": "spr_vfx_firewardnarrow1.png",
+    "mime": "image/png",
+    "group": "Fire Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/fire-narrow-spr_vfx_firewardnarrow1.png"
+  },
+  {
+    "id": "1t-MhHvE8v60X4dJKUXDfRm_PTDna2r0K",
+    "url": "https://drive.google.com/file/d/1t-MhHvE8v60X4dJKUXDfRm_PTDna2r0K/view?usp=drivesdk",
+    "name": "Gif ref loop frames 2-7.gif",
+    "mime": "image/gif",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-Gif_ref_loop_frames_2-7.gif"
+  },
+  {
+    "id": "1a_LmgJbqTa7bxPrtcxTERKw-DzlfrtQX",
+    "url": "https://drive.google.com/file/d/1a_LmgJbqTa7bxPrtcxTERKw-DzlfrtQX/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide7.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide7.png"
+  },
+  {
+    "id": "1wfOoUBFVvv_sQ6C5j2y0fbi8Asl3FtoU",
+    "url": "https://drive.google.com/file/d/1wfOoUBFVvv_sQ6C5j2y0fbi8Asl3FtoU/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide6.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide6.png"
+  },
+  {
+    "id": "1vDU8horFTPv5PaRvqmHpBVTbd4R5718V",
+    "url": "https://drive.google.com/file/d/1vDU8horFTPv5PaRvqmHpBVTbd4R5718V/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide5.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide5.png"
+  },
+  {
+    "id": "1dYgI8Av_4pDyNRQjL_7_vp1CYvknRcOO",
+    "url": "https://drive.google.com/file/d/1dYgI8Av_4pDyNRQjL_7_vp1CYvknRcOO/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide4.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide4.png"
+  },
+  {
+    "id": "1gRho4qQOIR9qS4i5yJlT3j3nv3BT1PO8",
+    "url": "https://drive.google.com/file/d/1gRho4qQOIR9qS4i5yJlT3j3nv3BT1PO8/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide3.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide3.png"
+  },
+  {
+    "id": "186F_uz9Jz9ja-aihjCtZEqxwqBKOhaFl",
+    "url": "https://drive.google.com/file/d/186F_uz9Jz9ja-aihjCtZEqxwqBKOhaFl/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide2.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide2.png"
+  },
+  {
+    "id": "1IhFi2aaPO8h-oVbwYRsDfhF0xr4wD0Rs",
+    "url": "https://drive.google.com/file/d/1IhFi2aaPO8h-oVbwYRsDfhF0xr4wD0Rs/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardwide1.png",
+    "mime": "image/png",
+    "group": "Lightning Wide",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-wide-spr_vfx_lightningwardwide1.png"
+  },
+  {
+    "id": "1PoZ1vZ5Ubdl0ZFCLN6Dz3roJHxlUfjM6",
+    "url": "https://drive.google.com/file/d/1PoZ1vZ5Ubdl0ZFCLN6Dz3roJHxlUfjM6/view?usp=drivesdk",
+    "name": "Gif ref loop frames 2-8.gif",
+    "mime": "image/gif",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-Gif_ref_loop_frames_2-8.gif"
+  },
+  {
+    "id": "1h22KXOUVP88v1Wewp5UupuzSJXjtdIbQ",
+    "url": "https://drive.google.com/file/d/1h22KXOUVP88v1Wewp5UupuzSJXjtdIbQ/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow8.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow8.png"
+  },
+  {
+    "id": "1P9agBlQtq_hbeNnoGX9eCQB122F6AWez",
+    "url": "https://drive.google.com/file/d/1P9agBlQtq_hbeNnoGX9eCQB122F6AWez/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow7.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow7.png"
+  },
+  {
+    "id": "1D_7D0Ds_nWO6ELKhC6lHEP4qCNjtFEVs",
+    "url": "https://drive.google.com/file/d/1D_7D0Ds_nWO6ELKhC6lHEP4qCNjtFEVs/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow6.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow6.png"
+  },
+  {
+    "id": "1Y5mCENZvbz8dLBce8ppVCT0PSWi_UvI_",
+    "url": "https://drive.google.com/file/d/1Y5mCENZvbz8dLBce8ppVCT0PSWi_UvI_/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow5.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow5.png"
+  },
+  {
+    "id": "14HU2FwuaVd3IU3FNfynf15YQRPeQ0ytj",
+    "url": "https://drive.google.com/file/d/14HU2FwuaVd3IU3FNfynf15YQRPeQ0ytj/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow4.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow4.png"
+  },
+  {
+    "id": "1pmmwnLTnzpKC3AaWoeB0BXMg4E7lsPHT",
+    "url": "https://drive.google.com/file/d/1pmmwnLTnzpKC3AaWoeB0BXMg4E7lsPHT/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow3.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow3.png"
+  },
+  {
+    "id": "1gSkSzaDPJyhEvuDRUiwU7T2DJM_J6jKt",
+    "url": "https://drive.google.com/file/d/1gSkSzaDPJyhEvuDRUiwU7T2DJM_J6jKt/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow2.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow2.png"
+  },
+  {
+    "id": "170CS2CudqV4kJ-fLDNBrnpHVUV92CvAD",
+    "url": "https://drive.google.com/file/d/170CS2CudqV4kJ-fLDNBrnpHVUV92CvAD/view?usp=drivesdk",
+    "name": "spr_vfx_lightningwardnarrow1.png",
+    "mime": "image/png",
+    "group": "Lightning Narrow",
+    "path": "tools/asset-sources/enemy-modifiers/lightning-narrow-spr_vfx_lightningwardnarrow1.png"
+  },
+  {
+    "id": "1CuuRtyVCsGyo7YtndoRmbvHsi0j4ZwNZ",
+    "url": "https://drive.google.com/file/d/1CuuRtyVCsGyo7YtndoRmbvHsi0j4ZwNZ/view",
+    "name": "banneretspeed.png",
+    "mime": "image/png",
+    "group": "Banner",
+    "path": "tools/asset-sources/enemy-modifiers/banneretspeed.png"
+  }
+]
