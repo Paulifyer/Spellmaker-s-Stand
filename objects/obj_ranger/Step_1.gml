@@ -1,11 +1,14 @@
 /// @description Enemy Ranger
 
-// Check if the enemies position on the path is greater than or equal to 1
+rock = enemy_detect_obstacle(id, detection_dist);
+is_blocked = rock != noone && is_targetable;
+
+// Check if the enemies position on the path is greater than or equal to pos_to_stop
 // which means that it is at the end of the path
-if (path_position >= pos_to_stop)
+if (path_position >= pos_to_stop || is_blocked)
 {
 	my_speed = 0;
-	base_speed = 0;
+	is_stop_reached = path_position >= pos_to_stop;
 	if (ready_to_attack && stun_timer <= 0) {
 		ready_to_attack = false;
 		var _arrow = instance_create_depth(x, y - 100, depth, obj_arrow)

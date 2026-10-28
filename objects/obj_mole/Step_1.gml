@@ -1,8 +1,17 @@
 /// @description Enemy Mole
 
+rock = enemy_detect_obstacle(id, detection_dist);
+is_blocked = rock != noone && is_targetable; // Can only e blocked if targettable/emerged
+
+if (pull == undefined && place_meeting(path_get_x(path_index, pos_to_stop), y, obj_rock)) {
+	pos_to_stop -= 1/13;
+} else {
+	pos_to_stop = base_pos_to_stop;
+}
+
 // Check if the enemies position on the path is greater than or equal to 1
 // which means that it is at the end of the path
-if (path_position >= pos_to_stop)
+if (path_position >= pos_to_stop || is_blocked)
 {
 	if (!emerged) {
 		emerged = true;
@@ -14,7 +23,7 @@ if (path_position >= pos_to_stop)
 		}
 	}
 	my_speed = 0;
-	base_speed = 0;
+	is_stop_reached = path_position >= pos_to_stop;
 	is_targetable = true;
 	walk_side_sprite = normal_sprite;
 	if (ready_to_attack && stun_timer <= 0) {

@@ -35,10 +35,12 @@ draw_set_halign(fa_left);
 for (var c = 0; c < 3; c++) {
     var _key = column_keys[c];
     var _ids = global.glyph_order[$ _key];
+	//Draws the Glyph Type Headers
 	draw_set_font(fnt_Arcane_Bold);
 	draw_set_halign(fa_left);
 	draw_text_ext(120, glyph_row_y[c] - 100, _key, 120, 120);
 	draw_set_font(fnt_Arcane);
+	
     for (var g = 0; g < array_length(_ids); g++) {
         var _id    = _ids[g];
         var _glyph = global.spell_glyphs[$ _key][$ _id];
@@ -151,7 +153,7 @@ if (_rm_effect >= 0) {
 }
 
 // ---- Clear button ----
-if (_has_form && gui_button(1340, 880, 150, 50, "Clear spell", false, _mouse)) {
+if (_has_form && gui_button(1370, 680, 100, 70, "Clear spell", false, _mouse)) {
     spell_clear(_spell);
     active_group = -1;
 }
@@ -222,7 +224,7 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     var _b = gui_circle_button(_slot_x[i], 990, 30, _ic, string(i + 1), i == sel, _unlocked, _mouse);
     if (!_unlocked) {
         draw_set_halign(fa_center);
-        draw_text(_slot_x[i], 1025, "Locked");
+        draw_text(_slot_x[i], 925, "Locked");
         draw_set_halign(fa_left);
         if (_b.hover) {
             var _level = spell_slot_unlock_level(i);
@@ -285,7 +287,7 @@ if (_start_message != "") {
     draw_set_color(c_black);
     draw_set_alpha(0.45);
 }
-if (!close_requested && !naming && gui_button(1340, 950, 150, 70, "Start", false, _mouse)) {
+if (!close_requested && !naming && gui_button(1370, 950, 100, 70, "Start", false, _mouse)) {
     if (_start_message != "") {
         notice = _start_message;
         notice_timer = 120;

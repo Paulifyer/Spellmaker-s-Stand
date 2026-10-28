@@ -1,4 +1,4 @@
-/// @description Zombie
+/// @description Mook
 
 // Inherit the parent event
 event_inherited();

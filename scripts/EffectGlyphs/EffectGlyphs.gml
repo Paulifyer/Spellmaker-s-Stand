@@ -142,3 +142,58 @@ function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
 		enemy_update_movement(target);
 	};
 }
+
+function Elem_Force() : EffectGlyph("Force", 10) constructor {
+	icon = spr_glyph_force;
+	col = c_silver;
+	allowed_forms = ["projectile", "strike", "rune"];
+	cost = tune_params("effects", "force", "cost", 10);
+	desc = "Forces back enemies by 1 tile";
+	on_hit = function(spell, target, fx) {
+	    if (!enemy_can_be_displaced(target)) return;
+	    if (target.pull != undefined) return;
+	    if (target.force_push != undefined) return;
+
+	    var _path = target.path_index;
+	    if (_path < 0) return;
+
+	    var _length = path_get_length(_path);
+	    if (_length <= 0) return;
+		var _push_mult = tune_params("effects", "force", "push_mult", 1);
+		var _duration = tune_params("effects", "force", "duration", 0.1);
+
+	    var _distance = TILE_W * _push_mult * fx.effect_multiplier;
+
+	    target.force_push = {
+	        start: target.path_position,
+	        finish: max(0, target.path_position - _distance / _length),
+	        elapsed: 0,
+	        duration: max(1, round(_duration * TARGET_ROOM_SPEED))
+	    };
+
+	    target.path_speed = 0;
+	};
+}
+
+function Elem_Earth() : EffectGlyph("Earth", 20) constructor {
+	icon = spr_glyph_earth;
+	col = #331C00;
+	delivery_kind = "location";
+	allowed_forms = ["projectile", "strike", "rune"];
+	cost = tune_params("effects", "earth", "cost", 20);
+	desc = "Create a barrier of earth to stop enemies from attacking";
+	on_impact = function(spell, fx, col, lane) {
+		if (spell.compiled.form_id == "projectile") col -= 1;
+		col = clamp(col, 0, GRID_COLS - 1);
+		if (lane < 0 || lane >= LANE_COUNT) return;
+		var _xy = grid_to_world_center(col, lane * ROWS_PER_LANE);
+		var _hp = tune_params("effects", "earth", "hp", 20);
+		var _duration = tune_params("effects", "earth", "duration", 20);
+		instance_create_layer(_xy.x, _xy.y, "Instances", obj_rock, {
+			hp: _hp,
+			lifetime: _duration * TARGET_ROOM_SPEED,
+			image_xscale: 0.25,
+			image_yscale: 0.25
+		})
+	}
+}

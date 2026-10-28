@@ -44,7 +44,9 @@
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 4},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 4},
         "hex": {"cost": 5, "cooldown_penalty": 3, "duration": 5, "damage_per_status": 0.1},
-        "pull": { "cost": 25, "cooldown_penalty": 5, "pull_sec": 0.4, "hold_sec": 0.2 }
+        "pull": { "cost": 25, "cooldown_penalty": 5, "pull_sec": 0.4, "hold_sec": 0.2 },
+        "force": { "cost": 10, "duration": 0.1, "push_mult": 1 },
+        "earth": { "cost": 20, "hp": 20, "duration": 20 }
     },
     "modifiers": {
         "interaction_penalty": { "cost_per_pair": 10, "penalized_modifiers": ["area", "pierce", "chain"] },

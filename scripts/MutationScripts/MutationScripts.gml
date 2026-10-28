@@ -158,11 +158,17 @@ function SkeletalMut() : EnemyMutation("skeletal", "Skeletal", SKELETAL_COST) co
 		var _lineage = enemy_get_lineage(enemy);
 		_lineage.gap = true;
 		_lineage.target = noone;
+		var _pth_index = enemy.path_index;
+		var _pth_pos = enemy.path_position;
+		if (enemy.pull != undefined) {
+			_pth_index = enemy.pull.pth_index;
+			_pth_pos = enemy.pull.pth_pos;
+		}
 		var _e_struct = {
 			revived_mutations: _retained,
 			lineage: _lineage,
-			e_path_index : enemy.path_index,
-			e_path_position : enemy.path_position,
+			e_path_index : _pth_index,
+			e_path_position : _pth_pos,
 			ex : enemy.x,
 			ey : enemy.y,
 			held_enemy : enemy.object_index,

@@ -227,10 +227,20 @@ function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force
 		var _policy = (_force_area && _fx.target_policy != "location") ? "area" : _fx.target_policy;
 		var _lineage = (_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
 		if (_policy == "entity" && _lineage == undefined) continue;
-		var _event = {due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), order: combat_next_id(),
-			cast_id: _delivery.cast_id, delivery_id: _delivery.id, fx: _fx, policy: _policy,
-			lineage: _lineage, col: _col, lane: _lane, radius: _radius,
-			epoch: _spell.hit_state.epoch, spell: _snapshot, scope: _scopes[$ _segment_key]};
+		var _event = {
+			due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), 
+			order: combat_next_id(),
+			cast_id: _delivery.cast_id, 
+			delivery_id: _delivery.id, 
+			fx: _fx, 
+			policy: _policy,
+			lineage: _lineage, 
+			col: _col, 
+			lane: _lane, 
+			radius: _radius,
+			epoch: _spell.hit_state.epoch, 
+			spell: _snapshot, 
+			scope: _scopes[$ _segment_key]};
 		array_push(_state.events, _event);
 	}
 	combat_execution_flush(_state);

@@ -14,7 +14,7 @@ if (_t != undefined) {
 // Draws the player's mana bar
 mana_display = lerp(mana_display, mana, 0.15);
 
-var _x = 20, _y = 120;
+var _x = 30, _y = 170;
 var _w = 24, _h = 300;
 var _pct = clamp(mana_display / max_mana, 0, 1);
 
@@ -40,8 +40,16 @@ draw_rectangle(_x, _y, _x + _w, _y + _h, true);
 
 // Mana Value
 draw_set_halign(fa_center);
-draw_text(_x + _w / 2, _y + _h + 6, string(floor(mana)));
+draw_set_font(fnt_Arcane_Bold)
+if (mana_exhausted) {
+	draw_set_colour(c_red);
+	draw_set_alpha(0.5);
+}
+draw_text(_x + _w / 2, _y + _h + 16, string(floor(mana)));
+draw_set_font(-1);
 draw_set_halign(fa_left);
+draw_set_colour(c_white);
+draw_set_alpha(1);
 
 // Caster Draw GUI
 

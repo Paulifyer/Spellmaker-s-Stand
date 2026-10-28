@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Glyphs",
-    "path":"folders/Sprites/UI/Glyphs.yy",
+    "name":"Effect",
+    "path":"folders/Sprites/UI/Glyphs/Effect.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Glyphs",
-    "path":"folders/Sprites/UI/Glyphs.yy",
+    "name":"Form",
+    "path":"folders/Sprites/UI/Glyphs/Form.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -1,5 +1,6 @@
 /// @description Hud Health
 
+if (instance_exists(obj_spellbook)) exit;
 
 var _scale, _alpha, _color;
 

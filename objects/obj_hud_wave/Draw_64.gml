@@ -1,5 +1,7 @@
 /// @description Hud Waves
 
+if (instance_exists(obj_spellbook)) exit;
+
 // Declare a temporary variable and set it to 1
 var _scale = 1;
 

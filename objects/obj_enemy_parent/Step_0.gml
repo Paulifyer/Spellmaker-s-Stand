@@ -6,9 +6,11 @@ sprite_index = walk_side_sprite;
 // Ensures pull is set correctly
 if (pull != undefined) enemy_update_pull(id);
 
+// Ensures Force is executed correctly
+if (force_push != undefined) enemy_update_force(id);
+
 combat_status_advance(id, 1);
 if (mutation != undefined) mutation.on_step(id);
-
 
 enemy_update_movement(id);
 

@@ -57,3 +57,7 @@ attack_delay = tune_enemy(name, "attack_delay", 2);
 // Range Selector
 pos_to_stop = 1 - (0.9 - random(0.4));
 
+is_stop_reached = false;
+
+detection_dist = 48;
+

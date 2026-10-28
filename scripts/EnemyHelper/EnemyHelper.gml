@@ -271,8 +271,17 @@ function enemy_advance_lightning(_state, _frames) {
 function enemy_update_movement(_enemy, _multiplier = 1) {
 	var _slow = (_enemy.slow_timer > 0) ? clamp(_enemy.slow_amt, 0, 0.6) : 0;
 	var _screeching = variable_instance_exists(_enemy, "screech_timer") && _enemy.screech_timer > 0;
-	_enemy.my_speed = _screeching ? 0 : max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
-	_enemy.path_speed = (_enemy.stun_timer > 0 || _enemy.pull != undefined) ? 0 : _enemy.my_speed;
+	_enemy.my_speed = (
+		(_screeching) || 
+		(_enemy.is_blocked) ||
+		(_enemy.is_stop_reached)
+	) ? 0 : max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
+	_enemy.path_speed = (
+		_enemy.stun_timer > 0 ||
+		_enemy.is_blocked ||
+		_enemy.pull != undefined || 
+		_enemy.force_push != undefined
+	) ? 0 : _enemy.my_speed;
 }
 
 // Displacement effects (including future Force) must check the live charge state.
@@ -282,10 +291,30 @@ function enemy_can_be_displaced(_enemy) {
 
 function enemy_begin_pull(_e, _x, _y, _lane, _frames, _hold) {
 	if (_e.pull != undefined || _e.is_pull_immune || !enemy_can_be_displaced(_e)) return;
+	_e.push = undefined; // Allow pull to cancel a push
+	var _path = _e.wave_owner.level_paths[_lane];
+	var _start_x = path_get_point_x(_path, 0);
+	var _end_x = path_get_point_x(_path, path_get_number(_path) - 1);
+
+	// Normalize your X position to a 0-1 range
+	var _path_pos = (_x - _start_x) / (_end_x - _start_x);
+
+	// Clamp the value between 0 and 1 so it doesn't break out of the path bounds
+	var _pth_pos = clamp(_path_pos, 0, 1);
+	
 	_e.pull = {
-		sx: _e.x, sy: _e.y, tx: _x, ty: _y,
-		t: 0, dur: max(1, _frames), hold: _hold, lane: _lane,
-		xs: _e.image_xscale, ys: _e.image_yscale
+		sx: _e.x,
+		sy: _e.y,
+		tx: _x,
+		ty: _y,
+		t: 0, 
+		dur: max(1, _frames), 
+		hold: _hold, 
+		lane: _lane,
+		xs: _e.image_xscale,
+		ys: _e.image_yscale,
+		pth_index: _e.path_index,
+		pth_pos: _e.path_position
 	};
 	with (_e) path_end(); // Stops path movement to freely move the enemy
 }
@@ -328,4 +357,32 @@ function enemy_end_pull(_e) {
         path_start(_path, my_speed, path_action_stop, true);
         path_position = _best;
     }
+}
+
+function enemy_update_force(_enemy) {
+    var _push = _enemy.force_push;
+    _push.elapsed++;
+
+    var _t = clamp(_push.elapsed / _push.duration, 0, 1);
+
+    // Fast initial shove, followed by a soft stop.
+    var _ease = 1 - power(1 - _t, 3);
+
+    _enemy.path_position = lerp(
+        _push.start,
+        _push.finish,
+        _ease
+    );
+
+    if (_t >= 1) {
+        _enemy.force_push = undefined;
+    }
+}
+
+function enemy_detect_obstacle(_enemy, _detection_dist) {
+	var _check_x = _enemy.x + lengthdir_x(_detection_dist, _enemy.direction);
+	var _check_y = _enemy.y + lengthdir_y(_detection_dist, _enemy.direction);
+	show_debug_message(_check_y);
+	var _rock = instance_place(_check_x, _check_y, obj_rock);
+	return _rock
 }

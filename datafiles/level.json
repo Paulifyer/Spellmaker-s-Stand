@@ -792,6 +792,14 @@
             {
                 "type": "effect",
                 "id": "pull"
+            },
+            {
+                "type": "effect",
+                "id": "force"
+            },
+            {
+                "type": "effect",
+                "id": "earth"
             }
         ]
     },

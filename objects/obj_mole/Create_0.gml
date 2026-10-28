@@ -61,7 +61,12 @@ damage_dealt = tune_enemy(name, "attack_dmg", 1);
 attack_delay = tune_enemy(name, "attack_delay", 2);
 
 // Range Selector
-pos_to_stop = 1 - (0.9 - random(0.4));
+base_pos_to_stop = 1 - (0.9 - random(0.4));
+
+pos_to_stop = base_pos_to_stop;
+
+is_stop_reached = false;
+
 emergence_marker = undefined;
 emerged = false;
 

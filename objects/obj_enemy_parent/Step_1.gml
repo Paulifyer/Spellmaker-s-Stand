@@ -3,12 +3,18 @@
 // Check if the enemies position on the path is greater than or equal to 1
 // which means that it is at the end of the path
 
+rock = enemy_detect_obstacle(id, detection_dist);
+is_blocked = rock != noone && is_targetable;
 
-if (path_position >= 1)
+if (path_position >= 1 || is_blocked)
 {
 	if (attack_sprite != undefined) sprite_index = attack_sprite;
 	if (ready_to_attack && stun_timer <= 0) {
-		reduce_village_hp(damage_dealt);
+		if (is_blocked) {
+			rock.hp -= damage_dealt;
+		} else {
+			reduce_village_hp(damage_dealt);
+		}
 		ready_to_attack = false;
 		switch (object_index) {
 			case obj_mook:

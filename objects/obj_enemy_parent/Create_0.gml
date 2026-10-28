@@ -119,8 +119,20 @@ hit_w = 0;
 pull = undefined;
 is_pull_immune = false;
 
+// Push Status
+force_push = undefined;
+
 // Check targetable (For MOLE)
 is_targetable = true;
+
+// Check blocked for Earth
+is_blocked = false;
+
+rock = noone;
+
+detection_dist = 16;
+
+is_stop_reached = false;
 
 
 
