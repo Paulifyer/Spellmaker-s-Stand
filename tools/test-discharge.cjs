@@ -30,4 +30,8 @@ assert.equal(a.hp,99975);assert.equal(b.hp,99975);assert.equal(Object.keys(beam.
 assert.equal(Object.keys(beam.discharge_reactions['0'].emitted).length,2);
 const prior=beam.discharge_reactions['0'].id;beam.hit_state.epoch++;beam.hit_state.contacts=[];a.stun_immune_timer=180;
 c.spell_deliver(beam,a,2,0);assert.notEqual(beam.discharge_reactions['0'].id,prior);assert.equal(a.hp,99950);
+h=makePayoffContext();c=h.ctx;c.tune_params=(_,id,key,value)=>id==='discharge'&&key==='max_hits_per_enemy'?1:value;
+const tuned=Array.from({length:5},()=>charged(h));const tunedVictim=h.enemy(2,0,{dmg_reduction:0});
+c.spell_deliver(h.spell('strike',[fx('discharge')]),null,2,0);
+assert.equal(tunedVictim.hp,99900);assert.ok(tuned.every(e=>e.hp===99900&&e.stun_immune_timer===0));
 console.log('Discharge checks passed: charged-only roots, consumption, dense hit caps, lethal emitters, independent Effect AoE, Amplify, Rune/hidden immunity and Beam tick isolation.');

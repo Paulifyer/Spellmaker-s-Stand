@@ -359,7 +359,7 @@ function draw_unlocked_glyphs(glyph_icon_array) {
 
 /// @description Uses the unlocked_glyphs struct in the json to unlock glyphs to the owned global struct
 /// @param {Asset.GMRoom} _room Room Unlocked Glyphs
-/// @returns {Array<Asset.GMSprite>}
+/// @returns {Array} Sprite assets or temporary glyph-name labels
 function handle_next_level_glyphs(_room, _unlock = true) {
 	if (!room_exists(_room)) return [];
 	if (!variable_struct_exists(global.level_config, room_get_name(_room))) return [];

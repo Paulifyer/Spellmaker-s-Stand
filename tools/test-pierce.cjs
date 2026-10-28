@@ -21,6 +21,8 @@ for(const effects of [['fire'],['ice'],['fire','ice'],['ice','fire']]) {
     }};
     vm.runInContext(`(function(){${read('objects/obj_spells/Collision_obj_enemy_parent.gml').replace(/\bexit;/g,'return;')}})()`,h.ctx);
     assert.equal(calls,1);
+    assert.equal(s.projectile_state,'end');
+    for(let i=0;i<4;i++)h.ctx.forms.projectile.on_step(s);
     assert.equal(s.destroyed,true);
     assert.equal(target.hp,100000); // Status delivery requires no direct Harm damage.
     assert.equal(target.burn_timer,effects.includes('fire')?180:0);
@@ -36,7 +38,7 @@ h.ctx.forms.projectile.on_hit(s,a);
 for(let i=0;i<20;i++)h.ctx.forms.projectile.on_hit(s,a);
 assert.equal(s.pierce,1);assert.equal(s.destroyed,undefined);assert.equal(h.log.length,2);
 h.ctx.forms.projectile.on_hit(s,b);assert.equal(s.destroyed,undefined);
-h.ctx.forms.projectile.on_hit(s,c);assert.equal(s.destroyed,true);
+h.ctx.forms.projectile.on_hit(s,c);assert.equal(s.projectile_state,'end');
 assert.deepEqual(h.log,['fire','ice','fire','ice','fire','ice']);
 h=makeExecutionContext();s=h.spell('projectile',[fx('harm')],['area','pierce']);
 const near=h.enemy(2),blastVictim=h.enemy(3);
@@ -44,7 +46,7 @@ h.ctx.forms.projectile.on_hit(s,near);h.ctx.forms.projectile.on_hit(s,blastVicti
 assert.equal(s.pierce,1);assert.equal(h.log.length,2);
 const hidden=h.enemy(4,0,{is_targetable:false});h.ctx.forms.projectile.on_hit(s,hidden);assert.equal(s.pierce,1);
 h=makeExecutionContext();s=h.spell('projectile',[fx('harm')]);h.ctx.forms.projectile.on_hit(s,h.enemy());
-assert.equal(s.destroyed,true);
+assert.equal(s.projectile_state,'end');
 h=makeExecutionContext();
 const distant=h.enemy(4),first=h.enemy(1),third=h.enemy(3),second=h.enemy(2);
 h.enemy(0,1);s=h.spell('beam',[fx('harm')],['pierce']);

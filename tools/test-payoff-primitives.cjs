@@ -16,4 +16,7 @@ assert.equal(c.spell_reaction_claim_hit(r,e,3),false);
 assert.equal(c.spell_reaction_claim_hit(c.spell_reaction_create(),e,3),true);
 const pile=h.enemy();c.enemy_bind_lineage(pile,e.combat_lineage);
 assert.equal(c.spell_reaction_claim_hit(r,pile,3),false);
+const old={slow_timer:60,slow_amt:0.4,burn_timer:0,burn_dmg:0,stun_timer:0,stun_immune_timer:0,hex_timer:0};
+assert.equal(c.combat_status_capture(old).frost_stacks,2);
+c.combat_status_restore(e,old);assert.equal(c.combat_status_frost_stacks(e),2);
 console.log('Payoff primitives passed: Frost counts/transfer/consumption, Charged eligibility/consumption and lineage-based bounded reaction identities.');

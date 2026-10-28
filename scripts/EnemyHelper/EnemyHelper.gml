@@ -105,7 +105,9 @@ function combat_status_capture(_subject) {
 		var _fields = _defs[i].fields;
 		for (var j = 0; j < array_length(_fields); j++) {
 			var _field = _fields[j];
-			_state[$ _field] = max(0, combat_status_get(_subject, _field));
+			var _value = combat_status_get(_subject, _field);
+			if (_field == "frost_stacks" && _value == undefined) _value = combat_status_frost_stacks(_subject);
+			_state[$ _field] = (_value == undefined) ? 0 : max(0, _value);
 		}
 	}
 	return _state;
@@ -115,7 +117,12 @@ function combat_status_restore(_subject, _state) {
 	var _defs = combat_status_definitions();
 	for (var i = 0; i < array_length(_defs); i++) {
 		var _fields = _defs[i].fields;
-		for (var j = 0; j < array_length(_fields); j++) combat_status_set(_subject, _fields[j], _state[$ _fields[j]]);
+		for (var j = 0; j < array_length(_fields); j++) {
+			var _field = _fields[j];
+			var _value = _state[$ _field];
+			if (_field == "frost_stacks" && _value == undefined) _value = combat_status_frost_stacks(_state);
+			combat_status_set(_subject, _field, (_value == undefined) ? 0 : _value);
+		}
 	}
 	if (!combat_status_active(_subject, "frost")) combat_status_clear(_subject, "frost");
 }

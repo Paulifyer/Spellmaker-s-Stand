@@ -19,9 +19,9 @@ ctx.global.spellbook[2]=valid();
 assert.match(ctx.spellbook_start_message(10),/Spell 3: Spell is too expensive/);
 
 // Draw the real editor with engine/UI calls stubbed; inspect counters and group positions.
-const texts=[], groups=[];
+const texts=[], groups=[], palette=[];
 const noop=()=>{};
-const circle=()=>({clicked:false,rclicked:false,hover:false});
+const circle=(x,y,r)=>{if(r===55)palette.push({x,y});return {clicked:false,rclicked:false,hover:false};};
 Object.assign(ctx, {
     SPELL_SLOTS:4,
     mutation_description:()=>undefined,
@@ -43,7 +43,7 @@ Object.assign(ctx, {
     mouse_check_button_pressed:()=>false,point_in_rectangle:()=>false,mb_left:1,
     fa_center:1,fa_middle:2,fa_left:3,fa_top:4,current_time:0,
 });
-ctx.global.glyph_order={form:['projectile','strike','beam','rune'],effect:['harm','fire','ice','lightning','hex','pull'],modifier:['pierce','area','amplify','extend_time','delay']};
+ctx.global.glyph_order={form:['projectile','strike','beam','rune'],effect:['harm','fire','ice','lightning','hex','pull','snap','combust','discharge'],modifier:['pierce','area','amplify','extend_time','delay']};
 const draw=read('objects/obj_spellbook/Draw_64.gml')
     .replace(/#([0-9A-Fa-f]{6})/g,'0x$1')
     .replace(/\[\$\s*([^\]]+)\]/g,'[$1]').replace(/\bmod\b/g,'%')
@@ -57,6 +57,7 @@ assert.ok(texts.includes('Glyphs: 8 / 8'));
 assert.equal(groups.length,8); // central Form plus seven Effects, including invalid repeats for repair
 assert.ok(groups.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)));
 assert.equal(new Set(groups.map(p=>`${p.x},${p.y}`)).size,8);
+assert.ok(palette.some(p=>p.x===140&&p.y===710)); // ninth Effect fits above the Modifier palette
 console.log('Spell editor checks passed: all-slot Start validation, empty slots, counter and seven visible effect groups.');
 
 // A retained high-slot selection is reset before Draw or keyboard naming can edit it.
