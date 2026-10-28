@@ -202,6 +202,29 @@ function carrion_death_in_range(_source, _target, _radius) {
 	return _dx * _dx + _dy * _dy <= _radius * _radius;
 }
 
+function carrion_begin_frenzy(_enemy) {
+	_enemy.frenzied = true;
+	_enemy.screech_timer = _enemy.screech_duration_frames;
+	_enemy.walk_side_sprite = spr_enemy_carrionscreech;
+	_enemy.sprite_index = spr_enemy_carrionscreech;
+	_enemy.image_index = 0;
+	audio_play_sound(snd_carrion_screech, 10, false);
+}
+
+// Called once per active Begin Step. Pull/status updates still run in parent Step.
+function carrion_update_frenzy(_enemy) {
+	if (_enemy.screech_timer <= 0) return;
+	_enemy.screech_timer -= 1;
+	if (_enemy.screech_timer > 0) return;
+	_enemy.base_speed *= _enemy.frenzy_speed_mult;
+	_enemy.walk_side_sprite = spr_enemy_carrionflight;
+	_enemy.walk_up_sprite = spr_enemy_carrionflight;
+	_enemy.walk_down_sprite = spr_enemy_carrionflight;
+	_enemy.sprite_index = spr_enemy_carrionflight;
+	_enemy.image_index = 0;
+	enemy_update_movement(_enemy);
+}
+
 // Notification comes from combat death, never from Destroy/room cleanup/replacement.
 function enemy_notify_combat_death(_enemy) {
 	if (_enemy.hp > 0 || _enemy.death_notified || enemy_is_bonepile(_enemy)) return;
@@ -215,8 +238,7 @@ function enemy_notify_combat_death(_enemy) {
 		_carrion.max_hp += _hp; _carrion.hp += _hp;
 		_carrion.nearby_deaths += 1;
 		if (!_carrion.frenzied && _carrion.nearby_deaths >= _carrion.deaths_to_frenzy) {
-			_carrion.frenzied = true;
-			_carrion.base_speed *= _carrion.frenzy_speed_mult;
+			carrion_begin_frenzy(_carrion);
 		}
 		_carrion.image_xscale += 0.1; _carrion.image_yscale += 0.1; _carrion.hit_w += 12;
 		enemy_update_movement(_carrion);
@@ -245,7 +267,8 @@ function enemy_advance_lightning(_state, _frames) {
 // Resolve speed once after status updates; Stun/Pull control actual path movement.
 function enemy_update_movement(_enemy, _multiplier = 1) {
 	var _slow = (_enemy.slow_timer > 0) ? clamp(_enemy.slow_amt, 0, 0.6) : 0;
-	_enemy.my_speed = max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
+	var _screeching = variable_instance_exists(_enemy, "screech_timer") && _enemy.screech_timer > 0;
+	_enemy.my_speed = _screeching ? 0 : max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
 	_enemy.path_speed = (_enemy.stun_timer > 0 || _enemy.pull != undefined) ? 0 : _enemy.my_speed;
 }
 

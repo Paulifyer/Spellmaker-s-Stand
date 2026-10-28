@@ -26,7 +26,7 @@
         "swarmer": { "hp_mult": 0.1, "spd_mult": 3, "attack_delay": 1, "attack_dmg": 0.5 },
         "siege_beast": { "hp_mult": 5, "spd_mult": 0.6, "attack_delay": 4, "attack_dmg": 5, "charge_spd_mult": 4, "charge_attack_mult": 2 },
         "mole": { "hp_mult": 1, "spd_mult": 1.6, "attack_delay": 3, "attack_dmg": 3 },
-        "carrion": { "hp_mult": 5, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "hp_gain_per_death_mult": 0.2, "deaths_to_frenzy": 5, "frenzy_speed_mult": 3, "death_radius_tiles": 1 }
+        "carrion": { "hp_mult": 5, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "hp_gain_per_death_mult": 0.2, "deaths_to_frenzy": 5, "frenzy_speed_mult": 3, "death_radius_tiles": 1, "screech_duration": 0.5 }
     },
     "forms": {
         "projectile": { "cost": 15, "spd": 15 },

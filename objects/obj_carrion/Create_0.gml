@@ -36,6 +36,8 @@ walk_up_sprite = spr_frankenstein_walk_up;
 
 // This variable holds the sprite to use when the enemy is moving down
 walk_down_sprite = spr_frankenstein_walk_down;
+// Keep gameplay collisions stable while the displayed pose changes.
+mask_index = spr_enemy_carrionwalk;
 
 
 // The defeated enemy to spawn if the enemy is moving sideways
@@ -63,3 +65,5 @@ deaths_to_frenzy = max(1, floor(tune_enemy(name, "deaths_to_frenzy", 5)));
 frenzy_speed_mult = max(1, tune_enemy(name, "frenzy_speed_mult", 3));
 nearby_deaths = 0;
 frenzied = false;
+screech_duration_frames = max(1, round(tune_enemy(name, "screech_duration", 0.5) * TARGET_ROOM_SPEED));
+screech_timer = 0;
