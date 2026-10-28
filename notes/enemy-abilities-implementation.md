@@ -7,7 +7,7 @@
 - Wards reduce damage by 50% while their matching status is absent. Fire uses Burn, Frost uses Frost, Lightning uses Stun or Charged. Protection and visibility read the same live status. Wards return after expiry. Ward body tint is removed; skeletal gray remains.
 - Supplied ward animations and the back-mounted banner are imported. Brutes use narrow wards; Siege Beasts and Carrion use wide wards. The first animation frame appears once, then the remaining frames loop at 5 FPS.
 - Swarmers cannot trigger or receive any Rune delivery, including Area, delayed effects and Pull. Other Forms remain valid.
-- Siege Beasts deal one immediate doubled arrival hit if charge survives. Stun permanently interrupts charge and starts a full normal windup, paused while stunned. Normal attacks resolve after scheduled spell effects. A barricade interruption hook is ready for future Earth integration.
+- Siege Beasts deal one immediate doubled arrival hit if charge survives. They are immune to displacement while `charge_active` is true. Pull is rejected without stopping the path or interrupting the charge. Stun permanently interrupts charge and immediately restores displacement eligibility, so Lightning followed by Pull works if the stun succeeds. Normal attacks resolve after scheduled spell effects and use a full windup, paused while stunned. A barricade interruption hook is ready for future Earth integration.
 - Moles show their actual path destination while underground, snap to it on emergence, and hide the marker on emergence/death.
 - Carrion grows once per nearby combat death: +20% standard enemy HP and +10% standard enemy speed, plus the existing visual growth. Individual Swarmers and revived bodies count; pile destruction and cleanup do not.
 
@@ -57,3 +57,9 @@ Run `node tools/run-regressions.cjs` for all simulated-engine/static checks. The
 Open `rm_spell_interaction_test` in GameMaker. Existing 1–6 cases remain available. F1 wards, F2 Banner/Skeletal revival, F3 Rune immunity, F4 Siege timing, F5 underground Mole banner/marker, F6 Carrion death growth. T applies a three-second status to the tracked enemy, K kills it, R restarts, P pauses. The F3 scenario invokes the delivery boundary directly; campaign Rune arming/collision still needs a playtest.
 
 GameMaker compilation and visual playtesting have not been performed here. Check overlay placement across animation frames and movement directions, narrow Brutes, wide Siege/Carrion, banner disappearance underground, ward disappearance/reappearance, and mixed mutation revival. Actual barricade collision remains future Earth work.
+
+## Charging displacement immunity update
+
+- `scripts/EnemyHelper/EnemyHelper.gml`: add `enemy_can_be_displaced`, reading the live charge flag. Apply it in `enemy_begin_pull` alongside the existing Pull immunity/already-pulled checks. Future Force/knockback implementations should use this same predicate.
+- `tools/test-siege-displacement.cjs`: execute the actual Pull helper and ordered spell delivery to check charging immunity, eligibility after impact/interruption, Lightning/Pull ordering, failed stun, delayed activation, ordinary enemies and existing Pull immunity.
+- `notes/enemy-abilities-implementation.md`: document these rules and the complete change inventory.

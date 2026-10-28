@@ -235,8 +235,13 @@ function enemy_update_movement(_enemy, _multiplier = 1) {
 	_enemy.path_speed = (_enemy.stun_timer > 0 || _enemy.pull != undefined) ? 0 : _enemy.my_speed;
 }
 
+// Displacement effects (including future Force) must check the live charge state.
+function enemy_can_be_displaced(_enemy) {
+	return !(variable_instance_exists(_enemy, "charge_active") && _enemy.charge_active);
+}
+
 function enemy_begin_pull(_e, _x, _y, _lane, _frames, _hold) {
-	if (_e.pull != undefined || _e.is_pull_immune) return;
+	if (_e.pull != undefined || _e.is_pull_immune || !enemy_can_be_displaced(_e)) return;
 	_e.pull = {
 		sx: _e.x, sy: _e.y, tx: _x, ty: _y,
 		t: 0, dur: max(1, _frames), hold: _hold, lane: _lane,
