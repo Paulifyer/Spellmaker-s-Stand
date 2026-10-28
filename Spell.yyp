@@ -85,6 +85,7 @@
   },
   "name":"Spell",
   "resources":[
+    {"id":{"name":"spr_glyph_chain","path":"sprites/spr_glyph_chain/spr_glyph_chain.yy"}},
     {"id":{"name":"spr_glyph_discharge","path":"sprites/spr_glyph_discharge/spr_glyph_discharge.yy"}},
     {"id":{"name":"spr_glyph_combust","path":"sprites/spr_glyph_combust/spr_glyph_combust.yy"}},
     {"id":{"name":"spr_glyph_snap","path":"sprites/spr_glyph_snap/spr_glyph_snap.yy"}},

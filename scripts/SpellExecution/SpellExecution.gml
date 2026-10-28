@@ -1,6 +1,6 @@
 // A room-owned clock and queue. Begin Step advances time; End Step drains due work.
 function combat_execution_create() {
-	return {clock: 0, events: [], processing: false};
+	return {clock: 0, events: [], processing: false, chain_links: []};
 }
 
 function spell_damage_scale(_spell) {
@@ -289,6 +289,35 @@ function spell_chain_add_link(_spell, _x1, _y1, _x2, _y2) {
 	if (!variable_struct_exists(_state, "chain_links")) _state.chain_links = [];
 	array_push(_state.chain_links, {x1: _x1, y1: _y1, x2: _x2, y2: _y2, colour: _spell.col,
 		born: _state.clock, duration: _spell.compiled.chain_visual_frames});
+}
+
+function spell_chain_prune_links(_state) {
+	if (!variable_struct_exists(_state, "chain_links")) return;
+	var _active = [];
+	for (var i = 0; i < array_length(_state.chain_links); i++) {
+		var _link = _state.chain_links[i];
+		if (_state.clock - _link.born < _link.duration) array_push(_active, _link);
+	}
+	_state.chain_links = _active;
+}
+
+function spell_chain_draw_links(_state) {
+	if (!is_struct(_state) || !variable_struct_exists(_state, "chain_links")) return;
+	var _sprite = spr_beam;
+	var _rate = sprite_get_speed(_sprite);
+	if (sprite_get_speed_type(_sprite) == spritespeed_framespersecond) _rate /= game_get_speed(gamespeed_fps);
+	for (var i = 0; i < array_length(_state.chain_links); i++) {
+		var _link = _state.chain_links[i];
+		var _age = max(0, _state.clock - _link.born);
+		if (_age >= _link.duration) continue;
+		var _angle = point_direction(_link.x1, _link.y1, _link.x2, _link.y2);
+		var _scale = point_distance(_link.x1, _link.y1, _link.x2, _link.y2) / sprite_get_width(_sprite);
+		var _offset = sprite_get_yoffset(_sprite) - sprite_get_height(_sprite) / 2;
+		var _x = _link.x1 + lengthdir_x(sprite_get_xoffset(_sprite) * _scale, _angle) + lengthdir_x(_offset, _angle - 90);
+		var _y = _link.y1 + lengthdir_y(sprite_get_xoffset(_sprite) * _scale, _angle) + lengthdir_y(_offset, _angle - 90);
+		var _frame = floor(_age * _rate) mod sprite_get_number(_sprite);
+		draw_sprite_ext(_sprite, _frame, _x, _y, _scale, 1, _angle, _link.colour, 0.5 * (1 - _age / _link.duration));
+	}
 }
 
 function spell_deliver(_spell, _target, _col, _lane, _radius = 0) {

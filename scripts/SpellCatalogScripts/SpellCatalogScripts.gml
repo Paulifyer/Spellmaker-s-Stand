@@ -24,6 +24,7 @@ global.spell_glyphs = {
 		area : new Mod_Area(),
 		amplify : new Mod_Amplify(),
 		pierce : new Mod_Pierce(),
+		chain: new Mod_Chain(),
 		extend_time : new Mod_Extend_Time(),
 		delay: new Mod_Delay(),
 		none : new Mod_None()
@@ -33,7 +34,7 @@ global.spell_glyphs = {
 global.glyph_order = {
 	form	:	["projectile", "beam", "strike", "rune"],
 	effect	:	["fire", "ice", "lightning", "harm", "pull", "hex", "snap", "combust", "discharge"],
-	modifier:	["area", "amplify", "pierce", "extend_time", "delay"]
+	modifier:	["area", "amplify", "pierce", "extend_time", "delay", "chain"]
 };
 
 function validate_glyphs() {

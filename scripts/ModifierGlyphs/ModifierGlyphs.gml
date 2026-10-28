@@ -83,6 +83,7 @@ function Mod_None() : ModifierGlyph("none", 0) constructor {
 }
 
 function Mod_Chain() : ModifierGlyph("Chain", CHAIN_COST) constructor {
+	icon = spr_glyph_chain;
 	cost = tune_params("modifiers", "chain", "cost", CHAIN_COST);
 	scope = "spell";
 	is_stacks = true;
