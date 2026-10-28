@@ -46,7 +46,6 @@ function glyph_status(_type, _id) {
 ///@param {string} _id		string representing the glyph to be checked
 ///@return {bool}
 function is_glyph_available(_type, _id) {
-	if (glyph_status(_type, _id) == GLYPH_STATE.locked) show_debug_message($"LOCKED, {_type}, {_id}");
 	return (glyph_status(_type, _id) == GLYPH_STATE.owned);
 }
 

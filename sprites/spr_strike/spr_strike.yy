@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":9,
   "parent":{
-    "name":"Forms",
-    "path":"folders/Sprites/VFX/Forms.yy",
+    "name":"Strike",
+    "path":"folders/Sprites/VFX/Forms/Strike.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

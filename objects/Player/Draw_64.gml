@@ -1,4 +1,6 @@
 
+if (global.menu_lock) exit;
+
 // Draws the hovered target tile
 var _t = world_to_grid(mouse_x, mouse_y);
 if (_t != undefined) {
@@ -38,6 +40,8 @@ draw_text(_x + _w / 2, _y + _h + 6, string(floor(mana)));
 draw_set_halign(fa_left);
 
 // Caster Draw GUI
+
+
 for (var i = 0; i < SPELL_SLOTS; i++) {
     var _x2 = 300 + i * 80, _y2 = display_get_gui_height() - 180;
     var _l = global.spellbook[i];

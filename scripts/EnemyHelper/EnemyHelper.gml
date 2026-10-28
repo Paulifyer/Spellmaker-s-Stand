@@ -226,7 +226,6 @@ function enemy_update_pull(_e) {
 
 function enemy_end_pull(_e) {
 	var _p = _e.pull;
-	show_debug_message(_p.lane);
 	var _path = _e.wave_owner.level_paths[_p.lane];
 	
 	var _best = 0, _bestd = 99999999;

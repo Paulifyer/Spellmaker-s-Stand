@@ -228,8 +228,9 @@ function spellbook_start_message(_max_mana) {
     return _message;
 }
 
-function gui_button(_x, _y, _w, _h, _label, _active) {
-    var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
+function gui_button(_x, _y, _w, _h, _label, _active, _mouse = undefined) {
+    var _mx = (_mouse == undefined) ? device_mouse_x_to_gui(0) : _mouse.x;
+    var _my = (_mouse == undefined) ? device_mouse_y_to_gui(0) : _mouse.y;
     var _hover = point_in_rectangle(_mx, _my, _x, _y, _x + _w, _y + _h);
 
     draw_set_color(_active ? c_aqua : (_hover ? c_gray : c_dkgray));
@@ -243,8 +244,9 @@ function gui_button(_x, _y, _w, _h, _label, _active) {
     return _hover && mouse_check_button_pressed(mb_left);
 }
 
-function gui_circle_button(_x, _y, _r, _icon, _label, _active, _enabled = true) {
-    var _mx = device_mouse_x_to_gui(0), _my = device_mouse_y_to_gui(0);
+function gui_circle_button(_x, _y, _r, _icon, _label, _active, _enabled = true, _mouse = undefined) {
+    var _mx = (_mouse == undefined) ? device_mouse_x_to_gui(0) : _mouse.x;
+    var _my = (_mouse == undefined) ? device_mouse_y_to_gui(0) : _mouse.y;
     var _hover = point_distance(_mx, _my, _x, _y) <= _r;
     var _a = _enabled ? 1 : 0.35;
 
@@ -272,7 +274,7 @@ function gui_circle_button(_x, _y, _r, _icon, _label, _active, _enabled = true) 
 }
 
 // Draws one glyph with its modifier satellites. Returns what was hovered/clicked.
-function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selected) {
+function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selected, _mouse = undefined) {
     var _out = { main: undefined, mod_r: -1, hover: "" };
     var _n = array_length(_mod_ids);
     var _px = [], _py = [];
@@ -296,12 +298,12 @@ function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selecte
 
     for (var k = 0; k < _n; k++) {
         var _m = global.spell_glyphs.modifier[$ _mod_ids[k]];
-        var _b = gui_circle_button(_px[k], _py[k], 24, _m.icon, _m.name, false);
+        var _b = gui_circle_button(_px[k], _py[k], 24, _m.icon, _m.name, false, true, _mouse);
         if (_b.hover)    _out.hover = _m.name + "\n" + _m.desc + "\n(right-click to remove)";
         if (_b.rclicked) _out.mod_r = k;
     }
 
-    _out.main = gui_circle_button(_x, _y, _r, _glyph.icon, _glyph.name, false);
+    _out.main = gui_circle_button(_x, _y, _r, _glyph.icon, _glyph.name, false, true, _mouse);
     if (_out.main.hover) _out.hover = _glyph.name + "\n" + _glyph.desc
                                     + "\n(click: select group, right-click: remove)";
     return _out;

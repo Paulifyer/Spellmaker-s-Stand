@@ -341,9 +341,10 @@ function map_value(_value, _current_lower_bound, _current_upper_bound, _desired_
 /// @param {Array<Asset.GMSprite>} glyph_icon_array, array holding icons of glyphs to be drawn
 function draw_unlocked_glyphs(glyph_icon_array) {
 	var _s = (55 * 2) / sprite_get_width(spr_glyph_fire);
-	var _sx_offs = string_width("Unlocked new Glyphs!:") / 64;
 	draw_set_font(fnt_Arcane);
-	draw_text(x - _sx_offs, y - 200, "Unlocked new Glyphs!:");
+	draw_set_halign(fa_center);
+	draw_text(x, y - 200, "Unlocked new Glyphs!:");
+	draw_set_halign(fa_left);
 	var _num_glyphs = array_length(glyph_icon_array);
 	for (var i = 0; i < _num_glyphs; i++) {
 		var _offs = ((_num_glyphs - 1) * -70) + (i * 140);
