@@ -39,6 +39,11 @@ function enemy_lane(_e) {
 function enemy_col_range(_e) {
 	var _half = _e.hit_w / 2;
 	var _cx = _e.x + _e.hit_x - GRID_X0;
+	// Point-sized targets occupy their own column, including at the tower edge.
+	if (_half == 0) {
+		var _col = floor(_cx / TILE_W);
+		return {c1: _col, c2: _col};
+	}
 	return {
 		c1: floor((_cx - _half) / TILE_W),
 		c2: floor((_cx + _half - 0.01) / TILE_W)
