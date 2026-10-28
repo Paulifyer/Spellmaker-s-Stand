@@ -42,6 +42,15 @@ function tune_value(_group, _key, _default) {
 	return is_real(_v) ? _v : _default;
 }
 
+/// @description Read a boolean feature switch from tune.json
+function tune_flag(_group, _key, _default = false) {
+	if (!variable_global_exists("tuning")) return _default;
+	var _g = global.tuning[$ _group];
+	if (!is_struct(_g)) return _default;
+	var _v = _g[$ _key];
+	return is_bool(_v) ? _v : _default;
+}
+
 ///@description This function fetches enemy json values
 ///@param {string} _id enemy name
 ///@param {string} _key parameter

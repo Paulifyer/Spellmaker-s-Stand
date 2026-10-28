@@ -1,5 +1,5 @@
 /// @description Main menu debug shortcut hint
-if (room != rm_menu) exit;
+if (room != rm_menu || !tune_flag("debug", "level_select_enabled")) exit;
 draw_set_font(fnt_game_end_small);
 draw_set_halign(fa_right);
 draw_set_valign(fa_bottom);

@@ -7,7 +7,8 @@ level or press **1–8** to enter it directly; **Esc** or **Back** returns to th
 menu. The screen shows each level's wave count and planned glyphs that are not
 implemented yet. Returning to the menu after a debug run resets normal Start to
 level 1. Finishing level 8 returns to the menu instead of advancing past the
-campaign.
+campaign. Set `debug.level_select_enabled` to `false` in `datafiles/tune.json`
+to hide the shortcut and disable the selector; set it to `true` to enable it.
 
 ## Spell controls
 

@@ -1,4 +1,8 @@
 /// @description Debug level selector
+if (!tune_flag("debug", "level_select_enabled")) {
+	room_goto(rm_menu);
+	exit;
+}
 window_set_cursor(cr_default);
 global.menu_lock = false;
 level_rooms = [rm_level_1, rm_level_2, rm_level_3, rm_level_4,
