@@ -7,6 +7,7 @@
 channel = noone // Holds the spell being channeled
 channel_key = -1; // Exact number-row or numpad key holding the channel
 channel_slot = -1;
+channel_cooldown_penalty = 0;
 cast_flash_slot = -1;
 cast_flash_ticks = 0;
 cost = 0 // Holds the drain cost of the spell casted for channels

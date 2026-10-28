@@ -30,6 +30,12 @@ casts without queuing them. Configure slot durations in seconds with
 fallback when a slot has no configured value. A channel starts its slot cooldown
 when the channel ends.
 
+Effects can add seconds to that slot's cooldown through
+`effects.<glyph>.cooldown_penalty` in `datafiles/tune.json` (default 0).
+Pull adds 5 seconds, Hex adds 3, and Discharge adds 2. Each occurrence counts,
+including effects repeated after Delay; modifiers do not multiply the penalty.
+The total is captured when casting and also applies when a channel ends.
+
 Beam timing and damage per hit are configured in `datafiles/tune.json` under
 `forms.beam`: `ticks_per_second` defaults to 4 and
 `damage_multiplier_per_tick` defaults to 0.25. Beam hits immediately, then

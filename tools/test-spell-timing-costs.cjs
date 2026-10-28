@@ -54,7 +54,8 @@ s={form:'projectile',form_mods:[],effects:[{effect:'harm',mods:['amplify','ampli
 assert.equal(ctx.cast_spell(payer,s,0,0).cost,ctx.spell_cost(s));
 s={form:'projectile',form_mods:[],effects:[{effect:'fire',mods:['extend_time','delay']},{effect:'harm',mods:[]}]};
 result=ctx.cast_spell(payer,s,0,0);
-assert.equal(result.spell.effects[0].duration,5);assert.equal(result.spell.effects[1].duration,0);
+assert.equal(result.spell.effects[0].duration,tuning.effects.fire.duration*tuning.modifiers.extend_time.duration_increase);
+assert.equal(result.spell.effects[1].duration,0);
 assert.equal(result.spell.effects[1].delay,1);
 // Pull's hold is configured directly, not multiplied by the extra-duration accumulator.
 const pull=callback(effectFile,'Elem_Pull','on_impact');let hold;

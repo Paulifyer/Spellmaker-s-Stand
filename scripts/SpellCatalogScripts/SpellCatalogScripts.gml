@@ -184,10 +184,14 @@ function compile_spell(_loadout) {
 	}
 
 	var _effects = [];
+	var _cooldown_penalty = 0;
 	for (var e = 0; e < array_length(_loadout.effects); e++) {
 		var _el = _g.effect[$ _loadout.effects[e].effect];
 		if (!is_struct(_el)) return undefined;
 		_cost += _el.cost;
+		var _penalty = tune_setting("effects", _loadout.effects[e].effect, "cooldown_penalty", 0);
+		if (!is_real(_penalty) || _penalty < 0) throw "Effect cooldown_penalty must be non-negative seconds";
+		_cooldown_penalty += _penalty;
 
 		var _mods = [];
 		var _amp_count = 0;
@@ -205,7 +209,7 @@ function compile_spell(_loadout) {
 
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
-	var _compiled = {cost: _cost, form: _f, form_id: _loadout.form,
+	var _compiled = {cost: _cost, cooldown_penalty: _cooldown_penalty, form: _f, form_id: _loadout.form,
 
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0, chain_hops: 0, form_modifier_penalty: _form_penalty};
 

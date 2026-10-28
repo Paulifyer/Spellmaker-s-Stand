@@ -254,7 +254,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	icon = spr_glyph_rune;
 	sprite = spr_vfx_rune_arming;
 	cost = tune_params("forms", "rune", "cost", RUNE_COST);
-	arming_time = 3 * TARGET_ROOM_SPEED;
+	arming_time = tune_params("forms", "rune", "arm_time", 3) * TARGET_ROOM_SPEED;
 	max_charges = 1;
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
