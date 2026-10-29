@@ -13,7 +13,7 @@ function load_tuning() {
 		var _data = json_parse(_json);
 		if (is_struct(_data)) global.tuning = _data;
 	} catch (_e) {
-		show_debug_message("TUNING: tuning.json has a syntax error, using defaults.");
+		show_debug_message("TUNING: tune.json has a syntax error, using defaults.");
 	}
 }
 

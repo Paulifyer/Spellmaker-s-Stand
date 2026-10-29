@@ -1,22 +1,6 @@
 {
     "_readme": "Times/Durations are in SECONDS. Costs are mana. player.mana_regen_rate is percent of max mana regenerated every 6 frames (0.5 = 0.5%). Don't rename the names in the quotes, just change numbers!",
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-    "compatibility": {
-        "_readme": "Overrides only restrict implemented compatibility. Built-in Form modifiers: area and chain accept projectile/beam/strike/rune; pierce accepts projectile/beam. Effect modifiers: area accepts combust/discharge; amplify accepts harm/fire/snap/combust/discharge; extend_time accepts fire/ice/lightning/hex; delay accepts all real Effects. Pull accepts projectile/strike/rune; other real Effects accept all Forms. IDs: AoE = area, Frost = ice.",
-        "_defaults": "Omitted settings add no restrictions. Set form_modifier_exclusions to {} and exclusive_form_modifier_groups to [] to restore built-in compatibility. Exclusions affect Form attachments only, so eligible Effect AoE remains allowed. Exclusive groups allow one modifier TYPE per Form; repeated Pierce/Chain stacks remain allowed, Area cannot stack. Restart the game after editing.",
-        "form_modifier_exclusions": { "beam": ["area"] },
-        "exclusive_form_modifier_groups": [["area", "pierce", "chain"]]
-    },
-<<<<<<< HEAD
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-=======
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-
     "debug": { "level_select_enabled": true },
 
     "player":   { 
@@ -29,7 +13,7 @@
     },
     "mutations": {
         "banneret": { "speed_mult": 1.5, "radius_tiles": 1.5},
-        "warded": {"damage_mult": 0.3}
+        "warded": {"damage_mult": 0.1}
     },
     "combat": {
         "base_dmg": 100
@@ -59,7 +43,7 @@
         "fire": {"cost": 10, "fire_dmg_mult": 0.4,"duration": 4},
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 4},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 4, "cooldown_penalty": 3},
-        "hex": {"cost": 5, "cooldown_penalty": 3, "duration": 5, "damage_per_status": 0.1},
+        "hex": {"cost": 5, "cooldown_penalty": 3, "duration": 5, "damage_per_status": 0.05},
         "pull": { "cost": 25, "cooldown_penalty": 5, "pull_sec": 0.4, "hold_sec": 0.2 },
         "force": { "cost": 10, "duration": 0.1, "push_mult": 1 },
         "earth": { "cost": 20, "hp": 20, "duration": 20 }
@@ -70,13 +54,11 @@
         "chain": { "cost": 20, "max_per_form": 2, "hops_per_stack": 2, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25, "cooldown_penalty": 4},
         "pierce": { "cost": 15, "max_per_form": 3, "pierce_amt": 1 },
-        "amplify": { "cost": 25, "max_per_effect": 1, "dmg_multplier": 1, "cost_increase_per_stack": 5 },
+        "amplify": { "cost": 25, "max_per_effect": 2, "dmg_multplier": 0.3, "cost_increase_per_stack": 5 },
         "extend_time": { "cost": 5, "duration_increase": 1 },
         "delay": { "cost": 5, "delay_increase": 1 }
     },
     "compatibility": {
-        "_readme": "Overrides only restrict implemented compatibility. Built-in Form modifiers: area and chain accept projectile/beam/strike/rune; pierce accepts projectile/beam. Effect modifiers: area accepts combust/discharge; amplify accepts harm/fire/snap/combust/discharge; extend_time accepts fire/ice/lightning/hex; delay accepts all real Effects. Pull accepts projectile/strike/rune; other real Effects accept all Forms. IDs: AoE = area, Frost = ice.",
-        "_defaults": "Omitted settings add no restrictions. Set form_modifier_exclusions to {} and exclusive_form_modifier_groups to [] to restore built-in compatibility. Exclusions affect Form attachments only, so eligible Effect AoE remains allowed. Exclusive groups allow one modifier TYPE per Form; repeated Pierce/Chain stacks remain allowed, Area cannot stack. Restart the game after editing.",
         "form_modifier_exclusions": { "beam": ["area"] },
         "exclusive_form_modifier_groups": [["area", "pierce", "chain"]]
     }

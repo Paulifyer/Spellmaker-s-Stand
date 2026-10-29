@@ -4,6 +4,8 @@ const {read,extract,load,loadStatuses}=require('./gml-test-utils.cjs');
 const {makeContext}=require('./construction-test-context.cjs');
 const ctx=makeContext();
 const tuning=JSON.parse(read('datafiles/tune.json'));
+// This fixture exercises three-stack surcharges independently of the campaign cap.
+tuning.modifiers.amplify.max_per_effect=3;
 loadStatuses(ctx);
 load(ctx,'scripts/SpellExecution/SpellExecution.gml',['enemy_can_receive_spell']);
 Object.assign(ctx,{
@@ -49,7 +51,16 @@ let s={form:'projectile',form_mods:[],effects:[{effect:'harm',mods:['amplify','a
 let payer={x:0,y:0,mana:1000,mana_exhausted:false};
 let result=ctx.cast_spell(payer,s,0,0);
 assert.equal(result.cost,85);assert.equal(ctx.spell_cost(s),85);assert.equal(payer.mana,915);
-assert.equal(result.spell.effects[0].duration,0);assert.equal(result.spell.effects[0].effect_multiplier,4);
+assert.equal(result.spell.effects[0].duration,0);
+assert.equal(result.spell.effects[0].effect_multiplier,1+3*tuning.modifiers.amplify.dmg_multplier);
+// Fractional Amplify bonuses accumulate from 1 without rounding or clamping.
+const savedAmplify=tuning.modifiers.amplify.dmg_multplier;
+tuning.modifiers.amplify.dmg_multplier=0.5;
+for (const stacks of [0,1,2,3]) {
+    const fractional={form:'projectile',form_mods:[],effects:[{effect:'harm',mods:Array(stacks).fill('amplify')}]};
+    assert.equal(ctx.cast_spell(payer,fractional,0,0).spell.effects[0].effect_multiplier,1+0.5*stacks);
+}
+tuning.modifiers.amplify.dmg_multplier=savedAmplify;
 s={form:'projectile',form_mods:[],effects:[{effect:'harm',mods:['amplify','amplify']},{effect:'fire',mods:['amplify']}]};
 assert.equal(ctx.cast_spell(payer,s,0,0).cost,ctx.spell_cost(s));
 s={form:'projectile',form_mods:[],effects:[{effect:'fire',mods:['extend_time','delay']},{effect:'harm',mods:[]}]};

@@ -110,9 +110,9 @@ _has_form = (_spell != undefined && _spell.form != undefined);   // may have jus
 var _rm_effect = -1;
 var _count = _has_form ? array_length(_spell.effects) : 0;
 
-// The JSON limit permits up to seven effects in the documented eight-glyph spell.
-// Keep existing excess groups visible so an invalid spell can still be repaired.
-var _effect_slots = max(1, spell_max_glyphs() - 1, _count);
+// Space the current effects evenly, starting at the top.
+// With no effects, keep one placeholder to prompt the first addition.
+var _effect_slots = max(1, _count);
 for (var e = 0; e < _effect_slots; e++) {
     var _ang = 90 + e * 360 / _effect_slots;
     var _gx = craft_cx + lengthdir_x(200, _ang);
