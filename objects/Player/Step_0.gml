@@ -59,7 +59,8 @@ if (_input_enabled && channel == noone) {
 					cost = _s.cost;
 				} else {
 					var _cooldown_seconds = tune_value("player", "spell_cd", SPELL_CD);
-					var _slot_cooldowns = global.tuning.player[$ "spell_cd_by_slot"];
+					var _player_tuning = global.tuning[$ "player"];
+					var _slot_cooldowns = is_struct(_player_tuning) ? _player_tuning[$ "spell_cd_by_slot"] : undefined;
 					if (is_array(_slot_cooldowns) && k < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[k])) {
 						_cooldown_seconds = _slot_cooldowns[k];
 					}
@@ -103,7 +104,8 @@ if (channel != noone) {
 		cost = 0;
 		if (_finished_channel_slot >= 0) {
 			var _cooldown_seconds = tune_value("player", "spell_cd", SPELL_CD);
-			var _slot_cooldowns = global.tuning.player[$ "spell_cd_by_slot"];
+			var _player_tuning = global.tuning[$ "player"];
+			var _slot_cooldowns = is_struct(_player_tuning) ? _player_tuning[$ "spell_cd_by_slot"] : undefined;
 			if (is_array(_slot_cooldowns) && _finished_channel_slot < array_length(_slot_cooldowns) && is_real(_slot_cooldowns[_finished_channel_slot])) {
 				_cooldown_seconds = _slot_cooldowns[_finished_channel_slot];
 			}

@@ -1,22 +1,6 @@
 {
     "_readme": "Times/Durations are in SECONDS. Costs are mana. player.mana_regen_rate is percent of max mana regenerated every 6 frames (0.5 = 0.5%). Don't rename the names in the quotes, just change numbers!",
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-    "compatibility": {
-        "_readme": "Overrides only restrict implemented compatibility. Built-in Form modifiers: area and chain accept projectile/beam/strike/rune; pierce accepts projectile/beam. Effect modifiers: area accepts combust/discharge; amplify accepts harm/fire/snap/combust/discharge; extend_time accepts fire/ice/lightning/hex; delay accepts all real Effects. Pull accepts projectile/strike/rune; other real Effects accept all Forms. IDs: AoE = area, Frost = ice.",
-        "_defaults": "Omitted settings add no restrictions. Set form_modifier_exclusions to {} and exclusive_form_modifier_groups to [] to restore built-in compatibility. Exclusions affect Form attachments only, so eligible Effect AoE remains allowed. Exclusive groups allow one modifier TYPE per Form; repeated Pierce/Chain stacks remain allowed, Area cannot stack. Restart the game after editing.",
-        "form_modifier_exclusions": { "beam": ["area"] },
-        "exclusive_form_modifier_groups": [["area", "pierce", "chain"]]
-    },
-<<<<<<< HEAD
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-=======
->>>>>>> 9563bd6b08477bb94eed1923e74bb88e3d07be0e
-
     "debug": { "level_select_enabled": true },
 
     "player":   { 
@@ -75,8 +59,6 @@
         "delay": { "cost": 5, "delay_increase": 1 }
     },
     "compatibility": {
-        "_readme": "Overrides only restrict implemented compatibility. Built-in Form modifiers: area and chain accept projectile/beam/strike/rune; pierce accepts projectile/beam. Effect modifiers: area accepts combust/discharge; amplify accepts harm/fire/snap/combust/discharge; extend_time accepts fire/ice/lightning/hex; delay accepts all real Effects. Pull accepts projectile/strike/rune; other real Effects accept all Forms. IDs: AoE = area, Frost = ice.",
-        "_defaults": "Omitted settings add no restrictions. Set form_modifier_exclusions to {} and exclusive_form_modifier_groups to [] to restore built-in compatibility. Exclusions affect Form attachments only, so eligible Effect AoE remains allowed. Exclusive groups allow one modifier TYPE per Form; repeated Pierce/Chain stacks remain allowed, Area cannot stack. Restart the game after editing.",
         "form_modifier_exclusions": { "beam": ["area"] },
         "exclusive_form_modifier_groups": [["area", "pierce", "chain"]]
     }

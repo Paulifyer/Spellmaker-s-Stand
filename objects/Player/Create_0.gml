@@ -12,7 +12,8 @@ cast_flash_slot = -1;
 cast_flash_ticks = 0;
 cost = 0 // Holds the drain cost of the spell casted for channels
 max_mana = tune_value("player", "max_mana", MAX_MANA);
-var _mana_increases = global.tuning.player[$ "max_mana_increase_by_level"];
+var _player_tuning = global.tuning[$ "player"];
+var _mana_increases = is_struct(_player_tuning) ? _player_tuning[$ "max_mana_increase_by_level"] : undefined;
 if (is_array(_mana_increases)) {
 	// Index 0 applies to level 1; add all increases through the current level.
 	var _level_count = min(global.current_level + 1, array_length(_mana_increases));
