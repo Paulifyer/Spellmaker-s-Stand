@@ -62,7 +62,39 @@ function spell_catalog_entry(_type, _id) {
 function mod_valid_for_form(_mod_id, _form_id) {
     var _m = spell_catalog_entry("modifier", _mod_id);
     if (!is_struct(_m) || _m.scope == "effect") return false;
+    var _excluded = tune_setting("compatibility", "form_modifier_exclusions", _form_id, []);
+    if (is_array(_excluded) && array_contains(_excluded, _mod_id)) return false;
     return _m.allowed_forms == undefined || array_contains(_m.allowed_forms, _form_id);
+}
+
+// Tuning restricts different types; existing is_stacks rules govern repeats.
+function form_modifiers_conflict(_a, _b) {
+    if (_a == _b) return false;
+    if (!variable_global_exists("tuning")) return false;
+    var _config = global.tuning[$ "compatibility"];
+    if (!is_struct(_config)) return false;
+    var _groups = _config[$ "exclusive_form_modifier_groups"];
+    if (!is_array(_groups)) return false;
+    for (var g = 0; g < array_length(_groups); g++) {
+        var _group = _groups[g];
+        if (!is_array(_group)) continue;
+        if (array_contains(_group, _a) && array_contains(_group, _b)) return true;
+    }
+    return false;
+}
+
+// Count only this attachment. The editor includes the pending addition via _extra.
+function modifier_limit_message(_list, _id, _key, _extra = 0) {
+    var _limit = tune_setting("modifiers", _id, _key, undefined);
+    if (_limit == undefined) return "";
+    if (!is_real(_limit) || _limit < 0 || floor(_limit) != _limit)
+        throw "modifiers." + _id + "." + _key + " must be a non-negative integer";
+    var _count = _extra;
+    for (var n = 0; n < array_length(_list); n++)
+        if (_list[n] == _id) _count++;
+    if (_count <= _limit) return "";
+    var _target = (_key == "max_per_form") ? "Form" : "Effect";
+    return "Max " + string(_limit) + " " + spell_catalog_entry("modifier", _id).name + " glyphs per " + _target;
 }
 
 function mod_valid_for_effect(_mod_id, _effect_id) {
@@ -87,7 +119,11 @@ function spell_validation_message(_s) {
     for (var i = 0; i < array_length(_s.form_mods); i++) {
         var _id = _s.form_mods[i];
         if (!mod_valid_for_form(_id, _s.form)) return "Modifier is incompatible with this Form";
+        for (var j = 0; j < i; j++)
+            if (form_modifiers_conflict(_id, _s.form_mods[j])) return "Can't combine these Form modifiers";
         if (!is_glyph_available("modifier", _id)) return "Modifier is locked";
+        var _form_limit = modifier_limit_message(_s.form_mods, _id, "max_per_form");
+        if (_form_limit != "") return _form_limit;
         if (!spell_catalog_entry("modifier", _id).is_stacks) {
             for (var j = 0; j < i; j++) if (_s.form_mods[j] == _id) return "Modifier cannot stack";
         }
@@ -100,6 +136,8 @@ function spell_validation_message(_s) {
             var _id = _fx.mods[i];
             if (!mod_valid_for_effect(_id, _fx.effect)) return "Modifier is incompatible with this Effect";
             if (!is_glyph_available("modifier", _id)) return "Modifier is locked";
+            var _effect_limit = modifier_limit_message(_fx.mods, _id, "max_per_effect");
+            if (_effect_limit != "") return _effect_limit;
             if (!spell_catalog_entry("modifier", _id).is_stacks) {
                 for (var j = 0; j < i; j++) if (_fx.mods[j] == _id) return "Modifier cannot stack";
             }
@@ -120,18 +158,23 @@ function spell_addition_message(_s, _type, _id, _active) {
     }
     var _m = spell_catalog_entry("modifier", _id);
     var _list;
+    var _limit_key;
     if (_m.scope == "spell" || (_m.scope == "both" && _active < 0)) {
         if (!mod_valid_for_form(_id, _s.form)) return "Can't attach to this Form";
         _list = _s.form_mods;
+        _limit_key = "max_per_form";
+        for (var i = 0; i < array_length(_list); i++)
+            if (form_modifiers_conflict(_id, _list[i])) return "Can't combine these Form modifiers";
     } else {
         if (array_length(_s.effects) == 0) return "Add an Effect first";
         var _ei = (_active >= 0) ? _active : array_length(_s.effects) - 1;
         if (_ei >= array_length(_s.effects)) return "Select an Effect first";
         if (!mod_valid_for_effect(_id, _s.effects[_ei].effect)) return "Can't attach to this Effect";
         _list = _s.effects[_ei].mods;
+        _limit_key = "max_per_effect";
     }
     if (array_contains(_list, _id) && !_m.is_stacks) return "Already attached";
-    return "";
+    return modifier_limit_message(_list, _id, _limit_key, 1);
 }
 
 // Delay satellites mark a boundary AFTER their effect group.

@@ -19,7 +19,7 @@ function makeContext(limit = 8) {
         const start = modifiers.indexOf(`function Mod_${name}(`);
         const next = modifiers.indexOf('\nfunction ', start + 1);
         const body = modifiers.slice(start, next < 0 ? undefined : next);
-        const m = {cost: 5, scope:'spell',is_stacks:false,allowed_forms:undefined,allowed_effects:undefined};
+        const m = {name, cost: 5, scope:'spell',is_stacks:false,allowed_forms:undefined,allowed_effects:undefined};
         const scope = body.match(/scope = "(\w+)"/); if (scope) m.scope=scope[1];
         m.is_stacks = body.includes('is_stacks = true');
         for (const field of ['allowed_forms','allowed_effects']) {
@@ -41,6 +41,7 @@ function makeContext(limit = 8) {
         tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,TARGET_ROOM_SPEED:60,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
+    load(ctx,helper,['form_modifiers_conflict','modifier_limit_message']);
     ctx.tune_setting=(...args)=>ctx.tune_params(...args);
     for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',chain:'Chain',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
         const body=extract(modifiers,`Mod_${name}`);
