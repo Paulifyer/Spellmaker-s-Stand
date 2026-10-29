@@ -68,6 +68,26 @@ adds its normal mana cost. A trailing Delay has no following effect to postpone.
 
 ## Spell construction rules
 
+Modifier entries in `datafiles/tune.json` support optional `max_per_form` and
+`max_per_effect` caps. Chain currently has `max_per_form: 2`; Amplify has
+`max_per_effect: 2`. Each Effect group has its own allowance, including repeated
+Effects after Delay. Omitted fields add no cap; zero forbids the attachment.
+Values must be non-negative integers. Existing compatibility, non-stacking and
+level-wide glyph limits still apply. Over-cap spells must be repaired before
+Start or casting. Restart after tuning changes. Run
+`node tools/test-glyph-limits.cjs` to check these limits.
+
+Balance restrictions are configured under `compatibility` in `datafiles/tune.json`.
+`form_modifier_exclusions` maps Form IDs to forbidden modifier IDs; Beam currently
+excludes `area` (AoE). Each `exclusive_form_modifier_groups` array permits only
+one modifier type on a Form; the current group prevents mixing AoE, Pierce, and
+Chain while preserving legal Pierce/Chain stacks. Effect-level AoE is unaffected.
+These overrides only restrict built-in compatibility. Use `{}` for exclusions
+and `[]` for exclusive groups (or omit the settings) to restore built-in behavior.
+The adjacent JSON notes list supported combinations. Restart after editing.
+Existing invalid spells must be repaired before Start or casting. Run
+`node tools/test-glyph-compatibility.cjs` to check these rules.
+
 Each level entry in `datafiles/level.json` defines `max_glyphs` (an integer of
 at least 2) and `unlocked_glyphs` (only the new unlocks for that level). Limits
 for the existing rooms are 2, 3, and 5. The eight-level draft in `notes/` also
