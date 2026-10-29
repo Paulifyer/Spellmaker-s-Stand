@@ -31,12 +31,8 @@ function start_wave(_wave_number)
 	_manager.intermission_timer = 0;
 	_manager.state = WaveState.SPAWNING;
 
-	with (_manager)
-	{
-		event_perform(ev_alarm, 0);
-	}
-
 	layer_sequence_create("Sequences", 0, 0, seq_wave_start_banner);
+	_manager.alarm[1] = TARGET_ROOM_SPEED * 1.5; // animation duration of wave_start_banner
 	return true;
 }
 

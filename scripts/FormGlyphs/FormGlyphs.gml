@@ -36,6 +36,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 	icon = spr_glyph_projectile;
 	sprite = spr_projectile;
 	uses_mask = true;
+	desc = "Launch an orb of arcane energy"
 	cost = tune_params("forms", "projectile", "cost", PROJECTILE_COST);
 	on_cast = function(spell) {
 		spell.spd = tune_params("forms", "projectile", "spd", PROJECTILE_SPD);
@@ -105,6 +106,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	icon = spr_glyph_beam;
 	sprite = spr_beam;
 	cost = tune_params("forms", "beam", "cost", BEAM_COST);
+	desc = "Blast a beam of lightning which stops at the nearest enemy";
 	is_channel = true;
 	on_cast = function(spell) {
 		spell.spd = 0;
@@ -179,6 +181,7 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 	icon = spr_glyph_strike;
 	sprite = spr_strike
 	cost = tune_params("forms", "strike", "cost", STRIKE_COST);
+	desc = "Infuse a bolt of lightning to damage a tile"
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
 		spell.target_x = _p.x;
@@ -256,6 +259,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	cost = tune_params("forms", "rune", "cost", RUNE_COST);
 	arming_time = tune_params("forms", "rune", "arm_time", 3) * TARGET_ROOM_SPEED;
 	max_charges = 1;
+	desc = "Place a rune holding a spell which triggers and hit the tile that it is placed on"
 	on_cast = function(spell) {
 		var _p = grid_to_world_center(spell.target_col, spell.target_row);
 		var _lane = spell.target_row div ROWS_PER_LANE;

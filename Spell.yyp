@@ -291,6 +291,8 @@
     {"id":{"name":"spr_enemy_moleburrowing","path":"sprites/spr_enemy_moleburrowing/spr_enemy_moleburrowing.yy",},},
     {"id":{"name":"spr_enemy_mook","path":"sprites/spr_enemy_mook/spr_enemy_mook.yy",},},
     {"id":{"name":"spr_enemy_ranger","path":"sprites/spr_enemy_ranger/spr_enemy_ranger.yy",},},
+    {"id":{"name":"spr_enemy_siegebeast_charge","path":"sprites/spr_enemy_siegebeast_charge/spr_enemy_siegebeast_charge.yy",},},
+    {"id":{"name":"spr_enemy_siegebeast_walk","path":"sprites/spr_enemy_siegebeast_walk/spr_enemy_siegebeast_walk.yy",},},
     {"id":{"name":"spr_enemy_siegebeast","path":"sprites/spr_enemy_siegebeast/spr_enemy_siegebeast.yy",},},
     {"id":{"name":"spr_enemy_skeleton","path":"sprites/spr_enemy_skeleton/spr_enemy_skeleton.yy",},},
     {"id":{"name":"spr_enemy_swarmer","path":"sprites/spr_enemy_swarmer/spr_enemy_swarmer.yy",},},

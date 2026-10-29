@@ -3,6 +3,8 @@
 rock = enemy_detect_obstacle(id, detection_dist);
 is_blocked = rock != noone && is_targetable; // Can only e blocked if targettable/emerged
 
+
+// This is to prevent the mole from emerging on a rock
 if (pull == undefined && place_meeting(path_get_x(path_index, pos_to_stop), y, obj_rock)) {
 	pos_to_stop -= 1/13;
 } else {

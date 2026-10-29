@@ -3,6 +3,7 @@
 // Draw the enemy itself
 enemy_draw_banner(id);
 draw_self();
+//draw_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, true); // For debugging hit boxes
 
 // Check if flash_alpha is greater than zero (which means the enemy has been hit and we should draw the hit flash)
 if (flash_alpha > 0) 

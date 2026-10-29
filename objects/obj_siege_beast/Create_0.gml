@@ -30,8 +30,11 @@ my_speed = base_speed;
 // This variable holds the speed the enemy should move at when moving vertically
 v_speed = my_speed * 0.7;
 
+charge_sprite = spr_enemy_siegebeast_charge;
+walk_sprite = spr_enemy_siegebeast_walk;
+
 // This variable holds the sprite to use when the enemy is moving sideways
-walk_side_sprite = spr_enemy_siegebeast;
+walk_side_sprite = spr_enemy_siegebeast_charge;
 
 // This variable holds the sprite to use when the enemy is moving up
 walk_up_sprite = spr_frankenstein_walk_up;

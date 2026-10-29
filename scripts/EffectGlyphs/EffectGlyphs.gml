@@ -28,6 +28,7 @@ function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
 	cost = tune_params("effects", "fire", "cost", FIRE_COST);
+	desc = "Infuse the spell with fire, leaving enemies burning taking damage over time";
 	on_hit = function(spell, target, fx) {
 		var _base_dmg = fx.params.base_damage;
 		var _fire_dmg_mult = fx.params.fire_mult;
@@ -40,6 +41,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
 	cost = tune_params("effects", "ice", "cost", FROST_COST);
+	desc = "Infuse the spell with frost, frosting and slowing enemies down"
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
 		var slow_amt = fx.params.slow_per_stack;

@@ -6,7 +6,6 @@
 	a short stagger, followed by a random delay before the next group.
 */
 
-
 // Ignore stale alarms after the wave has stopped or the game has ended.
 if (state != WaveState.SPAWNING)
 {
