@@ -13,7 +13,7 @@
     },
     "mutations": {
         "banneret": { "speed_mult": 1.5, "radius_tiles": 1.5},
-        "warded": {"damage_mult": 0.3}
+        "warded": {"damage_mult": 0.1}
     },
     "combat": {
         "base_dmg": 100
@@ -54,7 +54,7 @@
         "chain": { "cost": 20, "max_per_form": 2, "hops_per_stack": 2, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25, "cooldown_penalty": 4},
         "pierce": { "cost": 15, "max_per_form": 3, "pierce_amt": 1 },
-        "amplify": { "cost": 25, "max_per_effect": 2, "dmg_multplier": 0.5, "cost_increase_per_stack": 5 },
+        "amplify": { "cost": 25, "max_per_effect": 2, "dmg_multplier": 0.3, "cost_increase_per_stack": 5 },
         "extend_time": { "cost": 5, "duration_increase": 1 },
         "delay": { "cost": 5, "delay_increase": 1 }
     },
