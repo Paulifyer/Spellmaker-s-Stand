@@ -405,7 +405,7 @@
         ]
     },
     "rm_level_5": {
-        "max_glyphs": 7,
+        "max_glyphs": 6,
         "spell_slots": 4,
         "enemy_roster": [
             {
@@ -603,7 +603,7 @@
         ]
     },
     "rm_level_6": {
-        "max_glyphs": 8,
+        "max_glyphs": 6,
         "spell_slots": 4,
         "enemy_roster": [
             {
@@ -804,7 +804,7 @@
         ]
     },
     "rm_level_7": {
-        "max_glyphs": 8,
+        "max_glyphs": 6,
         "spell_slots": 4,
         "enemy_roster": [
             {
@@ -1073,7 +1073,7 @@
         ]
     },
     "rm_level_8": {
-        "max_glyphs": 8,
+        "max_glyphs": 6,
         "spell_slots": 4,
         "enemy_roster": [
             {

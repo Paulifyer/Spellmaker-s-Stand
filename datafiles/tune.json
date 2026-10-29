@@ -43,7 +43,7 @@
         "fire": {"cost": 10, "fire_dmg_mult": 0.4,"duration": 4},
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 4},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 4, "cooldown_penalty": 3},
-        "hex": {"cost": 5, "cooldown_penalty": 3, "duration": 5, "damage_per_status": 0.1},
+        "hex": {"cost": 5, "cooldown_penalty": 3, "duration": 5, "damage_per_status": 0.05},
         "pull": { "cost": 25, "cooldown_penalty": 5, "pull_sec": 0.4, "hold_sec": 0.2 },
         "force": { "cost": 10, "duration": 0.1, "push_mult": 1 },
         "earth": { "cost": 20, "hp": 20, "duration": 20 }
@@ -54,7 +54,7 @@
         "chain": { "cost": 20, "max_per_form": 2, "hops_per_stack": 2, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25, "cooldown_penalty": 4},
         "pierce": { "cost": 15, "max_per_form": 3, "pierce_amt": 1 },
-        "amplify": { "cost": 25, "max_per_effect": 1, "dmg_multplier": 1, "cost_increase_per_stack": 5 },
+        "amplify": { "cost": 25, "max_per_effect": 2, "dmg_multplier": 1, "cost_increase_per_stack": 5 },
         "extend_time": { "cost": 5, "duration_increase": 1 },
         "delay": { "cost": 5, "delay_increase": 1 }
     },

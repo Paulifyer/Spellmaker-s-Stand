@@ -60,6 +60,21 @@ assert.equal(new Set(groups.map(p=>`${p.x},${p.y}`)).size,8);
 assert.ok(palette.some(p=>p.x===140&&p.y===710)); // ninth Effect fits above the Modifier palette
 console.log('Spell editor checks passed: all-slot Start validation, empty slots, counter and seven visible effect groups.');
 
+// Adding/removing effects redistributes the occupied ring, independent of capacity.
+for (const count of [1, 2, 3, 4, 7, 3, 2, 0]) {
+    groups.length = 0;
+    ctx.global.spellbook[0].effects = Array.from({length:count},()=>({effect:'harm',mods:[]}));
+    vm.runInContext(draw,ctx);
+    assert.equal(groups.length, count + 1);
+    for (let i=0;i<count;i++) {
+        const angle=(90+i*360/count)*Math.PI/180;
+        assert.ok(Math.abs(groups[i+1].x-(ctx.craft_cx+200*Math.cos(angle)))<1e-8);
+        assert.ok(Math.abs(groups[i+1].y-(ctx.craft_cy-200*Math.sin(angle)))<1e-8);
+    }
+}
+assert.match(read('objects/obj_spellbook/Draw_0.gml'), /var _effect_slots = max\(1, _count\);/);
+console.log('Effect layout checks passed: evenly spaced rings starting at the top, including additions and removals.');
+
 // A retained high-slot selection is reset before Draw or keyboard naming can edit it.
 const retained={name:'Retained fourth',form:'projectile',form_mods:[],effects:[{effect:'harm',mods:[]}]};
 ctx.global.spellbook=[valid(),undefined,undefined,retained];
