@@ -52,6 +52,7 @@ health_offset_y = -190;
 // This variable shows that the enemy is ready to attack
 ready_to_attack = false;
 charge_active = true;
+charge_dmg_taken_mult = tune_enemy(name, "charge_dmg_taken_mult", 0.5);
 charge_interrupt_reason = "";
 siege_attack_timer = -1;
 

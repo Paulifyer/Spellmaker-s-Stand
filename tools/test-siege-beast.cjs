@@ -15,3 +15,26 @@ for(let i=0;i<30;i++)ctx.enemy_siege_attack(e);assert.equal(e.siege_attack_timer
 e.stun_timer=0;for(let i=0;i<140;i++)ctx.enemy_siege_attack(e);assert.equal(damage,5);
 e=beast();ctx.enemy_interrupt_charge(e,'barricade');assert.equal(e.charge_active,false);assert.equal(e.charge_interrupt_reason,'barricade');
 console.log('Siege checks passed: single doubled impact, normal windup, spell-before-impact stun, paused windup and barricade hook.');
+
+// Exercise the shared damage resolver, including live charge transitions and burn.
+load(ctx,'scripts/MutationScripts/MutationScripts.gml',['enemy_ward_key','enemy_ward_active']);
+Object.assign(ctx,{HEX_DAMAGE_PER_STATUS:0.1,obj_mook:'mook',obj_brute:'brute'});
+load(ctx,'scripts/GameplayScripts/GameplayScripts.gml',['deal_damage']);
+const protectedBeast=()=>Object.assign(beast(),{object_index:'siege',charge_dmg_taken_mult:0.5,dmg_reduction:0,mutation_keys:[]});
+e=protectedBeast();ctx.deal_damage(e,100);assert.equal(e.hp,700);
+e.charge_dmg_taken_mult=0.25;ctx.deal_damage(e,100);assert.equal(e.hp,675);
+for(const reason of ['stun','blocked','impact']){
+ e=protectedBeast();
+ if(reason==='stun')ctx.combat_status_apply(e,'lightning',60);
+ else if(reason==='impact')ctx.enemy_siege_attack(e);
+ else ctx.enemy_interrupt_charge(e,reason);
+ ctx.deal_damage(e,100);assert.equal(e.hp,650,reason);
+}
+e=protectedBeast();e.dmg_reduction=0.2;e.mutation_keys=['fire-warded'];
+ctx.combat_status_apply(e,'hex',60);ctx.deal_damage(e,100);
+assert.equal(e.hp,728); // 100 * 1.1 Hex * 0.8 mutation * 0.5 ward * 0.5 charge.
+e=protectedBeast();ctx.combat_status_apply(e,'burn',60,100);
+ctx.combat_status_advance(e,60);assert.equal(e.hp,700);
+e=h.enemy(2,0,{object_index:'other',hp:750,dmg_reduction:0,mutation_keys:[]});
+ctx.deal_damage(e,100);assert.equal(e.hp,650);
+console.log('Charge damage checks passed: configured multiplier, interruption, stacking, burn and ordinary enemies.');
