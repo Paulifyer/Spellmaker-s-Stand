@@ -127,9 +127,13 @@ function deal_damage(_id, _amount)
 		_hex_multiplier += _status_count * _bonus_per_status;
 	}
 
-	// Apply Hex amplification and mutation damage reduction.
+	// Charge protection stacks multiplicatively with Hex and mutation modifiers.
+	var _charge_multiplier = 1;
+	if (variable_instance_exists(_id, "charge_active") && _id.charge_active) {
+		_charge_multiplier = _id.charge_dmg_taken_mult;
+	}
 	var _ward_multiplier = enemy_ward_active(_id) ? tune_params("mutations", "warded", "damage_mult", 0.5) : 1;
-	_id.hp -= (_amount * _hex_multiplier * (1 - _id.dmg_reduction) * _ward_multiplier);
+	_id.hp -= (_amount * _hex_multiplier * (1 - _id.dmg_reduction) * _ward_multiplier * _charge_multiplier);
 	
 	// Set the enemy flash_alpha to 1 so that the hit flash will activate
 	_id.flash_alpha = 1;
