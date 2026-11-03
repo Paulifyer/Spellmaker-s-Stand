@@ -173,6 +173,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	on_draw = function(spell) {
 		for (var i = 0; i < array_length(spell.beam_lanes); i++) {
 			var _b = spell.beam_lanes[i];
+			draw_spell_sprite_ext(spr_beamhead, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H, 1, 1, 0, spell.col, 0.5);
 			draw_spell_sprite_ext(sprite, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H,
 				_b.len / sprite_get_width(sprite), 1, 0, spell.col, 0.5);
 		}

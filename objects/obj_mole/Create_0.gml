@@ -24,6 +24,8 @@ base_speed = base_speed * spd_mult;
 // This variable holds the current speed for the enemy
 my_speed = base_speed;
 
+is_ranged = true;
+
 // This variable holds the speed the enemy should move at when moving vertically
 v_speed = my_speed * 0.6;
 
@@ -32,6 +34,9 @@ burrow_sprite = spr_enemy_moleburrowing;
 
 // This variable holds the normal sprite when targettable
 normal_sprite = spr_enemy_mole;
+
+// This variable holds the emerge sprite when emerging
+emerge_sprite = spr_enemy_mole_emerge;
 
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = burrow_sprite;
@@ -69,6 +74,7 @@ is_stop_reached = false;
 
 emergence_marker = undefined;
 emerged = false;
+emerging = false;
 
 is_targetable = false;
 

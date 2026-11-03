@@ -290,6 +290,7 @@
     {"id":{"name":"spr_enemy_carrionwalk","path":"sprites/spr_enemy_carrionwalk/spr_enemy_carrionwalk.yy",},},
     {"id":{"name":"spr_enemy_mole_emerge","path":"sprites/spr_enemy_mole_emerge/spr_enemy_mole_emerge.yy",},},
     {"id":{"name":"spr_enemy_mole","path":"sprites/spr_enemy_mole/spr_enemy_mole.yy",},},
+    {"id":{"name":"spr_enemy_moleburrowing_old","path":"sprites/spr_enemy_moleburrowing_old/spr_enemy_moleburrowing_old.yy",},},
     {"id":{"name":"spr_enemy_moleburrowing","path":"sprites/spr_enemy_moleburrowing/spr_enemy_moleburrowing.yy",},},
     {"id":{"name":"spr_enemy_mook_old","path":"sprites/spr_enemy_mook_old/spr_enemy_mook_old.yy",},},
     {"id":{"name":"spr_enemy_mook","path":"sprites/spr_enemy_mook/spr_enemy_mook.yy",},},
