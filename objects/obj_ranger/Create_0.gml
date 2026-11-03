@@ -27,8 +27,14 @@ my_speed = base_speed;
 // This variable holds the speed the enemy should move at when moving vertically
 v_speed = my_speed * 0.6;
 
+// This variable is used to check if the enemy is ranged or not
+is_ranged = true;
+
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = spr_enemy_ranger;
+
+mask_index = spr_enemy_ranger_old;
+
 
 // This variable holds the sprite to use when the enemy is moving up
 walk_up_sprite = spr_zombie_walk_up;
@@ -55,7 +61,7 @@ damage_dealt = tune_enemy(name, "attack_dmg", 1);
 attack_delay = tune_enemy(name, "attack_delay", 2);
 
 // Range Selector
-pos_to_stop = 1 - (0.9 - random(0.4));
+pos_to_stop = 1 - (0.9 - random(0.3));
 
 is_stop_reached = false;
 

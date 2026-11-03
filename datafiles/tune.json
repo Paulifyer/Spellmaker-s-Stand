@@ -16,7 +16,8 @@
         "warded": {"damage_mult": 0.1}
     },
     "combat": {
-        "base_dmg": 100
+        "base_dmg": 100,
+        "base_hitstun_duration": 0.08
     },
     "enemies": {
         "base_speed": 1,

@@ -41,7 +41,7 @@ function makeExecutionContext() {
         enemy_overlaps_region:(e,a,b,l1,l2)=>Math.floor(e.x/100)>=a&&Math.floor(e.x/100)<=b&&e.lane>=l1&&e.lane<=l2,
     });
     ctx.global.lane_top=[0,100,200];
-    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage','enemy_update_movement']);
+    load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_get_lineage','enemy_bind_lineage','enemy_update_movement','enemy_apply_hitstun']);
     load(ctx,'scripts/SpellCatalogScripts/SpellCatalogScripts.gml',['apply_effect_group','spell_snapshot','spell_effect_colour','cast_spell','rune_trim_to_limit']);
     const execution=read('scripts/SpellExecution/SpellExecution.gml');
     const names=[...execution.matchAll(/function (\w+)\(/g)].map(m=>m[1]);
@@ -63,7 +63,7 @@ function makeExecutionContext() {
     }
     function enemy(col=2,lane=0,extra={}) {
         const e={x:col*100+50,y:lane*100,lane,hp:100000,base_speed:1,my_speed:1,is_targetable:true,
-            burn_timer:0,burn_dmg:0,slow_timer:0,slow_amt:0,frost_stacks:0,stun_timer:0,stun_immune_timer:0,hex_timer:0,pull:undefined,...extra};
+            burn_timer:0,burn_dmg:0,slow_timer:0,slow_amt:0,frost_stacks:0,stun_timer:0,stun_immune_timer:0,hitstun_timer:0,hex_timer:0,pull:undefined,...extra};
         enemies.push(e);ctx.enemy_get_lineage(e);return e;
     }
     function spell(form,effects,mods=[]) {

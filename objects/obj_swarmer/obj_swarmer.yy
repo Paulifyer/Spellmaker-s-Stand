@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_enemy_swarmer",
-    "path":"sprites/spr_enemy_swarmer/spr_enemy_swarmer.yy",
+    "name":"spr_enemy_swarmer_old",
+    "path":"sprites/spr_enemy_swarmer_old/spr_enemy_swarmer_old.yy",
   },
   "spriteMaskId":null,
   "visible":true,

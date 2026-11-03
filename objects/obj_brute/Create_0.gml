@@ -27,6 +27,8 @@ v_speed = my_speed * 0.7;
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = spr_enemy_brute;
 
+mask_index = spr_enemy_brute_old;
+
 // This variable holds the sprite to use when the enemy is moving up
 walk_up_sprite = spr_frankenstein_walk_up;
 

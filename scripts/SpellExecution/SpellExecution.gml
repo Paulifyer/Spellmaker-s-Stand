@@ -198,6 +198,28 @@ function combat_flush_lineage(_lineage) {
 	if (is_struct(_state)) combat_execution_flush(_state, _lineage);
 }
 
+// Impact feedback is independent of effect damage, delays and reaction bursts.
+function spell_apply_impact_hitstun(_spell, _target, _col, _lane, _radius, _force_area) {
+	var _hits = _spell.hit_state;
+	if (!variable_struct_exists(_hits, "hitstun_epoch") || _hits.hitstun_epoch != _hits.epoch) {
+		_hits.hitstun_epoch = _hits.epoch;
+		_hits.hitstun_targets = {};
+	}
+	var _area = _force_area || (_spell.area && !_spell.form.is_channel)
+		|| _spell.compiled.form_id == "strike" || _spell.compiled.form_id == "rune";
+	var _targets = _area
+		? enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius)
+		: [ _target ];
+	for (var i = 0; i < array_length(_targets); i++) {
+		var _enemy = _targets[i];
+		if (!enemy_can_receive_spell(_enemy, _spell.compiled) || _enemy.hp <= 0) continue;
+		var _key = string(enemy_get_lineage(_enemy).id);
+		if (variable_struct_exists(_hits.hitstun_targets, _key)) continue;
+		_hits.hitstun_targets[$ _key] = true;
+		enemy_apply_hitstun(_spell, _enemy);
+	}
+}
+
 // A delivery starts all Effects in written order. Delay schedules activation;
 // it never waits implicitly for Pull movement to finish.
 function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force_area = false) {
@@ -207,6 +229,7 @@ function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force
 		if (!enemy_can_receive_spell(_target, _spell.compiled) || spell_contacted(_spell, _target)) return false;
 		spell_record_contact(_spell, _target);
 	}
+	spell_apply_impact_hitstun(_spell, _target, _col, _lane, _radius, _force_area);
 	var _delivery = spell_new_delivery(_spell);
 	var _snapshot = spell_snapshot(_spell);
 	var _scopes = {};

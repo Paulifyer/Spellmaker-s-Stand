@@ -271,16 +271,19 @@ function enemy_advance_lightning(_state, _frames) {
 function enemy_update_movement(_enemy, _multiplier = 1) {
 	var _slow = (_enemy.slow_timer > 0) ? clamp(_enemy.slow_amt, 0, 0.6) : 0;
 	var _screeching = variable_instance_exists(_enemy, "screech_timer") && _enemy.screech_timer > 0;
+	var _hitstun = _enemy.hitstun_timer > 0;
 	_enemy.my_speed = (
 		(_screeching) || 
 		(_enemy.is_blocked) ||
-		(_enemy.is_stop_reached)
+		(_enemy.is_stop_reached) ||
+		(_hitstun)
 	) ? 0 : max(0, _enemy.base_speed * _multiplier * enemy_banner_speed(_enemy) * (1 - _slow));
 	_enemy.path_speed = (
 		_enemy.stun_timer > 0 ||
 		_enemy.is_blocked ||
 		_enemy.pull != undefined || 
-		_enemy.force_push != undefined
+		_enemy.force_push != undefined ||
+		_hitstun
 	) ? 0 : _enemy.my_speed;
 }
 
@@ -386,3 +389,36 @@ function enemy_detect_obstacle(_enemy, _detection_dist) {
 	var _rock = instance_place(_check_x, _check_y, obj_rock);
 	return _rock
 }
+
+
+function enemy_shoot_prj(_x, _y, _depth, _damage_dealt, _prj) {
+	var _arrow = instance_create_depth(_x, _y - 100, _depth, _prj)
+	with (_arrow) {
+		// Set image_angle using point_direction to get the direction to the target 
+		// We are offsetting the target's y value because we don't want to shoot at the target's feet
+		image_angle = point_direction(x, y, -x, y);
+			
+		// Set the direction to be the same as the image_angle
+		direction = image_angle;
+			
+		// Create a layer for our arrow fire sequence so it will be at the right depth
+		var _layer = layer_create(-(y + 105));
+			
+		// Create a sequence on that layer
+		var _seq = layer_sequence_create(_layer, x, y, seq_arrow_fire);
+			
+		//Set the sequence's angle to be the same as the arrows
+		layer_sequence_angle(_seq, image_angle);
+			
+		damage = _damage_dealt;
+	}
+}
+
+function enemy_apply_hitstun(_spell, _target) {
+	var _hitstun_duration = tune_value("combat", "base_hitstun_duration", 0.08) * TARGET_ROOM_SPEED;
+	var _scaled_duration = _hitstun_duration * array_length(_spell.effects);
+	var _frames = max(0, round(_scaled_duration));
+	_target.hitstun_timer = max(_target.hitstun_timer, _frames);
+}
+
+

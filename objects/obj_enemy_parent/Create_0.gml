@@ -47,6 +47,9 @@ y_previous = y;
 // This variable holds the speed the enemy should move at when moving vertically
 v_speed = my_speed * 0.6;
 
+// This variable is used to check if the enemy is ranged or not
+is_ranged = false;
+
 // This variable holds the sprite to use when the enemy is moving sideways
 walk_side_sprite = spr_zombie_walk_side;
 
@@ -81,6 +84,10 @@ hex_timer = 0;
 
 // how long the stun_immue_timer is
 stun_immune_timer = 0;
+
+// Hit stun timer
+hitstun_timer = 0;
+
 // Registry initialization also covers newly registered status fields.
 combat_status_initialize(self);
 
@@ -132,7 +139,11 @@ rock = noone;
 
 detection_dist = 16;
 
+pos_to_stop = 0.95;
+
 is_stop_reached = false;
+
+is_attack_possible = false;
 
 
 

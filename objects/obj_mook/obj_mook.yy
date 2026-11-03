@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_enemy_mook",
-    "path":"sprites/spr_enemy_mook/spr_enemy_mook.yy",
+    "name":"spr_enemy_mook_old",
+    "path":"sprites/spr_enemy_mook_old/spr_enemy_mook_old.yy",
   },
   "spriteMaskId":null,
   "visible":true,

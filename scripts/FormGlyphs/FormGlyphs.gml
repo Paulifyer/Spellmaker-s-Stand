@@ -165,7 +165,9 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		spell_chain_reserve_roots(spell, _direct_targets);
 		for (var i = 0; i < array_length(_direct_targets); i++) {
 			var _target = _direct_targets[i];
-			if (instance_exists(_target)) spell_deliver(spell, _target, floor((_target.x - GRID_X0) / TILE_W), enemy_lane(_target));
+			if (instance_exists(_target)) {
+				spell_deliver(spell, _target, floor((_target.x - GRID_X0) / TILE_W), enemy_lane(_target));
+			}
 		}
 	};
 	on_draw = function(spell) {

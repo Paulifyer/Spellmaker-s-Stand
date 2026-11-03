@@ -6,16 +6,21 @@
 rock = enemy_detect_obstacle(id, detection_dist);
 is_blocked = rock != noone && is_targetable;
 
-if (path_position >= 1 || is_blocked)
+if (path_position >= pos_to_stop || is_blocked)
 {
 	if (attack_sprite != undefined) sprite_index = attack_sprite;
-	if (ready_to_attack && stun_timer <= 0) {
-		if (is_blocked) {
-			rock.hp -= damage_dealt;
+	if (ready_to_attack && stun_timer <= 0 && hitstun_timer <= 0) {
+		ready_to_attack = false
+		is_stop_reached = path_position >= pos_to_stop;
+		if (is_ranged) {
+			enemy_shoot_prj(x, y, depth, damage_dealt, obj_arrow);
 		} else {
-			reduce_village_hp(damage_dealt);
+			if (is_blocked) {
+				rock.hp -= damage_dealt;
+			} else {
+				reduce_village_hp(damage_dealt);
+			}
 		}
-		ready_to_attack = false;
 		switch (object_index) {
 			case obj_mook:
 				audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false);
@@ -27,7 +32,7 @@ if (path_position >= 1 || is_blocked)
 				break;
 		}
 	}
-	if (!ready_to_attack && stun_timer <= 0 && alarm[0] <= 0) {
+	if (!ready_to_attack && stun_timer <= 0 && hitstun_timer <= 0 && alarm[0] <= 0) {
 		alarm[0] = TARGET_ROOM_SPEED * attack_delay * (1 + slow_amt);
 	}
 }

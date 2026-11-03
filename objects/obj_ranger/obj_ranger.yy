@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_enemy_ranger",
-    "path":"sprites/spr_enemy_ranger/spr_enemy_ranger.yy",
+    "name":"spr_enemy_ranger_old",
+    "path":"sprites/spr_enemy_ranger_old/spr_enemy_ranger_old.yy",
   },
   "spriteMaskId":null,
   "visible":true,

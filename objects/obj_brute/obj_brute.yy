@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_enemy_brute",
-    "path":"sprites/spr_enemy_brute/spr_enemy_brute.yy",
+    "name":"spr_enemy_brute_old",
+    "path":"sprites/spr_enemy_brute_old/spr_enemy_brute_old.yy",
   },
   "spriteMaskId":null,
   "visible":true,

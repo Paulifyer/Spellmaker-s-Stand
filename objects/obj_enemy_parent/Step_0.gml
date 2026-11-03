@@ -9,6 +9,11 @@ if (pull != undefined) enemy_update_pull(id);
 // Ensures Force is executed correctly
 if (force_push != undefined) enemy_update_force(id);
 
+if (hitstun_timer > 0) {
+	hitstun_timer--;	
+}
+
+
 combat_status_advance(id, 1);
 if (mutation != undefined) mutation.on_step(id);
 
