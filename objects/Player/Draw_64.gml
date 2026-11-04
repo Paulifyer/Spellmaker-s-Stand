@@ -52,8 +52,6 @@ draw_set_colour(c_white);
 draw_set_alpha(1);
 
 // Caster Draw GUI
-
-
 for (var i = 0; i < SPELL_SLOTS; i++) {
     var _x2 = 300 + i * 130, _y2 = display_get_gui_height() - 260;
     var _l = global.spellbook[i];

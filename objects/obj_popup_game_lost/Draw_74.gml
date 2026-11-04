@@ -10,7 +10,7 @@
 draw_self();
 
 // Draw the lose image 
-draw_sprite_ext(spr_lose_image, 0, x, y - 28, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+draw_sprite_ext(spr_ui_gameovergraphic, 0, x, y - 28, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
 
 // Set the font horizontal alignment
 draw_set_halign(fa_center);
@@ -22,10 +22,10 @@ draw_set_valign(fa_middle);
 draw_set_font(fnt_game_end_small);
 
 // Use our custom function to draw the text and the outline 
-draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 300), "OH NO!", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
+draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 400), "OH NO!", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
 
 // Set the font
 draw_set_font(fnt_game_end_big);
 
 // Use our custom function to draw the text and the outline 
-draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 200), "GAME OVER", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
+draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 300), "GAME OVER", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);

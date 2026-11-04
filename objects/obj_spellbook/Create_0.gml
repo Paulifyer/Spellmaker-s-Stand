@@ -8,6 +8,8 @@ naming = false;
 close_requested = false;
 hover_text = "";
 enemy_view = 0;
+enemy_preview_view = -1;
+enemy_preview_since = current_time;
 
 column_keys   = ["form", "effect", "modifier"];
 column_titles = ["Form", "Effect", "Modifier"];

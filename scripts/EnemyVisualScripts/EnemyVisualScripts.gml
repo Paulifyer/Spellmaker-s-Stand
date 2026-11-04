@@ -1,3 +1,50 @@
+// Menu preview uses elapsed seconds because the combat clock stops in the spellbook.
+function draw_enemy_mutation_preview(_entry, _sprite, _x, _y, _seconds) {
+	var _keys = normalize_mutation_keys(_entry.mutation);
+	var _width = max(1, sprite_get_bbox_right(_sprite) - sprite_get_bbox_left(_sprite) + 1);
+	var _height = max(1, sprite_get_bbox_bottom(_sprite) - sprite_get_bbox_top(_sprite) + 1);
+	var _scale = min(0.75, min(180 / _width, 180 / _height));
+	var _cx = (sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)) / 2;
+	var _cy = (sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)) / 2;
+	var _tint = array_contains(_keys, "skeletal") ? c_gray : c_white;
+	var _rate = sprite_get_speed(_sprite);
+	if (sprite_get_speed_type(_sprite) == spritespeed_framespergameframe) _rate *= TARGET_ROOM_SPEED;
+	var _frame = floor(_seconds * _rate) mod max(1, sprite_get_number(_sprite));
+	draw_sprite_ext(_sprite, _frame,
+		_x - (_cx - sprite_get_xoffset(_sprite)) * _scale,
+		_y - (_cy - sprite_get_yoffset(_sprite)) * _scale,
+		_scale, _scale, 0, _tint, 1);
+	var _wide = _entry.enemy == obj_siege_beast || _entry.enemy == obj_carrion;
+	var _ward = -1;
+	if (array_contains(_keys, "fire-warded")) _ward = _wide ? spr_ward_fire_wide : spr_ward_fire_narrow;
+	if (array_contains(_keys, "frost-warded")) _ward = _wide ? spr_ward_frost_wide : spr_ward_frost_narrow;
+	if (array_contains(_keys, "lightning-warded")) _ward = _wide ? spr_ward_lightning_wide : spr_ward_lightning_narrow;
+	if (_ward >= 0) {
+		var _ward_rate = sprite_get_speed(_ward);
+		if (sprite_get_speed_type(_ward) == spritespeed_framespergameframe) _ward_rate *= TARGET_ROOM_SPEED;
+		var _elapsed = _seconds * _ward_rate;
+		var _count = sprite_get_number(_ward);
+		var _ward_frame = (_elapsed < 1 || _count <= 1) ? 0 : 1 + (floor(_elapsed - 1) mod (_count - 1));
+		var _ward_scale = _width * _scale * 1.15 / max(1, sprite_get_bbox_right(_ward) - sprite_get_bbox_left(_ward) + 1);
+		var _ward_cx = (sprite_get_bbox_left(_ward) + sprite_get_bbox_right(_ward)) / 2;
+		var _ward_cy = (sprite_get_bbox_top(_ward) + sprite_get_bbox_bottom(_ward)) / 2;
+		draw_sprite_ext(_ward, _ward_frame,
+			_x - (_ward_cx - sprite_get_xoffset(_ward)) * _ward_scale,
+			_y - (_ward_cy - sprite_get_yoffset(_ward)) * _ward_scale,
+			_ward_scale, _ward_scale, 0, c_white, 1);
+	}
+	if (array_contains(_keys, "banneret")) {
+		var _banner = spr_banneret_speed;
+		var _banner_scale = _height * _scale / max(1, sprite_get_bbox_bottom(_banner) - sprite_get_bbox_top(_banner) + 1);
+		var _banner_cx = (sprite_get_bbox_left(_banner) + sprite_get_bbox_right(_banner)) / 2;
+		var _banner_cy = (sprite_get_bbox_top(_banner) + sprite_get_bbox_bottom(_banner)) / 2;
+		draw_sprite_ext(_banner, 0,
+			_x + _width * _scale * 0.3 - (_banner_cx - sprite_get_xoffset(_banner)) * _banner_scale,
+			_y - _height * _scale * 0.15 - (_banner_cy - sprite_get_yoffset(_banner)) * _banner_scale + sin(_seconds * 3) * 3,
+			_banner_scale, _banner_scale, 0, c_white, 1);
+	}
+}
+
 // Visual progress follows combat time, independent of the enemy's animation.
 function enemy_frost_visual(_enemy, _clock) {
 	var _stacks = combat_status_frost_stacks(_enemy);

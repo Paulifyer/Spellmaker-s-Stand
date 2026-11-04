@@ -89,6 +89,7 @@ draw_set_font(fnt_Arcane_More_Bold);
 draw_text_ext(850, craft_cy - 245, "Crafting:", 200, 200);
 draw_set_font(fnt_Arcane);
 draw_sprite_ext(crafting_interface_hexagram, 0, craft_cx, craft_cy, 1, 1, 0, c_white, 1);
+draw_sprite_ext(spr_ui_hexagram_border1, 0, craft_cx, craft_cy, 1.5, 1.5, 0, c_white, 0.5);
 if (_has_form) {
     var _fg = draw_glyph_group(craft_cx, craft_cy, 45, global.spell_glyphs.form[$ _spell.form],
                                _spell.form_mods, 90, 120, active_group == -1, _mouse);
@@ -255,9 +256,13 @@ var _n = array_length(enemies_in_level);
 if (_n > 0) {
     var _entry = enemies_in_level[enemy_view];
 	var _info = global.enemy_info[$ object_get_name(_entry.enemy)];
-	var _mut = (_entry.mutation != undefined) ? global.mutations[$ _entry.mutation] : undefined;
+	var _mut = mutation_description(_entry.mutation);
+    if (enemy_preview_view != enemy_view) {
+        enemy_preview_view = enemy_view;
+        enemy_preview_since = current_time;
+    }
     if (_info != undefined) {
-        if (_info.icon != undefined) draw_sprite_ext(_info.icon, 0, 1714, 400, 0.75, 0.75, 0, (_mut != undefined) ? _mut.tint : c_white, 1);   // centered origin assumed
+        if (_info.icon != undefined) draw_enemy_mutation_preview(_entry, _info.icon, 1714, 350, (current_time - enemy_preview_since) / 1000);
         draw_set_halign(fa_center);
 		draw_set_colour(#FFFFE3);
 		draw_set_font(fnt_Arcane_Bold);

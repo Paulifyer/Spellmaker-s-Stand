@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_popup",
-    "path":"sprites/spr_popup/spr_popup.yy",
+    "name":"spr_ui_menu_darkeroutline",
+    "path":"sprites/spr_ui_menu_darkeroutline/spr_ui_menu_darkeroutline.yy",
   },
   "spriteMaskId":null,
   "visible":true,
