@@ -42,6 +42,8 @@ defeat_side_object = obj_frankenstein_defeat_side;
 // The defeated enemy to spawn if the enemy is moving down
 defeat_down_object = obj_frankenstein_defeat_down;
 
+stun_sprite = spr_enemy_brutestun;
+
 // This variable is updated to match the health bar offset to the frankensteins height
 health_offset_y = -190;
 

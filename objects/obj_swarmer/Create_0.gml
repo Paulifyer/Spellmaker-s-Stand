@@ -37,6 +37,8 @@ walk_up_sprite = spr_zombie_walk_up;
 // This variable holds the sprite to use when the enemy is moving down
 walk_down_sprite = spr_zombie_walk_down;
 
+stun_sprite = spr_enemy_swarmerstun;
+
 // The defeated enemy to spawn if the enemy is moving sideways
 defeat_side_object = obj_zombie_defeat_side;
 

@@ -61,6 +61,8 @@ defeat_side_object = obj_zombie_defeat_side;
 // The defeated enemy to spawn if the enemy is moving down
 defeat_down_object = obj_zombie_defeat_down;
 
+stun_sprite = spr_enemy_mookstun;
+
 image_xscale = 0.6;
 image_yscale = 0.6;
 

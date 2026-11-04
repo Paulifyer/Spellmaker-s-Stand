@@ -48,6 +48,8 @@ defeat_side_object = obj_zombie_defeat_side;
 // The defeated enemy to spawn if the enemy is moving down
 defeat_down_object = obj_zombie_defeat_down;
 
+stun_sprite = spr_enemy_rangerstun;
+
 // This variable is updated to match the health bar offset to the zombies height
 health_offset_y = -170;
 

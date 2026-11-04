@@ -1,7 +1,7 @@
 /// @description Enemy Parent
 
 // Set the sprite to the sideways sprite
-sprite_index = walk_side_sprite;
+sprite_index = (hitstun_timer > 0 || stun_timer > 0) ? stun_sprite : walk_side_sprite;
 	
 // Ensures pull is set correctly
 if (pull != undefined) enemy_update_pull(id);
