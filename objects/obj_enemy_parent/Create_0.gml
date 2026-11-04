@@ -150,6 +150,9 @@ is_stop_reached = false;
 
 is_attack_possible = false;
 
+is_dying = false;
+fade_speed = 0.05;
+
 
 
 

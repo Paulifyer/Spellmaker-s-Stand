@@ -336,6 +336,35 @@ function gui_circle_button(_x, _y, _r, _icon, _label, _active, _enabled = true, 
 }
 
 // Draws one glyph with its modifier satellites. Returns what was hovered/clicked.
+// Fit visible glyph artwork into a square, independent of sprite padding/origin.
+function draw_spell_slot_glyph(_sprite, _x, _y, _size) {
+    if (_sprite == undefined || _sprite < 0) return;
+    var _left = sprite_get_bbox_left(_sprite), _right = sprite_get_bbox_right(_sprite);
+    var _top = sprite_get_bbox_top(_sprite), _bottom = sprite_get_bbox_bottom(_sprite);
+    var _scale = _size / max(1, max(_right - _left + 1, _bottom - _top + 1));
+    draw_sprite_ext(_sprite, 0,
+        _x - ((_left + _right) / 2 - sprite_get_xoffset(_sprite)) * _scale,
+        _y - ((_top + _bottom) / 2 - sprite_get_yoffset(_sprite)) * _scale,
+        _scale, _scale, 0, c_white, 1);
+}
+
+// Compact spell diagram: form in the center, only effects on the outer ring.
+function draw_spell_slot_diagram(_spell, _x, _y, _size) {
+    if (!is_struct(_spell) || _spell.form == undefined) return;
+    var _form = global.spell_glyphs.form[$ _spell.form];
+    draw_spell_slot_glyph(_form.icon, _x, _y, _size * 0.32);
+    var _count = array_length(_spell.effects);
+    var _radius = _size * 0.34;
+    // Also shrink unusually long effect lists to keep neighboring glyphs apart.
+    var _effect_size = min(_size * 0.23, 2 * _radius * sin(degtorad(180 / max(2, _count))) * 0.7);
+    for (var i = 0; i < _count; i++) {
+        var _angle = 90 + i * 360 / _count;
+        var _effect = global.spell_glyphs.effect[$ _spell.effects[i].effect];
+        draw_spell_slot_glyph(_effect.icon,
+            _x + lengthdir_x(_radius, _angle), _y + lengthdir_y(_radius, _angle), _effect_size);
+    }
+}
+
 function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selected, _mouse = undefined) {
     var _out = { main: undefined, mod_r: -1, hover: "" };
     var _n = array_length(_mod_ids);

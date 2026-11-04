@@ -69,17 +69,20 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     }
     if (_l != undefined && _l.form != undefined) {
 		var _spell_name = (_l.name == "" || _l.name == undefined) ? _l.form : _l.name;
-		draw_set_font(fnt_Arcane);
-        draw_text_ext(_x2 + 4, _y2 + 22, string(i + 1) + " " + _spell_name, 18, 112);
-        draw_text_ext(_x2 + 4, _y2 + 40, "cost: " + string(spell_cost(_l)), 18, 112);
-        // swap for glyph icons later
-    }
+        draw_set_font(fnt_Arcane_Bold);
+		var _label = string(i + 1) + " " + _spell_name;
+        var _label_scale = min(0.55, 112 / max(1, string_width(_label)));
+        draw_text_transformed(_x2 + 4, _y2 + 8, _label, _label_scale, _label_scale, 0);
+        draw_spell_slot_diagram(_l, _x2 + 60, _y2 + 55, 90);
+        draw_text_transformed(_x2 + 4, _y2 + 108, "cost: " + string(spell_cost(_l)), _label_scale, _label_scale, 0);
+		draw_set_font(-1);
+	}
 	if (spell_cooldowns[i] > 0 && spell_cooldown_max[i] > 0) {
 		var _progress = 1 - spell_cooldowns[i] / spell_cooldown_max[i];
 		draw_set_color(c_gray);
-		draw_rectangle(_x2 + 4, _y2 + 62, _x2 + 66, _y2 + 66, false);
+        draw_rectangle(_x2 + 4, _y2 + 116, _x2 + 116, _y2 + 119, false);
 		draw_set_color(c_aqua);
-		draw_rectangle(_x2 + 4, _y2 + 62, _x2 + 4 + 62 * _progress, _y2 + 66, false);
+        draw_rectangle(_x2 + 4, _y2 + 116, _x2 + 4 + 112 * _progress, _y2 + 119, false);
 	}
 }
 

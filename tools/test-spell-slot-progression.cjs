@@ -105,6 +105,8 @@ for(const count of [2,3,4]) {
         draw_set_alpha:noop,draw_rectangle:noop,draw_set_colour:noop,draw_set_color:noop,
         draw_set_halign:noop,draw_set_font:noop,draw_text:(x,y,text)=>labels.push(String(text)),
         draw_text_ext:(x,y,text)=>labels.push(String(text)),
+        draw_text_transformed:(x,y,text)=>labels.push(String(text)),string_width:s=>s.length*12,
+        draw_spell_slot_diagram:noop,
     });
     h.p.mana_display=100;
     const hud=read('objects/Player/Draw_64.gml').replace('current_time div 500','Math.floor(current_time / 500)').replace(/\bmod\b/g,'%');
