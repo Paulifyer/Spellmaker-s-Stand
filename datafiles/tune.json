@@ -14,6 +14,7 @@
         "spell_cd_by_slot": [0.4, 0.4, 0.4]
     },
     "mutations": {
+        "skeletal": { "transfer_status": false },
         "banneret": { "speed_mult": 1.5, "radius_tiles": 1.5},
         "warded": {"damage_mult": 0.1}
     },

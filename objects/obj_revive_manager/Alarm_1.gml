@@ -19,7 +19,9 @@ _bones.combat_lineage = undefined;
 instance_destroy(_bones);
 var _enemy = instance_create_layer(ex, ey, "Instances", held_enemy);
 enemy_bind_lineage(_enemy, lineage);
-enemy_restore_status(_enemy, _status);
+if (tune_setting("mutations", "skeletal", "transfer_status", true) != false) {
+	enemy_restore_status(_enemy, _status);
+}
 
 // The revived enemy is no longer skeletal and must not create another revive.
 var _retained = variable_instance_exists(id, "revived_mutations") ? revived_mutations : [];

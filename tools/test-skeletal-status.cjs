@@ -41,3 +41,21 @@ const race=h.manager(h.enemy());race._bones=h.enemy(2,0,{hp:0});
 h.alarm('Alarm_1.gml',race);assert.equal(race.destroyed,true);
 const missing=h.manager(h.enemy());h.alarm('Alarm_1.gml',missing);assert.equal(missing.destroyed,true);
 console.log('Skeletal checks passed: shared scheduled lineage, gap-overdue hits, status expiry, revival and lethal-pile cancellation.');
+
+// Disable inheritance at both replacement boundaries; scheduled hits still land.
+h=setup();
+h.ctx.tune_setting=(group,id,key,fallback)=>group==='mutations'&&id==='skeletal'&&key==='transfer_status'?false:fallback;
+source=h.enemy();
+Object.assign(source,{burn_timer:500,burn_dmg:40,slow_timer:500,slow_amt:0.4,stun_timer:120,stun_immune_timer:200,hex_timer:500});
+h.ctx.global.spell_glyphs.effect.harm.on_hit=(s,e)=>{e.hp-=5;};
+h.ctx.spell_deliver(h.spell('projectile',[fx('harm',['delay']),fx('harm')]),source,2,0);
+const clean=h.manager(source);h.tick(60);h.alarm('Alarm_0.gml',clean);
+assert.equal(clean._bones.hp,10,'Delayed hit still reaches the pile');
+for(const field of ['burn_timer','burn_dmg','slow_timer','slow_amt','stun_timer','stun_immune_timer','hex_timer']) assert.equal(clean._bones[field],0,field);
+// Newly applied pile statuses work, but are not inherited by the revived body.
+h.ctx.combat_status_apply(clean._bones,'burn',120,1);
+assert.equal(clean._bones.burn_timer,120);
+h.alarm('Alarm_1.gml',clean);
+assert.equal(clean.lineage.target.burn_timer,0);
+assert.equal(clean.lineage.target.hp,600);
+console.log('Skeletal transfer toggle checks passed: clean replacements, new statuses and delayed hits.');
