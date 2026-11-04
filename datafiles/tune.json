@@ -3,6 +3,8 @@
 
     "debug": { "level_select_enabled": true },
 
+    "defended_base": { "hp": 50 },
+
     "player":   { 
         "max_mana": 100, 
         "max_mana_increase_by_level": [0, 25, 25, 25, 25, 25, 25, 25, 25],

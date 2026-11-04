@@ -10,7 +10,7 @@ validate_glyphs();
 money = 150;
 
 // This variable stores the amount of health the village has
-village_hp = 30;
+village_hp = tune_value("defended_base", "hp", 30);
 
 // This variable stores the money_flash_alpha number,
 // and is how we animate the money text in the HUD.
