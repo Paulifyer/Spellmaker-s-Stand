@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_purple_swap",
+  "name":"shd_purple_swap",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

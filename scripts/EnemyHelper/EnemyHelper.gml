@@ -386,7 +386,6 @@ function enemy_update_force(_enemy) {
 function enemy_detect_obstacle(_enemy, _detection_dist) {
 	var _check_x = _enemy.x + lengthdir_x(_detection_dist, _enemy.direction);
 	var _check_y = _enemy.y + lengthdir_y(_detection_dist, _enemy.direction);
-	show_debug_message(_check_y);
 	var _rock = instance_place(_check_x, _check_y, obj_rock);
 	return _rock
 }

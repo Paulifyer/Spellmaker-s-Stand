@@ -45,6 +45,7 @@ function enemy_draw_frost(_enemy) {
 	// Use a common canvas anchor and scale so the ice grows without jumping.
 	var _reference = spr_frost_3;
 	var _scale = _bounds.width * 1.15 / max(1, sprite_get_bbox_right(_reference) - sprite_get_bbox_left(_reference) + 1);
+	_scale = max(_scale, 0.9)
 	var _anchor_x = (sprite_get_bbox_left(_reference) + sprite_get_bbox_right(_reference)) / 2;
 	var _anchor_y = sprite_get_bbox_bottom(_reference);
 	var _sprite = _visual.sprite;
@@ -83,10 +84,10 @@ function enemy_draw_fire(_enemy) {
 		) % sprite_get_number(_sprite);
 	}
 	
-	 var _bounds = enemy_visual_bounds(_enemy);
+	var _bounds = enemy_visual_bounds(_enemy);
     var _width = sprite_get_bbox_right(spr_fire_2)
         - sprite_get_bbox_left(spr_fire_2) + 1;
-    var _scale = _bounds.width * 1.15 / max(1, _width);
+    var _scale = max(_bounds.width * 1.15 / max(1, _width), 0.9);
 
     var _center_x = (
         sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
@@ -134,7 +135,7 @@ function enemy_draw_stun(_enemy) {
 	 var _bounds = enemy_visual_bounds(_enemy);
     var _width = sprite_get_bbox_right(spr_stun_2)
         - sprite_get_bbox_left(spr_stun_2) + 1;
-    var _scale = _bounds.width * 1.15 / max(1, _width);
+    var _scale = max(_bounds.width * 1.15 / max(1, _width), 0.9);
 
     var _center_x = (
         sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
@@ -171,7 +172,7 @@ function enemy_draw_charged(_enemy) {
 	var _bounds = enemy_visual_bounds(_enemy);
     var _width = sprite_get_bbox_right(_sprite)
         - sprite_get_bbox_left(_sprite) + 1;
-    var _scale = _bounds.width * 1.15 / max(1, _width);
+    var _scale = max(_bounds.width * 1.15 / max(1, _width), 0.9);
 
     var _center_x = (
         sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
@@ -187,4 +188,42 @@ function enemy_draw_charged(_enemy) {
         _scale, _scale, 0, c_white, _enemy.image_alpha
     );
 }
+
+function enemy_draw_hex(_enemy) {
+	if (_enemy.hp <= 0 || _enemy.hex_timer <= 0) {
+		_enemy.hex_visual = undefined;
+		return undefined;
+	}
+	var _execution = combat_execution_state();
+	if (!is_struct(_execution)) return;
+	var _clock = _execution.clock;
+	
+	if (!variable_instance_exists(_enemy, "charged_visual") || !is_struct(_enemy.hex_visual)) _enemy.hex_visual = {since: _clock};
+	var _elapsed = _clock - _enemy.hex_visual.since;
+	var _sprite = spr_hex;
+	var _frame = floor(
+		_elapsed
+		* sprite_get_speed(_sprite) / TARGET_ROOM_SPEED
+	) % sprite_get_number(_sprite);
+	
+	var _bounds = enemy_visual_bounds(_enemy);
+    var _width = sprite_get_bbox_right(_sprite)
+        - sprite_get_bbox_left(_sprite) + 1;
+    var _scale = max(_bounds.width * 1.15 / max(1, _width), 0.9);
+    var _center_x = (
+        sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
+    ) / 2;
+	var _center_y = (
+		sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)
+	) / 2;
+	shader_set(shd_purple_swap);
+    draw_sprite_ext(
+        _sprite, _frame,
+        _bounds.x - (_center_x - sprite_get_xoffset(_sprite)) * _scale,
+        _bounds.y - (_center_y - sprite_get_yoffset(_sprite)) * _scale,
+        _scale, _scale, 0, c_white, _enemy.image_alpha
+    );
+	shader_reset();
+}
+
 
