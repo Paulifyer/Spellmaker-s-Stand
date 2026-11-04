@@ -114,6 +114,7 @@ is_bonepile = false;
 death_notified = false;
 ward_variant = "narrow";
 ward_visible_since = -1;
+frost_visual_scale = 1;
 
 // Stable identity used by the room's scheduled enemy-following work.
 combat_lineage = undefined;
@@ -142,6 +143,8 @@ rock = noone;
 detection_dist = 16;
 
 pos_to_stop = 0.95;
+
+range_obj = obj_arrow;
 
 is_stop_reached = false;
 

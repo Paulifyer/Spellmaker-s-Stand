@@ -47,3 +47,5 @@ global.screen_shot_id = -1;
 
 // This variable tells whether the game is currently over.
 game_over = false;
+
+

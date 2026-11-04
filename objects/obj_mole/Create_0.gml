@@ -72,6 +72,8 @@ base_pos_to_stop = 1 - (0.9 - random(0.4));
 
 pos_to_stop = base_pos_to_stop;
 
+range_obj = obj_mole_arrow;
+
 is_stop_reached = false;
 
 emergence_marker = undefined;

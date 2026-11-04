@@ -79,6 +79,8 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 		if (spell.form.is_channel) {
 			_dmg *= spell.compiled.beam_damage_multiplier_per_tick;
 		}
+		var pos = enemy_get_leftpoint(target, spr_harm, "center", 0.5);
+		combat_spawn_vfx(spr_harm, target.x, target.y, 0.5, 0.5);
 		spell_direct_damage(spell, target, _dmg);
 	}
 }
@@ -95,10 +97,13 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
         var _ty = global.lane_top[lane] + LANE_H / 2;          // the enemy path
         var _list = enemies_in_region_list(col - 1, col + 1, lane - 1, lane + 1);
 		
-		 for (var i = 0; i < array_length(_list); i++) {
+		combat_spawn_vfx(spr_pull, _tx, _ty, 5, 5);
+		
+		for (var i = 0; i < array_length(_list); i++) {
 			if (!enemy_can_receive_spell(_list[i], spell.compiled)) continue;
             // small random offset so pulled enemies don't stack on one pixel
             var _a = random(360), _r = random(28);
+			
             enemy_begin_pull(_list[i], _tx + lengthdir_x(_r, _a), _ty + lengthdir_y(_r, _a),
                              lane, round(fx.params.pull_sec * TARGET_ROOM_SPEED),
                              round(fx.params.hold_sec * TARGET_ROOM_SPEED));
@@ -134,13 +139,20 @@ function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
 	icon = spr_glyph_snap;
 	col = c_teal;
 	cost = tune_params("effects", "snap", "cost", 15);
+	effect_sprites = [spr_snap_1, spr_snap_2, spr_snap_3];
 	desc = "Deals damage per Frost stack, then consumes all Frost. No Frost means no damage.";
 	on_hit = function(spell, target, fx) {
 		var _stacks = combat_status_frost_stacks(target);
 		if (_stacks <= 0) return;
+		var _sprite = fx.effect.effect_sprites[_stacks - 1];
 		var _damage = fx.params.base_damage * fx.params.damage_per_stack_mult * _stacks * fx.effect_multiplier * spell_damage_scale(spell);
-		spell_direct_damage(spell, target, _damage);
+		var pos = enemy_get_leftpoint(target, _sprite, "center", 0);
+		// The helper anchors the artwork's left edge; center Snap on the victim.
+		pos.x -= (sprite_get_bbox_right(_sprite) - sprite_get_bbox_left(_sprite)) * pos.scale / 2;
+		combat_spawn_vfx(_sprite, pos.x, pos.y, pos.scale, pos.scale);
 		combat_status_clear(target, "frost");
+		spell_direct_damage(spell, target, _damage);
+		
 		enemy_update_movement(target);
 	};
 }
@@ -165,7 +177,9 @@ function Elem_Force() : EffectGlyph("Force", 10) constructor {
 		var _duration = tune_params("effects", "force", "duration", 0.1);
 
 	    var _distance = TILE_W * _push_mult * fx.effect_multiplier;
-
+		
+		var pos = enemy_get_leftpoint(target, spr_force, "center", 1.3)
+		combat_spawn_vfx(spr_force, pos.x, pos.y, 1.3, 1.3);
 	    target.force_push = {
 	        start: target.path_position,
 	        finish: max(0, target.path_position - _distance / _length),
@@ -194,8 +208,8 @@ function Elem_Earth() : EffectGlyph("Earth", 20) constructor {
 		instance_create_layer(_xy.x, _xy.y, "Instances", obj_rock, {
 			hp: _hp,
 			lifetime: _duration * TARGET_ROOM_SPEED,
-			image_xscale: 0.25,
-			image_yscale: 0.25
+			image_xscale: 0.75,
+			image_yscale: 1
 		})
 	}
 }

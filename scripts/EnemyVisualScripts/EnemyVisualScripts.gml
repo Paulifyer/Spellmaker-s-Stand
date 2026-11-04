@@ -44,14 +44,24 @@ function enemy_draw_frost(_enemy) {
 	var _bounds = enemy_visual_bounds(_enemy);
 	// Use a common canvas anchor and scale so the ice grows without jumping.
 	var _reference = spr_frost_3;
-	var _scale = _bounds.width * 1.15 / max(1, sprite_get_bbox_right(_reference) - sprite_get_bbox_left(_reference) + 1);
-	_scale = max(_scale, 0.9)
+	var _width = sprite_get_bbox_right(_reference)
+       - sprite_get_bbox_left(_reference) + 1;
+	var _height = sprite_get_bbox_bottom(_reference)
+		- sprite_get_bbox_top(_reference) + 1;
+	// Fit both dimensions so long bodies/tails cannot inflate the overlay.
+	var _scale = max(min(
+		_bounds.width / max(1, _width),
+		_bounds.height / max(1, _height)
+	) * 1.15, 0.9);
+	_scale *= _enemy.frost_visual_scale;
 	var _anchor_x = (sprite_get_bbox_left(_reference) + sprite_get_bbox_right(_reference)) / 2;
-	var _anchor_y = sprite_get_bbox_bottom(_reference);
+	var _anchor_y =  (
+		sprite_get_bbox_top(_reference) + sprite_get_bbox_bottom(_reference)
+	) / 2;
 	var _sprite = _visual.sprite;
 	draw_sprite_ext(_sprite, _visual.frame,
 		_bounds.x - (_anchor_x - sprite_get_xoffset(_sprite)) * _scale,
-		_bounds.y + _bounds.height / 2 - (_anchor_y - sprite_get_yoffset(_sprite)) * _scale,
+		_bounds.y - (_anchor_y - sprite_get_yoffset(_sprite)) * _scale,
 		_scale, _scale, 0, c_white, _enemy.image_alpha);
 }
 
@@ -132,7 +142,7 @@ function enemy_draw_stun(_enemy) {
 		) % sprite_get_number(_sprite);
 	}
 	
-	 var _bounds = enemy_visual_bounds(_enemy);
+	var _bounds = enemy_visual_bounds(_enemy);
     var _width = sprite_get_bbox_right(spr_stun_2)
         - sprite_get_bbox_left(spr_stun_2) + 1;
     var _scale = max(_bounds.width * 1.15 / max(1, _width), 0.9);
@@ -224,6 +234,38 @@ function enemy_draw_hex(_enemy) {
         _scale, _scale, 0, c_white, _enemy.image_alpha
     );
 	shader_reset();
+}
+
+function enemy_get_leftpoint(_enemy, _sprite, _pos, _scale) {
+	var _bounds = enemy_visual_bounds(_enemy);
+    var _width = sprite_get_bbox_right(_sprite)
+        - sprite_get_bbox_left(_sprite) + 1;
+	if (_scale == 0) {
+		_scale = max(_bounds.width * 1.15 / max(1, _width), 0.9) * _enemy.frost_visual_scale;
+	}
+
+    var _left_x = sprite_get_bbox_left(_sprite);
+	var _left = _bounds.x - (_left_x - sprite_get_xoffset(_sprite)) * _scale;
+	
+	switch (_pos) {
+	    case "top":
+			var _top = _bounds.y - _bounds.height / 2
+				- (sprite_get_bbox_top(_sprite) - sprite_get_yoffset(_sprite)) * _scale;
+			return {x: _left, y: _top, scale: _scale};
+		case "center":
+			var _center_y = (
+				sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)
+			) / 2;
+			var _center = _bounds.y - (_center_y - sprite_get_yoffset(_sprite)) * _scale;
+	        return {x: _left, y: _center, scale: _scale};
+		case "bottom":
+			var _bottom_y = sprite_get_bbox_bottom(_sprite);
+			var _bottom = _bounds.y + _bounds.height / 2
+				- (_bottom_y - sprite_get_yoffset(_sprite)) * _scale;
+	        return {x: _left, y: _bottom, scale: _scale};
+	    default:
+	        return {x: 0, y: 0, scale: 0};
+	}
 }
 
 

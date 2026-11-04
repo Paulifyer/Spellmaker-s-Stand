@@ -5,6 +5,8 @@ event_inherited();
 
 // This variable stores the name of the enemy as a string for tune
 name = "mook";
+// Fit Frost to the torso rather than the spread of the arms and feet.
+frost_visual_scale = tune_enemy(name, "frost_visual_scale", 0.6);
 
 hit_w = 128;
 

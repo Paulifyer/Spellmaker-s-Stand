@@ -1,6 +1,6 @@
 // A room-owned clock and queue. Begin Step advances time; End Step drains due work.
 function combat_execution_create() {
-	return {clock: 0, events: [], processing: false, chain_links: []};
+	return {clock: 0, events: [], processing: false, chain_links: [], visuals: []};
 }
 
 function spell_damage_scale(_spell) {
@@ -61,6 +61,21 @@ function spell_drain_bursts(_spell, _scope) {
 		if (_burst.kind == "discharge" && instance_exists(_burst.source)) combat_status_consume_charge(_burst.source);
 		var _radius = _fx.area ? _fx.params.area_radius_tiles : _fx.params.radius_tiles;
 		var _targets = spell_reaction_targets(_spell, _burst.x, _burst.y, _radius);
+		// One centered visual per emission, independent of the number of victims.
+		var _sprite;
+		var _scale;
+		if (_burst.kind == "combust") {
+			_sprite = spr_combust;
+			_scale = 2.5;
+		} else {
+			_sprite = spr_discharge;
+			_scale = 1.5;
+		}
+		var _center_x = (sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)) / 2;
+		var _center_y = (sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)) / 2;
+		combat_spawn_vfx(_sprite,
+			_burst.x - (_center_x - sprite_get_xoffset(_sprite)),
+			_burst.y - (_center_y - sprite_get_yoffset(_sprite)), _scale, _scale);
 		for (var i = 0; i < array_length(_targets); i++) {
 			var _target = _targets[i];
 			if (!instance_exists(_target) || _target.hp <= 0) continue;

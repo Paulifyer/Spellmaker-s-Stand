@@ -13,7 +13,7 @@ if (path_position >= pos_to_stop || is_blocked)
 		ready_to_attack = false
 		is_stop_reached = path_position >= pos_to_stop;
 		if (is_ranged) {
-			enemy_shoot_prj(x, y, depth, damage_dealt, obj_arrow);
+			enemy_shoot_prj(x, y, depth, damage_dealt, range_obj);
 		} else {
 			if (is_blocked) {
 				rock.hp -= damage_dealt;
