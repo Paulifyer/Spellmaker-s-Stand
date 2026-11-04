@@ -80,6 +80,7 @@ function combat_status_frost_stacks(_subject) {
 }
 
 function combat_status_clear(_subject, _key) {
+	if (_key == "frost") combat_status_set(_subject, "frost_visual", undefined);
 	var _defs = combat_status_definitions();
 	for (var i = 0; i < array_length(_defs); i++) {
 		if (_defs[i].key != _key) continue;

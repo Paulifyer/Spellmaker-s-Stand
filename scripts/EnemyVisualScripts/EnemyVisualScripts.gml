@@ -1,0 +1,190 @@
+// Visual progress follows combat time, independent of the enemy's animation.
+function enemy_frost_visual(_enemy, _clock) {
+	var _stacks = combat_status_frost_stacks(_enemy);
+	if (_stacks <= 0 || _enemy.hp <= 0) {
+		_enemy.frost_visual = undefined;
+		return undefined;
+	}
+	if (!variable_instance_exists(_enemy, "frost_visual") || !is_struct(_enemy.frost_visual)) {
+		_enemy.frost_visual = {phase: 0, since: _clock, sprite: spr_frost_1_1, frame: 0};
+	}
+	var _visual = _enemy.frost_visual;
+	var _sprites = [spr_frost_1_1, spr_frost_1_2, spr_frost_2, spr_frost_3];
+	// Finish each buildup before progressing, even if stacks arrive together.
+	while (true) {
+		var _sprite = _sprites[_visual.phase];
+		var _rate = max(0.0001, sprite_get_speed(_sprite));
+		if (sprite_get_speed_type(_sprite) == spritespeed_framespergameframe) _rate *= TARGET_ROOM_SPEED;
+		var _duration = sprite_get_number(_sprite) * TARGET_ROOM_SPEED / _rate;
+		var _elapsed = max(0, _clock - _visual.since);
+		if (_visual.phase == 1 && _stacks > 1) {
+			_visual.phase = 2;
+			_visual.since = _clock;
+			continue;
+		}
+		if (_elapsed >= _duration && (_visual.phase == 0 || (_visual.phase == 2 && _stacks >= 3))) {
+			var _next_since = (_visual.phase == 2) ? _clock : _visual.since + _duration;
+			_visual.phase += 1;
+			_visual.since = _next_since;
+			continue;
+		}
+		_visual.sprite = _sprite;
+		var _frame = floor(_elapsed * _rate / TARGET_ROOM_SPEED);
+		_visual.frame = (_visual.phase == 1) ? _frame mod sprite_get_number(_sprite)
+			: min(_frame, sprite_get_number(_sprite) - 1);
+		return _visual;
+	}
+}
+
+function enemy_draw_frost(_enemy) {
+	var _execution = combat_execution_state();
+	var _clock = is_struct(_execution) ? _execution.clock : 0;
+	var _visual = enemy_frost_visual(_enemy, _clock);
+	if (!is_struct(_visual)) return;
+	var _bounds = enemy_visual_bounds(_enemy);
+	// Use a common canvas anchor and scale so the ice grows without jumping.
+	var _reference = spr_frost_3;
+	var _scale = _bounds.width * 1.15 / max(1, sprite_get_bbox_right(_reference) - sprite_get_bbox_left(_reference) + 1);
+	var _anchor_x = (sprite_get_bbox_left(_reference) + sprite_get_bbox_right(_reference)) / 2;
+	var _anchor_y = sprite_get_bbox_bottom(_reference);
+	var _sprite = _visual.sprite;
+	draw_sprite_ext(_sprite, _visual.frame,
+		_bounds.x - (_anchor_x - sprite_get_xoffset(_sprite)) * _scale,
+		_bounds.y + _bounds.height / 2 - (_anchor_y - sprite_get_yoffset(_sprite)) * _scale,
+		_scale, _scale, 0, c_white, _enemy.image_alpha);
+}
+
+function enemy_draw_fire(_enemy) {
+	if (_enemy.hp <= 0 || _enemy.burn_timer <= 0) {
+		_enemy.fire_visual = undefined;
+		return undefined;
+	}
+	var _execution = combat_execution_state();
+	if (!is_struct(_execution)) return;
+	var _clock = _execution.clock;
+	
+	if (!variable_instance_exists(_enemy, "fire_visual") || !is_struct(_enemy.fire_visual)) _enemy.fire_visual = {since: _clock};
+	var _elapsed = _clock - _enemy.fire_visual.since;
+	var _start_frames = sprite_get_number(spr_fire_1);
+	var _start_rate = sprite_get_speed(spr_fire_1);
+	var _start_duration = _start_frames * TARGET_ROOM_SPEED / _start_rate;
+	
+	var _sprite;
+	var _frame;
+	
+	if (_elapsed < _start_duration) {
+		_sprite = spr_fire_1;
+		_frame = floor(_elapsed * _start_rate / TARGET_ROOM_SPEED);
+	} else {
+		_sprite = spr_fire_2;
+		_frame = floor(
+			(_elapsed - _start_duration)
+			* sprite_get_speed(_sprite) / TARGET_ROOM_SPEED
+		) % sprite_get_number(_sprite);
+	}
+	
+	 var _bounds = enemy_visual_bounds(_enemy);
+    var _width = sprite_get_bbox_right(spr_fire_2)
+        - sprite_get_bbox_left(spr_fire_2) + 1;
+    var _scale = _bounds.width * 1.15 / max(1, _width);
+
+    var _center_x = (
+        sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
+    ) / 2;
+    var _bottom = sprite_get_bbox_bottom(_sprite);
+
+    draw_sprite_ext(
+        _sprite, _frame,
+        _bounds.x - (_center_x - sprite_get_xoffset(_sprite)) * _scale,
+        _bounds.y + _bounds.height / 2
+            - (_bottom - sprite_get_yoffset(_sprite)) * _scale,
+        _scale, _scale, 0, c_white, _enemy.image_alpha
+    );
+}
+
+function enemy_draw_stun(_enemy) {
+	if (_enemy.hp <= 0 || _enemy.stun_timer <= 0) {
+		_enemy.stun_visual = undefined;
+		return undefined;
+	}
+	var _execution = combat_execution_state();
+	if (!is_struct(_execution)) return;
+	var _clock = _execution.clock;
+	
+	if (!variable_instance_exists(_enemy, "stun_visual") || !is_struct(_enemy.stun_visual)) _enemy.stun_visual = {since: _clock};
+	var _elapsed = _clock - _enemy.stun_visual.since;
+	var _start_frames = sprite_get_number(spr_stun_1);
+	var _start_rate = sprite_get_speed(spr_stun_1);
+	var _start_duration = _start_frames * TARGET_ROOM_SPEED / _start_rate;
+	
+	var _sprite;
+	var _frame;
+	
+	if (_elapsed < _start_duration) {
+		_sprite = spr_stun_1;
+		_frame = floor(_elapsed * _start_rate / TARGET_ROOM_SPEED);
+	} else {
+		_sprite = spr_stun_2;
+		_frame = floor(
+			(_elapsed - _start_duration)
+			* sprite_get_speed(_sprite) / TARGET_ROOM_SPEED
+		) % sprite_get_number(_sprite);
+	}
+	
+	 var _bounds = enemy_visual_bounds(_enemy);
+    var _width = sprite_get_bbox_right(spr_stun_2)
+        - sprite_get_bbox_left(spr_stun_2) + 1;
+    var _scale = _bounds.width * 1.15 / max(1, _width);
+
+    var _center_x = (
+        sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
+    ) / 2;
+	var _top = sprite_get_bbox_top(_sprite);
+    var _draw_y =  _bounds.y - _bounds.height / 2
+		- (_top - sprite_get_yoffset(_sprite)) * _scale;
+
+    draw_sprite_ext(
+        _sprite, _frame,
+        _bounds.x - (_center_x - sprite_get_xoffset(_sprite)) * _scale,
+        _draw_y - 25,
+        _scale, _scale, 0, c_white, _enemy.image_alpha
+    );
+}
+	
+function enemy_draw_charged(_enemy) {
+	if (_enemy.hp <= 0 || !combat_status_charged(_enemy)) {
+		_enemy.charged_visual = undefined;
+		return undefined;
+	}
+	var _execution = combat_execution_state();
+	if (!is_struct(_execution)) return;
+	var _clock = _execution.clock;
+	
+	if (!variable_instance_exists(_enemy, "charged_visual") || !is_struct(_enemy.charged_visual)) _enemy.charged_visual = {since: _clock};
+	var _elapsed = _clock - _enemy.charged_visual.since;
+	var _sprite = spr_charged;
+	var _frame = floor(
+		_elapsed
+		* sprite_get_speed(_sprite) / TARGET_ROOM_SPEED
+	) % sprite_get_number(_sprite);
+	
+	var _bounds = enemy_visual_bounds(_enemy);
+    var _width = sprite_get_bbox_right(_sprite)
+        - sprite_get_bbox_left(_sprite) + 1;
+    var _scale = _bounds.width * 1.15 / max(1, _width);
+
+    var _center_x = (
+        sprite_get_bbox_left(_sprite) + sprite_get_bbox_right(_sprite)
+    ) / 2;
+	var _center_y = (
+		sprite_get_bbox_top(_sprite) + sprite_get_bbox_bottom(_sprite)
+	) / 2;
+
+    draw_sprite_ext(
+        _sprite, _frame,
+        _bounds.x - (_center_x - sprite_get_xoffset(_sprite)) * _scale,
+        _bounds.y - (_center_y - sprite_get_yoffset(_sprite)) * _scale,
+        _scale, _scale, 0, c_white, _enemy.image_alpha
+    );
+}
+

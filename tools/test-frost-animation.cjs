@@ -1,0 +1,43 @@
+const assert = require('node:assert/strict');
+const {makeExecutionContext} = require('./execution-test-context.cjs');
+const {load} = require('./gml-test-utils.cjs');
+const h = makeExecutionContext(), c = h.ctx;
+Object.assign(c, {spr_frost_1_1:0, spr_frost_1_2:1, spr_frost_2:2, spr_frost_3:3,
+    spritespeed_framespergameframe:1,
+    sprite_get_number:s=>[3,5,4,3][s], sprite_get_speed:s=>[8,8,5,5][s], sprite_get_speed_type:()=>0});
+load(c, 'scripts/MutationScripts/MutationScripts.gml', ['enemy_frost_visual']);
+const e = h.enemy();
+const apply = ()=>c.combat_status_apply(e, 'frost', 180, 0.2);
+const frame = clock=>c.enemy_frost_visual(e, clock);
+assert.equal(frame(0), undefined);
+apply();
+assert.equal(frame(0).sprite, 0);
+assert.equal(frame(15).frame, 2);
+assert.equal(frame(23).sprite, 1);
+assert.equal(frame(61).sprite, 1);
+const since = e.frost_visual.since;
+c.combat_status_apply(e, 'frost', 180, 0); // Advance to tier 2.
+assert.equal(frame(62).sprite, 2);
+assert.equal(frame(110).frame, 3);
+assert.equal(frame(150).frame, 3, 'Tier 2 holds its completed frame');
+apply();
+assert.equal(frame(151).sprite, 3);
+assert.equal(frame(151).frame, 0, 'A new tier starts its transition after a long hold');
+assert.equal(frame(200).frame, 2);
+const finalSince = e.frost_visual.since;
+apply();
+assert.equal(frame(201).since, finalSince, 'Refreshing max stacks does not restart');
+const pausedFrame = frame(201).frame;
+assert.equal(frame(201).frame, pausedFrame, 'Paused clock preserves progress');
+c.combat_status_clear(e, 'frost');
+assert.equal(e.frost_visual, undefined);
+apply();
+assert.equal(frame(202).sprite, 0, 'Reapplication restarts buildup');
+apply(); apply();
+assert.equal(frame(203).sprite, 0, 'Rapid stacks finish initial buildup');
+assert.equal(frame(225).sprite, 2);
+assert.equal(frame(273).sprite, 3);
+c.combat_status_advance(e, 180, false);
+assert.equal(frame(274), undefined, 'Expiry removes the overlay');
+assert.ok(since > 0);
+console.log('Frost animation checks passed: buildup, sparkle loop, tier transitions/holds, refresh, rapid stacks, clear and expiry.');
