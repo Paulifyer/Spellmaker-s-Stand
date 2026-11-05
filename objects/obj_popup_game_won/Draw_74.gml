@@ -32,14 +32,14 @@ draw_set_font(fnt_game_end_small);
 draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 500), "Stage Complete!", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
 
 // Stars share the popup's sequence scale and alpha.
-var _star_size = 128 / 128;
+var _star_size = 160 / 128;
 for (var i = 0; i < 3; i++) {
     var _sprite = i < rating.stars
         ? (rating.flawless ? spr_star_flawless : spr_star_earned) : spr_star_empty;
-    draw_sprite_ext(_sprite, 0, x + (i - 1) * 152 * image_xscale,
-        y - 395 * image_yscale, _star_size * image_xscale,
+    draw_sprite_ext(_sprite, 0, x + (i - 1) * 184 * image_xscale,
+        y - 350 * image_yscale, _star_size * image_xscale,
         _star_size * image_yscale, image_angle, c_white, image_alpha);
 }
-draw_text_transformed_outlined(x, y - 295 * image_yscale,
-    "Wall HP remaining: " + string(rating.hp_remaining),
+draw_text_transformed_outlined(x, y - 245 * image_yscale,
+    "HP remaining: " + string(rating.hp_remaining),
     image_xscale * 0.65, image_yscale * 0.65, image_angle, #baaa7d, #33261E);
