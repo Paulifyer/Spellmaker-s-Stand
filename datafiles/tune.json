@@ -16,7 +16,7 @@
     "mutations": {
         "skeletal": { "transfer_status": false },
         "banneret": { "speed_mult": 1.5, "radius_tiles": 1.5},
-        "warded": {"damage_mult": 0.1}
+        "warded": {"damage_mult": 0.1, "break_permanently": true}
     },
     "combat": {
         "base_dmg": 100,

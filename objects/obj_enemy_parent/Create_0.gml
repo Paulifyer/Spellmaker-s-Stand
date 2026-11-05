@@ -114,6 +114,7 @@ is_bonepile = false;
 death_notified = false;
 ward_variant = "narrow";
 ward_visible_since = -1;
+ward_broken = false;
 frost_visual_scale = 1;
 
 // Stable identity used by the room's scheduled enemy-following work.
