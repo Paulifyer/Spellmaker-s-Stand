@@ -3,6 +3,12 @@
 
     "debug": { "level_select_enabled": true },
 
+    "star_rating": {
+        "_readme": "Remaining wall HP percent; awards require strictly ABOVE the threshold. Optional star_rating overrides in each level.json entry. Flawless requires zero damage throughout the run.",
+        "two_star_wall_hp_percent": 33,
+        "three_star_wall_hp_percent": 66
+    },
+
     "defended_base": { "hp": 50 },
 
     "player":   { 

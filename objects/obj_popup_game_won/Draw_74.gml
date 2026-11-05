@@ -31,8 +31,19 @@ draw_set_font(fnt_game_end_small);
 // Use our custom function to draw the text and the outline 
 draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 500), "Stage Complete!", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
 
-// Set the font
-draw_set_font(fnt_game_end_big);
-
-// Use our custom function to draw the text and the outline 
-draw_text_transformed_outlined(x, y - map_value(image_xscale, 0, 1, 0, 400), "well done!", image_xscale, image_yscale, image_angle, #baaa7d, #33261E);
+// Stars share the popup's sequence scale and alpha.
+var _star_size = 88 / 128;
+for (var i = 0; i < 3; i++) {
+    var _sprite = i < rating.stars
+        ? (rating.flawless ? spr_star_flawless : spr_star_earned) : spr_star_empty;
+    draw_sprite_ext(_sprite, 0, x + (i - 1) * 112 * image_xscale,
+        y - 395 * image_yscale, _star_size * image_xscale,
+        _star_size * image_yscale, image_angle, c_white, image_alpha);
+}
+var _label = rating.flawless ? "Flawless!" : string(rating.stars) + " / 3 stars";
+draw_text_transformed_outlined(x, y - 320 * image_yscale,
+    _label + " - Wall HP: " + string_format(rating.hp_percent, 0, 1) + "%",
+    image_xscale * 0.65, image_yscale * 0.65, image_angle, #baaa7d, #33261E);
+draw_text_transformed_outlined(x, y - 270 * image_yscale,
+    "2 stars: >" + string(rating_thresholds.two) + "%   3 stars: >" + string(rating_thresholds.three) + "%",
+    image_xscale * 0.5, image_yscale * 0.5, image_angle, #baaa7d, #33261E);
