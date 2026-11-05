@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');
 const {makeEnemyContext}=require('./enemy-test-context.cjs');
-const {load}=require('./gml-test-utils.cjs');
+const {load,read}=require('./gml-test-utils.cjs');
 const h=makeEnemyContext(),ctx=h.ctx;
 load(ctx,'scripts/MutationScripts/MutationScripts.gml',['enemy_ward_key','enemy_ward_active']);
 Object.assign(ctx,{HEX_DAMAGE_PER_STATUS:0.1,obj_mook:'mook',obj_brute:'brute',
@@ -19,9 +19,17 @@ for(const [ward,status]of [['fire-warded','burn'],['frost-warded','frost'],['lig
 const fire=h.spell('projectile',[{effect:'fire',mods:[]},{effect:'harm',mods:[]}]);
 e.mutation_keys=['fire-warded'];ctx.combat_status_initialize(e);e.hp=1000;
 ctx.spell_deliver(fire,e,2,0);assert.equal(e.hp,900); // Fire removes ward before Harm
-const originalTune=ctx.tune_params;
-for(const permanent of [false,true]){
- ctx.tune_params=(a,b,c,fallback)=>c==='break_permanently'?permanent:originalTune(a,b,c,fallback);
+// Exercise production tuning readers: JSON booleans must not go through the numeric reader.
+ctx.is_real=value=>typeof value==='number';
+load(ctx,'scripts/TuneScript/TuneScript.gml',['tune_setting','tune_params']);
+for(const setting of [undefined,false,true]){
+ const permanent=setting===true;
+ ctx.global.tuning=JSON.parse(read('datafiles/tune.json'));
+ // Keep the existing damage expectations independent of balance edits.
+ ctx.global.tuning.mutations.warded.damage_mult=0.5;
+ if(setting===undefined)delete ctx.global.tuning.mutations.warded.break_permanently;
+ else ctx.global.tuning.mutations.warded.break_permanently=setting;
+ assert.equal(ctx.tune_setting('mutations','warded','break_permanently',false),permanent);
  for(const [ward,status]of [['fire-warded','burn'],['frost-warded','frost'],['lightning-warded','lightning']]){
   const target=h.enemy();target.mutation_keys=[ward];target.ward_broken=false;
   ctx.combat_status_apply(target,status,0,0.2);
@@ -33,7 +41,7 @@ for(const permanent of [false,true]){
   ctx.combat_status_apply(target,status,10,0.2);
   assert.equal(target.ward_broken,permanent);
   assert.equal(ctx.enemy_ward_active(target),false);
-  ctx.combat_status_advance(target,200,false);
+  ctx.combat_status_advance(target,10+ctx.tune_params('effects','lightning','stun_immune_duration',3)*ctx.TARGET_ROOM_SPEED,false);
   assert.equal(ctx.enemy_ward_active(target),!permanent,'Expiry respects the toggle');
   ctx.combat_status_apply(target,status,10,0.2);
   ctx.combat_status_clear(target,status);

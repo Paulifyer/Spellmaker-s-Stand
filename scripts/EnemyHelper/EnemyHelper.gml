@@ -67,7 +67,7 @@ function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
 		case "hex": _enemy.hex_timer = _frames; break;
 	}
 	// Latch breakage when the matching status lands, before later spell effects deal damage.
-	if (_frames > 0 && tune_params("mutations", "warded", "break_permanently", false)
+	if (_frames > 0 && tune_setting("mutations", "warded", "break_permanently", false) == true
 		&& combat_status_active(_enemy, _key)) {
 		var _ward = (_key == "burn") ? "fire-warded" : ((_key == "frost") ? "frost-warded" : ((_key == "lightning") ? "lightning-warded" : ""));
 		if (_ward != "" && enemy_has_mutation(_enemy, _ward)) _enemy.ward_broken = true;
