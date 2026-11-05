@@ -25,7 +25,7 @@ function level_star_result(_completed, _hp, _max_hp, _damaged, _thresholds) {
         _flawless = !_damaged;
         if (_flawless) _stars = 3;
     }
-    return {stars: _stars, flawless: _flawless, hp_percent: _percent};
+    return {stars: _stars, flawless: _flawless, hp_percent: _percent, hp_remaining: max(0, _hp)};
 }
 
 /// @description Keep best stars and flawless independently, including across launches.

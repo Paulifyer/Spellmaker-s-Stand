@@ -13,7 +13,7 @@ An individual `datafiles/level.json` level entry can optionally contain:
 }
 ```
 
-Omitted per-level fields inherit tuning defaults. Victory-screen threshold text uses the resolved values.
+Omitted per-level fields inherit tuning defaults. The victory popup shows larger stars and a single Wall HP remaining label with the raw final HP value.
 
 Any positive damage through `reduce_village_hp` permanently marks that run as damaged. Healing back to full does not restore flawless eligibility. A completed, undamaged run awards three stars with the supplied cyan gradient sprite. Normal earned stars use the yellow sprite; unearned slots use white. Each retry starts fresh damage history and HP.
 
