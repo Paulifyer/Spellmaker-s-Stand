@@ -171,11 +171,15 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 		}
 	};
 	on_draw = function(spell) {
+		var _thickness = 1.75;
+		var _alpha = 1;
+		var _frame = floor(spell.beam_frame);
 		for (var i = 0; i < array_length(spell.beam_lanes); i++) {
 			var _b = spell.beam_lanes[i];
-			draw_spell_sprite_ext(spr_beamhead, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H, 1, 1, 0, spell.col, 0.5);
-			draw_spell_sprite_ext(sprite, floor(spell.beam_frame), spell.x, global.lane_top[_b.lane] + TILE_H,
-				_b.len / sprite_get_width(sprite), 1, 0, spell.col, 0.5);
+			var _y = global.lane_top[_b.lane] + TILE_H;
+			draw_spell_sprite_ext(spr_beamhead, _frame, spell.x, _y, 1, _thickness, 0, spell.col, _alpha);
+			draw_spell_sprite_ext(sprite, _frame, spell.x, _y,
+				_b.len / sprite_get_width(sprite), _thickness, 0, spell.col, _alpha);
 		}
 	};
 }
