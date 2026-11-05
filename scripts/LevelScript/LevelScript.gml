@@ -55,6 +55,7 @@ function parse_level_data(_level_data)
 	}
 
 	return {
+		star_rating: _level_data[$ "star_rating"],
 		max_glyphs: _max_glyphs,
 		spell_slots: _spell_slots,
 		level_wave_config:	new LevelWaveConfig (

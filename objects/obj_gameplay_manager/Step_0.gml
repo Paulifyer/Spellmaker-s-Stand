@@ -34,6 +34,9 @@ if (get_village_hp() <= 0)
 } 
 else if (waves_are_over())
 {
+    // Freeze and persist the result before deactivating gameplay instances.
+    level_result = level_star_result(true, village_hp, village_max_hp, tower_damage_taken, star_thresholds);
+    save_level_stars(room_get_name(room), level_result);
 	
 	// Use the custom game over function to turn off variables
 	set_game_over();

@@ -11,6 +11,10 @@ money = 150;
 
 // This variable stores the amount of health the village has
 village_hp = tune_value("defended_base", "hp", 30);
+village_max_hp = village_hp;
+tower_damage_taken = false;
+level_result = undefined;
+star_thresholds = level_star_thresholds(global.level_config[$ room_get_name(room)].star_rating);
 
 // This variable stores the money_flash_alpha number,
 // and is how we animate the money text in the HUD.

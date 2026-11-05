@@ -101,7 +101,8 @@ function reduce_village_hp(_amount)
 	with (obj_gameplay_manager)
 	{
 		// If the village hp is already at zero, then stop the function
-		if (village_hp <= 0) return;
+		if (village_hp <= 0 || game_over) return;
+		if (_amount > 0) tower_damage_taken = true;
 		
 		// Reduce the village hp by the amount provided
 		village_hp -= _amount;		
