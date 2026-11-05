@@ -13,6 +13,24 @@ const fx=(effect,mods=[])=>({effect,mods});
 const spell=effects=>({form:'projectile',form_mods:[],effects});
 const c=context();
 assert.equal(c.compile_spell(spell([fx('harm')])).cooldown_penalty,0);
+const areaPenalty=tuning.modifiers.area.cooldown_penalty;
+const areaSpell={...spell([fx('harm')]),form_mods:['area']};
+assert.equal(c.compile_spell(areaSpell).cooldown_penalty,areaPenalty);
+assert.equal(c.compile_spell(spell([fx('combust',['area'])])).cooldown_penalty,areaPenalty);
+assert.equal(c.compile_spell({...spell([fx('discharge',['area'])]),form_mods:['area']}).cooldown_penalty,2*areaPenalty+tuning.effects.discharge.cooldown_penalty);
+const areaPlan=c.compile_spell(areaSpell);
+tuning.modifiers.area.cooldown_penalty=7;
+assert.equal(c.compile_spell(areaSpell).cooldown_penalty,7);
+assert.equal(areaPlan.cooldown_penalty,areaPenalty);
+for(const invalid of [-1,'4']){
+ tuning.modifiers.area.cooldown_penalty=invalid;
+ assert.throws(()=>c.compile_spell(areaSpell),/Modifier cooldown_penalty/);
+ assert.throws(()=>c.compile_spell(spell([fx('combust',['area'])])),/Modifier cooldown_penalty/);
+}
+delete tuning.modifiers.area.cooldown_penalty;
+assert.equal(c.compile_spell(areaSpell).cooldown_penalty,0);
+assert.equal(c.compile_spell(spell([fx('combust',['area'])])).cooldown_penalty,0);
+tuning.modifiers.area.cooldown_penalty=areaPenalty;
 for(const [id,value] of [['pull',5],['hex',3],['discharge',2]])
     assert.equal(c.compile_spell(spell([fx(id)])).cooldown_penalty,value);
 const plan=c.compile_spell(spell([fx('pull',['delay']),fx('pull'),fx('hex',['extend_time']),fx('discharge',['amplify'])]));

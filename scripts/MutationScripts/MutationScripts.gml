@@ -102,7 +102,7 @@ function enemy_ward_key(_enemy) {
 
 function enemy_ward_active(_enemy) {
 	var _key = enemy_ward_key(_enemy);
-	if (_key == "" || _enemy.hp <= 0) return false;
+	if (_key == "" || _enemy.hp <= 0 || combat_status_get(_enemy, "ward_broken") == true) return false;
 	var _status = (_key == "fire-warded") ? "burn" : ((_key == "frost-warded") ? "frost" : "lightning");
 	return !combat_status_active(_enemy, _status);
 }

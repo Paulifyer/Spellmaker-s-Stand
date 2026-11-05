@@ -189,16 +189,19 @@ function compile_spell(_loadout) {
 	_cost += _form_penalty;
 
 	var _fmods = [];
+	var _cooldown_penalty = 0;
 
 	for (var i = 0; i < array_length(_loadout.form_mods); i++) {
 		var _m = _g.modifier[$ _loadout.form_mods[i]];
 		if (!is_struct(_m)) return undefined;
 		array_push(_fmods, _m);
 		_cost += _m.cost;
+		var _penalty = tune_setting("modifiers", _loadout.form_mods[i], "cooldown_penalty", 0);
+		if (!is_real(_penalty) || _penalty < 0) throw "Modifier cooldown_penalty must be non-negative seconds";
+		_cooldown_penalty += _penalty;
 	}
 
 	var _effects = [];
-	var _cooldown_penalty = 0;
 	for (var e = 0; e < array_length(_loadout.effects); e++) {
 		var _el = _g.effect[$ _loadout.effects[e].effect];
 		if (!is_struct(_el)) return undefined;
@@ -214,6 +217,9 @@ function compile_spell(_loadout) {
 			if (!is_struct(_m)) return undefined;
 			array_push(_mods, _m);
 			_cost += _m.cost;
+			var _mod_penalty = tune_setting("modifiers", _loadout.effects[e].mods[i], "cooldown_penalty", 0);
+			if (!is_real(_mod_penalty) || _mod_penalty < 0) throw "Modifier cooldown_penalty must be non-negative seconds";
+			_cooldown_penalty += _mod_penalty;
 			if (_loadout.effects[e].mods[i] == "amplify") {
 				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
 				_cost += (_amp_count * _amp_cost);
