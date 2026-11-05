@@ -41,7 +41,7 @@ function makeContext(limit = 8) {
         tune_params:(_,__,___,v)=>v,tune_value:(_,__,v)=>v,TARGET_ROOM_SPEED:60,AMPLIFY_ADD_MULT:1,PIERCE_AMT:2,EXTEND_TIME_ADD:5,DELAY_AMT:1,
     });
     const helper = 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml';
-    load(ctx,helper,['form_modifiers_conflict','modifier_limit_message']);
+    load(ctx,helper,['form_modifiers_conflict','spell_exclusive_glyph_message','modifier_limit_message']);
     ctx.tune_setting=(...args)=>ctx.tune_params(...args);
     for (const [id,name] of Object.entries({area:'Area',pierce:'Pierce',chain:'Chain',amplify:'Amplify',extend_time:'Extend_Time',delay:'Delay'})) {
         const body=extract(modifiers,`Mod_${name}`);

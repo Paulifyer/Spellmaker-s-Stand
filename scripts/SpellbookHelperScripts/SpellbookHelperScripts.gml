@@ -83,6 +83,46 @@ function form_modifiers_conflict(_a, _b) {
     return false;
 }
 
+// Groups span the whole spell; repeats of the same ID still follow stacking/Delay rules.
+// A replacement Form is checked against only the attachments it will retain.
+function spell_exclusive_glyph_message(_s, _extra = "", _replacement_form = undefined) {
+    if (!variable_global_exists("tuning")) return "";
+    var _config = global.tuning[$ "compatibility"];
+    if (!is_struct(_config)) return "";
+    var _groups = _config[$ "exclusive_glyph_groups"];
+    if (!is_array(_groups)) return "";
+    var _ids = [];
+    if (_s != undefined) {
+        var _form = (_replacement_form == undefined) ? _s.form : _replacement_form;
+        if (_form != undefined) array_push(_ids, _form);
+        for (var i = 0; i < array_length(_s.form_mods); i++) {
+            var _id = _s.form_mods[i];
+            if (_replacement_form == undefined || mod_valid_for_form(_id, _form)) array_push(_ids, _id);
+        }
+        for (var e = 0; e < array_length(_s.effects); e++) {
+            var _fx = _s.effects[e];
+            if (_replacement_form != undefined && !effect_valid_for_form(_fx.effect, _form)) continue;
+            array_push(_ids, _fx.effect);
+            for (var i = 0; i < array_length(_fx.mods); i++) {
+                var _id = _fx.mods[i];
+                if (_replacement_form == undefined || mod_valid_for_effect(_id, _fx.effect)) array_push(_ids, _id);
+            }
+        }
+    } else if (_replacement_form != undefined) array_push(_ids, _replacement_form);
+    if (_extra != "") array_push(_ids, _extra);
+    for (var g = 0; g < array_length(_groups); g++) {
+        var _group = _groups[g];
+        if (!is_array(_group)) continue;
+        var _seen = "";
+        for (var i = 0; i < array_length(_ids); i++) {
+            if (!array_contains(_group, _ids[i])) continue;
+            if (_seen != "" && _seen != _ids[i]) return "Can't combine these glyphs";
+            _seen = _ids[i];
+        }
+    }
+    return "";
+}
+
 // Count only this attachment. The editor includes the pending addition via _extra.
 function modifier_limit_message(_list, _id, _key, _extra = 0) {
     var _limit = tune_setting("modifiers", _id, _key, undefined);
@@ -115,6 +155,8 @@ function spell_validation_message(_s) {
     if (!is_struct(spell_catalog_entry("form", _s.form)) || !is_glyph_available("form", _s.form)) return "Form is unavailable";
     if (spell_glyph_count(_s) > spell_max_glyphs()) return "Too many glyphs for this level";
     if (array_length(_s.effects) == 0) return "Add an Effect";
+    var _exclusive = spell_exclusive_glyph_message(_s);
+    if (_exclusive != "") return _exclusive;
     if (!spell_sequence_valid(_s)) return "Add Delay between repeated effects";
     for (var i = 0; i < array_length(_s.form_mods); i++) {
         var _id = _s.form_mods[i];
@@ -148,9 +190,11 @@ function spell_validation_message(_s) {
 
 function spell_addition_message(_s, _type, _id, _active) {
     if (!is_struct(spell_catalog_entry(_type, _id)) || !is_glyph_available(_type, _id)) return "Not available";
-    if (_type == "form") return "";
+    if (_type == "form") return spell_exclusive_glyph_message(_s, "", _id);
     if (_s == undefined || _s.form == undefined) return "Pick a Form first";
     if (spell_glyph_count(_s) >= spell_max_glyphs()) return "Glyph limit reached";
+    var _exclusive = spell_exclusive_glyph_message(_s, _id);
+    if (_exclusive != "") return _exclusive;
     if (_type == "effect") {
         if (!effect_valid_for_form(_id, _s.form)) return "Can't use this Effect with this Form";
         if (!spell_can_append_effect(_s, _id)) return "Add Delay between repeated effects";

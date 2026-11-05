@@ -64,7 +64,7 @@
     },
     "compatibility": {
         "form_modifier_exclusions": { "beam": ["area"] },
-        "exclusive_form_modifier_groups": [["area", "pierce", "chain"]]
+        "exclusive_glyph_groups": [["area", "pierce", "chain"], ["fire", "ice", "lightning"]]
     }
 
 }
