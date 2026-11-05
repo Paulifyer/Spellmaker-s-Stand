@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_wave",
-    "path":"sprites/spr_wave/spr_wave.yy",
+    "name":"spr_ui_nextwave",
+    "path":"sprites/spr_ui_nextwave/spr_ui_nextwave.yy",
   },
   "spriteMaskId":null,
   "visible":true,

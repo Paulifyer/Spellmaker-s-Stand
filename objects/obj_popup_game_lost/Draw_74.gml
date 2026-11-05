@@ -10,7 +10,7 @@
 draw_self();
 
 // Draw the lose image 
-draw_sprite_ext(spr_ui_gameovergraphic, 0, x, y - 28, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+draw_sprite_ext(spr_ui_gameovergraphic, 0, x, y - 28, image_xscale * 0.8, image_yscale * 0.8, image_angle, image_blend, image_alpha);
 
 // Set the font horizontal alignment
 draw_set_halign(fa_center);

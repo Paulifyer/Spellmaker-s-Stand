@@ -448,6 +448,7 @@
     {"id":{"name":"spr_zombie_walk_down","path":"sprites/spr_zombie_walk_down/spr_zombie_walk_down.yy",},},
     {"id":{"name":"spr_zombie_walk_side","path":"sprites/spr_zombie_walk_side/spr_zombie_walk_side.yy",},},
     {"id":{"name":"spr_zombie_walk_up","path":"sprites/spr_zombie_walk_up/spr_zombie_walk_up.yy",},},
+    {"id":{"name":"Sprite175","path":"sprites/Sprite175/Sprite175.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
