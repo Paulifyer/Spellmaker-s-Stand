@@ -124,6 +124,19 @@ for (var e = 0; e < _effect_slots; e++) {
         var _fx = _spell.effects[e];
         var _gr = draw_glyph_group(_gx, _gy, 45, global.spell_glyphs.effect[$ _fx.effect],
                                    _fx.mods, _ang, 50, active_group == e, _mouse);
+        // Number effects in execution order, toward the centre to clear modifiers.
+        var _order_x = _gx - lengthdir_x(57, _ang);
+        var _order_y = _gy - lengthdir_y(57, _ang);
+        draw_set_color(c_black);
+        draw_circle(_order_x, _order_y, 17, false);
+        draw_set_color(c_white);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_text(_order_x, _order_y, string(e + 1));
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_color(c_black);
+
         if (_gr.hover != "") hover_text = _gr.hover;
         if (_gr.main.clicked)  active_group = e;
         if (_gr.main.rclicked) _rm_effect = e;
