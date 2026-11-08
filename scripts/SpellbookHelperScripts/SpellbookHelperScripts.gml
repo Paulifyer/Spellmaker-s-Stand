@@ -443,3 +443,34 @@ function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selecte
                                     + "\n(click: select group, right-click: remove)";
     return _out;
 }
+
+function handle_triangle_click(_x, _y, _scale, _spr, _mouse, is_left) {
+	var w = sprite_get_width(_spr) * _scale;
+	var h = sprite_get_height(_spr) * _scale;
+	
+	//Top Vertice
+	var x1;
+	if (is_left)
+		x1 =  _x + (h / 2);
+	else
+		x1 = _x - (h / 2);
+	var y1 = _y - (w / 2);
+	
+	// Left/Right Vertice
+	var x2;
+	if (is_left) 
+		x2 = _x - (h / 2);
+	else
+		x2 = _x + (h / 2);
+	var y2 = _y;
+	
+	//Bottom Vertice
+	var x3;
+	if (is_left)
+		x3 = _x + (h / 2);
+	else
+		x3 = _x - (h / 2);
+	var y3 = _y + (w / 2);
+	var is_hovering = point_in_triangle(_mouse.x, _mouse.y, x1, y1, x2, y2, x3, y3);
+	return is_hovering;
+}

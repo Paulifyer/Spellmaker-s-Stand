@@ -428,6 +428,7 @@
     {"id":{"name":"spr_tree_bare","path":"sprites/spr_tree_bare/spr_tree_bare.yy",},},
     {"id":{"name":"spr_tree_blue","path":"sprites/spr_tree_blue/spr_tree_blue.yy",},},
     {"id":{"name":"spr_tree_green","path":"sprites/spr_tree_green/spr_tree_green.yy",},},
+    {"id":{"name":"spr_ui_arrow","path":"sprites/spr_ui_arrow/spr_ui_arrow.yy",},},
     {"id":{"name":"spr_ui_gameovergraphic","path":"sprites/spr_ui_gameovergraphic/spr_ui_gameovergraphic.yy",},},
     {"id":{"name":"spr_ui_hexagram_border1","path":"sprites/spr_ui_hexagram_border1/spr_ui_hexagram_border1.yy",},},
     {"id":{"name":"spr_ui_logofull","path":"sprites/spr_ui_logofull/spr_ui_logofull.yy",},},

@@ -252,6 +252,12 @@ draw_set_font(fnt_Arcane_Bold);
 draw_text_ext(1672, 460, "Enemies", 120, 120);
 draw_set_colour(c_white);
 draw_set_font(fnt_Arcane);
+var _is_left_tri_hover = handle_triangle_click(1587, 313, 0.1, spr_ui_arrow, _mouse, true);
+var _is_right_tri_hover = handle_triangle_click(1841, 313, 0.1, spr_ui_arrow, _mouse, false);
+draw_sprite_ext(spr_ui_arrow, 0, 1587, 313, 0.1, 0.1, -90, (_is_left_tri_hover) ? c_black : c_grey, (_is_left_tri_hover) ? 1: 0.3);
+draw_sprite_ext(spr_ui_arrow, 0, 1841, 313, 0.1, 0.1, -270, (_is_right_tri_hover) ? c_black : c_grey, (_is_right_tri_hover) ? 1: 0.3);
+
+
 var _n = array_length(enemies_in_level);
 if (_n > 0) {
     var _entry = enemies_in_level[enemy_view];
@@ -272,8 +278,13 @@ if (_n > 0) {
 		draw_set_halign(fa_left);
         if (point_distance(_mx, _my, 1714, 310) <= 143) {
             hover_text = _info.name + "\n" + _info.notes + "\n(click for next enemy)";
-            if (mouse_check_button_pressed(mb_left)) enemy_view = (enemy_view + 1) mod _n;
-        }
+			if (mouse_check_button_pressed(mb_left)) {
+				if (_is_right_tri_hover)
+					enemy_view = (enemy_view + 1) mod _n;
+				else if (_is_left_tri_hover)
+					enemy_view = (enemy_view == 0) ? _n - 1 : enemy_view - 1;
+			}
+		}
     }
 }
 
