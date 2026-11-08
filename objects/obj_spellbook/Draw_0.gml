@@ -19,6 +19,7 @@ var _mx = (_dx * dcos(image_angle) - _dy * dsin(image_angle)) / image_xscale + _
 var _my = (_dx * dsin(image_angle) + _dy * dcos(image_angle)) / image_yscale + _origin_y;
 var _mouse = { x: _mx, y: _my };
 hover_text = "";
+info = "";
 draw_set_color(c_black);
 draw_set_font(fnt_Arcane);
 
@@ -68,8 +69,8 @@ for (var c = 0; c < 3; c++) {
 				hover_text = "???\nNot unlocked yet...";
 			} else {
 				hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
-				if (_status == GLYPH_STATE.disabled) hover_text += "\nSome force has disabled this?";
-                if (!_enabled && _reason != "") hover_text += "\n" + _reason;
+				if (_status == GLYPH_STATE.disabled) info += "\nSome force has disabled this?";
+                if (!_enabled && _reason != "") info = _reason;
 			}
         }
         if (_b.clicked) {
@@ -241,8 +242,8 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
 		draw_set_colour(c_white);
 	}
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
-    if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) hover_text = spell_validation_message(_sp);
-    if (_b.hover && _too_expensive) hover_text = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
+    if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) info = spell_validation_message(_sp);
+    if (_b.hover && _too_expensive) info = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
     if (_b.clicked) { sel = i; naming = false; active_group = -1; }
 }
 
@@ -277,7 +278,8 @@ if (_n > 0) {
 		draw_set_font(fnt_Arcane);
 		draw_set_halign(fa_left);
         if (point_distance(_mx, _my, 1714, 310) <= 143) {
-            hover_text = _info.name + "\n" + _info.notes + "\n(click for next enemy)";
+            hover_text = _info.name + "\n" + _info.notes;
+			info = "(Use arrows to see other enemies!)";
 			if (mouse_check_button_pressed(mb_left)) {
 				if (_is_right_tri_hover)
 					enemy_view = (enemy_view + 1) mod _n;
@@ -291,10 +293,14 @@ if (_n > 0) {
 // ---- Description scroll ----
 draw_set_halign(fa_center);
 draw_set_font(fnt_Arcane_Bold);
+draw_set_colour(c_black);
 draw_text_ext(1720, 660, "Description", 32, 220);
 draw_set_font(fnt_Arcane);
 draw_set_halign(fa_left)
 draw_text_ext(1610, 700, hover_text, 26, 220);
+draw_set_colour(#990000);
+draw_text_ext(1610, 920, info, 26, 220);
+draw_set_colour(c_white);
 
 // ---- Start ----
 if (_start_message != "") {
