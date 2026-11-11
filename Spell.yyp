@@ -280,6 +280,7 @@
     {"id":{"name":"crafting_interface_bg","path":"sprites/crafting_interface_bg/crafting_interface_bg.yy",},},
     {"id":{"name":"crafting_interface_hexagram","path":"sprites/crafting_interface_hexagram/crafting_interface_hexagram.yy",},},
     {"id":{"name":"spr_acr_short","path":"sprites/spr_acr_short/spr_acr_short.yy",},},
+    {"id":{"name":"spr_aoe","path":"sprites/spr_aoe/spr_aoe.yy",},},
     {"id":{"name":"spr_arc_ball","path":"sprites/spr_arc_ball/spr_arc_ball.yy",},},
     {"id":{"name":"spr_arc_hit","path":"sprites/spr_arc_hit/spr_arc_hit.yy",},},
     {"id":{"name":"spr_arc_long","path":"sprites/spr_arc_long/spr_arc_long.yy",},},

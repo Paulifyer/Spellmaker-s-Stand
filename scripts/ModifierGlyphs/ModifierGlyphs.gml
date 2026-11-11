@@ -29,7 +29,8 @@ function Mod_Area() : ModifierGlyph("Area", AREA_COST) constructor {
 	desc = "Expand a Form's delivery area or a compatible Effect's burst area. Pull keeps its normal 3x3 area.";
 	cost = tune_params("modifiers", "area", "cost", AREA_COST);
 	on_cast = function(spell, fx) {
-		if (fx == undefined) spell.area = true; else fx.area = true;
+		if (fx != undefined) fx.area = true;
+		spell.area = true;
 	}
 	on_hit = function(spell, target) {};
 }
