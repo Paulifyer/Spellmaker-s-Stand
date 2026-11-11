@@ -398,7 +398,7 @@ function enemy_detect_obstacle(_enemy, _detection_dist) {
 
 
 function enemy_shoot_prj(_x, _y, _depth, _damage_dealt, _prj) {
-	var _arrow = instance_create_depth(_x, _y - 100, _depth, _prj)
+	var _arrow = instance_create_depth(_x, _y - 50, _depth, _prj)
 	with (_arrow) {
 		// Set image_angle using point_direction to get the direction to the target 
 		// We are offsetting the target's y value because we don't want to shoot at the target's feet

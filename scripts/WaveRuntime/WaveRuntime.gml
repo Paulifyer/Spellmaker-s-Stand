@@ -32,7 +32,7 @@ function start_wave(_wave_number)
 	_manager.state = WaveState.SPAWNING;
 
 	layer_sequence_create("Sequences", 0, 0, seq_wave_start_banner);
-	_manager.alarm[1] = TARGET_ROOM_SPEED * 1.5; // animation duration of wave_start_banner
+	_manager.alarm[1] = TARGET_ROOM_SPEED * 2; // animation duration of wave_start_banner
 	return true;
 }
 
@@ -127,6 +127,23 @@ function return_wave_number()
 		// Return the number stored in the wave variable of obj_wave_manager.
 		// return will end the function
 		return wave;
+	}
+
+	// If we make it here, then there is no instance of obj_wave_manager to check,
+	// so we will return -1 instead.
+	return -1;
+}
+
+function return_total_waves()
+{
+
+	// Uses with() to access the instance of obj_wave_manager.
+	// with() only works if an instance of the object exists.
+	with (obj_wave_manager)
+	{
+		// Return the number stored in the wave variable of obj_wave_manager.
+		// return will end the function
+		return array_length(wave_array);
 	}
 
 	// If we make it here, then there is no instance of obj_wave_manager to check,

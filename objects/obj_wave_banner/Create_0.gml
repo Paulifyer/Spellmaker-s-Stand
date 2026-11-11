@@ -31,7 +31,7 @@ if (_waves_over)
 else 
 {
 	// Set the text to the waver number
-	text = "WAVE " + string(return_wave_number());
+	text = "WAVE " + string(return_wave_number()) + "/" + string(return_total_waves());
 	
 	// And play the normal wave sound
 	audio_play_sound(snd_wave_start, 4, false);

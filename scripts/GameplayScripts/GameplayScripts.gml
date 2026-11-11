@@ -102,7 +102,10 @@ function reduce_village_hp(_amount)
 	{
 		// If the village hp is already at zero, then stop the function
 		if (village_hp <= 0 || game_over) return;
-		if (_amount > 0) tower_damage_taken = true;
+		if (_amount > 0) {
+			tower_damage_taken = true;
+			with (obj_barrier) flash_alpha = 1;
+		}
 		
 		// Reduce the village hp by the amount provided
 		village_hp -= _amount;		
@@ -113,6 +116,7 @@ function reduce_village_hp(_amount)
 		// Play a random villager death sound
 		audio_play_sound(choose(snd_villager_death_01, snd_villager_death_02, snd_villager_death_03, snd_villager_death_04, snd_villager_death_05, snd_villager_death_06), 100, false);
 	}
+
 }
 
 /// @description Deal damage to an enemy

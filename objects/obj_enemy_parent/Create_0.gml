@@ -143,7 +143,7 @@ rock = noone;
 
 detection_dist = 16;
 
-pos_to_stop = 0.95;
+pos_to_stop = 0.86;
 
 range_obj = obj_arrow;
 
