@@ -55,14 +55,21 @@ draw_set_alpha(1);
 for (var i = 0; i < SPELL_SLOTS; i++) {
     var _x2 = 300 + i * 130, _y2 = display_get_gui_height() - 260;
     var _l = global.spellbook[i];
+    var _ready = spell_slot_can_cast(id, _l, i, _t);
+    var _cx = _x2 + 60, _cy = _y2 + 60;
     var _active = i == channel_slot || (i == cast_flash_slot && cast_flash_ticks > 0);
-    draw_set_color(_active ? c_aqua : c_white);
-    draw_rectangle(_x2, _y2, _x2 + 120, _y2 + 120, true);
-    draw_set_color(c_white);
+    draw_set_color(c_black);
+    draw_set_alpha(0.6);
+    draw_circle(_cx, _cy, 60, false);
+    draw_set_alpha(1);
+    draw_set_color(_ready ? (_active ? c_aqua : c_white) : c_gray);
+    draw_circle(_cx, _cy, 60, true);
     if (!spell_slot_unlocked(i)) {
         draw_set_font(fnt_Arcane);
-        draw_text(_x2 + 4, _y2 + 22, string(i + 1));
-        draw_text(_x2 + 4, _y2 + 40, "Locked");
+        draw_set_halign(fa_center);
+        draw_text(_cx, _cy - 20, string(i + 1));
+        draw_text(_cx, _cy, "Locked");
+        draw_set_halign(fa_left);
         continue;
     }
     if (_l != undefined && _l.form != undefined) {
@@ -70,24 +77,29 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
         draw_set_font(fnt_Arcane_Bold);
 		var _label = string(i + 1) + " " + _spell_name;
         var _label_scale = min(0.55, 112 / max(1, string_width(_label)));
-        draw_text_transformed(_x2 + 4, _y2 + 8, _label, _label_scale, _label_scale, 0);
-        draw_spell_slot_diagram(_l, _x2 + 60, _y2 + 55, 90);
-        draw_text_transformed(_x2 + 4, _y2 + 108, "cost: " + string(spell_cost(_l)), _label_scale, _label_scale, 0);
+        draw_set_halign(fa_center);
+        draw_text_transformed(_cx, _y2 - 22, _label, _label_scale, _label_scale, 0);
+        draw_spell_slot_diagram(_l, _cx, _cy, 116, !_ready);
+        var _cost_label = "cost: " + string(spell_cost(_l));
+        var _cost_scale = min(0.55, 112 / max(1, string_width(_cost_label)));
+        draw_text_transformed(_cx, _y2 + 126, _cost_label, _cost_scale, _cost_scale, 0);
+        draw_set_halign(fa_left);
 		draw_set_font(-1);
 	}
 	if (spell_cooldowns[i] > 0 && spell_cooldown_max[i] > 0) {
 		var _progress = 1 - spell_cooldowns[i] / spell_cooldown_max[i];
 		draw_set_color(c_gray);
-        draw_rectangle(_x2 + 4, _y2 + 116, _x2 + 116, _y2 + 119, false);
+        draw_rectangle(_x2 + 4, _y2 + 148, _x2 + 116, _y2 + 151, false);
 		draw_set_color(c_aqua);
-        draw_rectangle(_x2 + 4, _y2 + 116, _x2 + 4 + 112 * _progress, _y2 + 119, false);
+        draw_rectangle(_x2 + 4, _y2 + 148, _x2 + 4 + 112 * _progress, _y2 + 151, false);
 	}
 }
 
+draw_set_color(c_white);
 draw_set_font(fnt_Arcane);
 var _slot_keys = "1";
 for (var i = 1; i < spell_slot_count(); i++) _slot_keys += "/" + string(i + 1);
-draw_text(300, display_get_gui_height() - 95, "Hover a tile + press " + _slot_keys + " to cast");
-draw_text(300, display_get_gui_height() - 115, "Press space to enter mana recovery");
+draw_text(300, display_get_gui_height() - 50, "Hover a tile + press " + _slot_keys + " to cast");
+draw_text(300, display_get_gui_height() - 70, "Press space to enter mana recovery");
 
 draw_set_font(-1);

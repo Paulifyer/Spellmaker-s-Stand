@@ -381,31 +381,63 @@ function gui_circle_button(_x, _y, _r, _icon, _label, _active, _enabled = true, 
 
 // Draws one glyph with its modifier satellites. Returns what was hovered/clicked.
 // Fit visible glyph artwork into a square, independent of sprite padding/origin.
-function draw_spell_slot_glyph(_sprite, _x, _y, _size) {
+function draw_spell_slot_glyph(_sprite, _x, _y, _size, _disabled = false) {
     if (_sprite == undefined || _sprite < 0) return;
     var _left = sprite_get_bbox_left(_sprite), _right = sprite_get_bbox_right(_sprite);
     var _top = sprite_get_bbox_top(_sprite), _bottom = sprite_get_bbox_bottom(_sprite);
     var _scale = _size / max(1, max(_right - _left + 1, _bottom - _top + 1));
+    if (_disabled) shader_set(sh_spell_recolour);
     draw_sprite_ext(_sprite, 0,
         _x - ((_left + _right) / 2 - sprite_get_xoffset(_sprite)) * _scale,
         _y - ((_top + _bottom) / 2 - sprite_get_yoffset(_sprite)) * _scale,
-        _scale, _scale, 0, c_white, 1);
+        _scale, _scale, 0, _disabled ? c_gray : c_white, 1);
+    if (_disabled) shader_reset();
 }
 
-// Compact spell diagram: form in the center, only effects on the outer ring.
-function draw_spell_slot_diagram(_spell, _x, _y, _size) {
+// Read-only counterpart of the player's input gates and cast_spell checks.
+function spell_slot_can_cast(_caster, _spell, _slot, _target) {
+    if (!spell_slot_unlocked(_slot) || !is_struct(_spell) || _spell.form == undefined) return false;
+    if (_caster.spell_cooldowns[_slot] > 0 || _caster.mana_exhausted) return false;
+    if (_caster.channel != noone || global.menu_lock || instance_exists(obj_spellbook) || !window_has_focus()) return false;
+    if (_target == undefined || !is_spell_usable(_spell)) return false;
+    var _compiled = compile_spell(_spell);
+    if (!is_struct(_compiled)) return false;
+    if (!is_instanceof(_compiled.form, Form_Beam) && _caster.mana < _compiled.cost) return false;
+    if (_compiled.form.name == "Rune") {
+        if (floor(tune_params("forms", "rune", "max_placed", 6)) < 1) return false;
+        var _lane = _target.row div ROWS_PER_LANE;
+        for (var i = 0; i < instance_number(obj_spells); i++) {
+            var _existing = instance_find(obj_spells, i);
+            if (_existing.form.name == "Rune" && _existing.target_col == _target.col && _existing.lane == _lane) return false;
+        }
+    }
+    return true;
+}
+
+// Form at the center; effects and modifiers share an evenly spaced outer ring.
+function draw_spell_slot_diagram(_spell, _x, _y, _size, _disabled = false) {
     if (!is_struct(_spell) || _spell.form == undefined) return;
     var _form = global.spell_glyphs.form[$ _spell.form];
-    draw_spell_slot_glyph(_form.icon, _x, _y, _size * 0.32);
-    var _count = array_length(_spell.effects);
+    var _icons = [];
+    for (var i = 0; i < array_length(_spell.form_mods); i++)
+        array_push(_icons, global.spell_glyphs.modifier[$ _spell.form_mods[i]].icon);
+    for (var i = 0; i < array_length(_spell.effects); i++) {
+        var _fx = _spell.effects[i];
+        array_push(_icons, global.spell_glyphs.effect[$ _fx.effect].icon);
+        for (var j = 0; j < array_length(_fx.mods); j++)
+            array_push(_icons, global.spell_glyphs.modifier[$ _fx.mods[j]].icon);
+    }
+    var _count = array_length(_icons);
+    draw_spell_slot_glyph(_form.icon, _x, _y, _size * (_count == 0 ? 0.7 : 0.36), _disabled);
     var _radius = _size * 0.34;
     // Also shrink unusually long effect lists to keep neighboring glyphs apart.
-    var _effect_size = min(_size * 0.23, 2 * _radius * sin(degtorad(180 / max(2, _count))) * 0.7);
+    // Reserve the diagonal of each glyph's bounding square, keeping it inside
+    // the circular slot and clear of both the center and neighboring glyphs.
+    var _effect_size = min(_size * 0.22, 2 * _radius * sin(degtorad(180 / max(2, _count))) * 0.65);
     for (var i = 0; i < _count; i++) {
         var _angle = 90 + i * 360 / _count;
-        var _effect = global.spell_glyphs.effect[$ _spell.effects[i].effect];
-        draw_spell_slot_glyph(_effect.icon,
-            _x + lengthdir_x(_radius, _angle), _y + lengthdir_y(_radius, _angle), _effect_size);
+        draw_spell_slot_glyph(_icons[i],
+            _x + lengthdir_x(_radius, _angle), _y + lengthdir_y(_radius, _angle), _effect_size, _disabled);
     }
 }
 

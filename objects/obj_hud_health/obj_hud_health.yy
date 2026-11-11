@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_HUD_counter_health",
-    "path":"sprites/spr_HUD_counter_health/spr_HUD_counter_health.yy",
+    "name":"spr_ui_spellmakerface",
+    "path":"sprites/spr_ui_spellmakerface/spr_ui_spellmakerface.yy",
   },
   "spriteMaskId":null,
   "visible":true,
