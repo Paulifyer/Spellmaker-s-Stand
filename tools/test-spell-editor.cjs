@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
-const {read} = require('./gml-test-utils.cjs');
+const {read, load} = require('./gml-test-utils.cjs');
 const {makeContext} = require('./construction-test-context.cjs');
 const ctx = makeContext(8);
 const valid = () => ({form:'projectile',form_mods:[],effects:[{effect:'harm',mods:[]}]});
@@ -95,3 +95,65 @@ ctx.sel=3;ctx.naming=true;ctx.keyboard_string='Must not overwrite';
 vm.runInContext(read('objects/obj_spellbook/Step_0.gml'),ctx);
 assert.equal(ctx.sel,0);assert.equal(ctx.naming,false);assert.equal(retained.name,'Retained fourth');
 console.log('Spell editor slot checks passed: four distinct buttons, disabled locked slots, stale selection reset and retained naming protection.');
+
+// Exercise the registered Draw event's Start and confirmation handlers.
+load(ctx, 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml', ['spellbook_has_damaging_spell']);
+const activeDraw = read('objects/obj_spellbook/Draw_0.gml');
+const startHandler = activeDraw.slice(activeDraw.indexOf('// ---- Start ----')).replace(/#([0-9A-Fa-f]{6})/g, '0x$1');
+const pointerSetup = activeDraw.slice(activeDraw.indexOf('var _popup_mouse'), activeDraw.indexOf('hover_text = "";'));
+let clicked = 'Start';
+let wavesStarted = 0;
+const drawnButtons = [];
+Object.assign(ctx, {
+    confirm_no_damage: false, close_requested: false, naming: false,
+    _mx: 0, _my: 0, _start_message: '', _saved_world: {}, matrix_world: 0, matrix_set: noop,
+    sprite_index: 0, sprite_get_width: () => 1920, sprite_get_height: () => 1080, fnt_Arcane_Bold: 1,
+    spr_ui_menu_darkeroutline: 1,
+    gui_button: (x, y, w, h, label, active, mouse) => {
+        drawnButtons.push({label, mouse});
+        return label === clicked && mouse.x === ctx._mx;
+    },
+    start_prepared_wave: () => wavesStarted++,
+});
+const drawStart = () => {
+    drawnButtons.length = 0;
+    vm.runInContext(pointerSetup + startHandler, ctx);
+};
+ctx.global.spellbook = [{...valid(), effects: [{effect: 'ice', mods: []}]}, undefined, undefined, retained];
+assert.equal(ctx.spellbook_has_damaging_spell(), false); // Fourth slot is locked.
+drawStart();
+assert.equal(ctx.confirm_no_damage, true);
+assert.equal(wavesStarted, 0);
+drawStart();
+assert.deepEqual(drawnButtons.map(button => button.label), ['Start', 'Go Back', 'Continue']);
+assert.notEqual(drawnButtons[0].mouse.x, ctx._mx);
+assert.equal(drawnButtons[1].mouse.x, ctx._mx);
+clicked = 'Go Back';
+drawStart();
+assert.equal(ctx.confirm_no_damage, false);
+assert.equal(wavesStarted, 0);
+clicked = 'Start';
+drawStart();
+clicked = 'Continue';
+drawStart();
+assert.equal(ctx.confirm_no_damage, false);
+assert.equal(wavesStarted, 1);
+
+ctx.global.level_config.rm_test.spell_slots = 4;
+clicked = 'Start';
+drawStart();
+assert.equal(ctx.confirm_no_damage, false);
+assert.equal(wavesStarted, 2);
+
+ctx.global.spellbook[3] = undefined;
+const defaultTuning = ctx.tune_setting;
+ctx.tune_setting = (group, id, key, fallback) =>
+    group === 'spellbook' && id === 'start_warning' && key === 'damaging_effects'
+        ? ['ice'] : defaultTuning(group, id, key, fallback);
+assert.equal(ctx.spellbook_has_damaging_spell(), true);
+ctx._start_message = 'Spell 1: Add an Effect';
+drawStart();
+assert.equal(ctx.notice, ctx._start_message);
+assert.equal(ctx.confirm_no_damage, false);
+assert.equal(wavesStarted, 2);
+console.log('Spellbook warning checks passed: locked and fourth slots, custom tuning, validation, Go Back and Continue.');

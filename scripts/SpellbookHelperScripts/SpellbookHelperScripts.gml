@@ -347,6 +347,21 @@ function spellbook_start_message(_max_mana) {
     return _message;
 }
 
+function spellbook_has_damaging_spell() {
+    var _defaults = ["harm", "fire", "combust", "snap", "discharge"];
+    var _damaging = tune_setting("spellbook", "start_warning", "damaging_effects", _defaults);
+    if (!is_array(_damaging)) _damaging = _defaults;
+
+    for (var i = 0; i < min(spell_slot_count(), array_length(global.spellbook)); i++) {
+        var _spell = global.spellbook[i];
+        if (_spell == undefined || _spell.form == undefined) continue;
+        for (var e = 0; e < array_length(_spell.effects); e++) {
+            if (array_contains(_damaging, _spell.effects[e].effect)) return true;
+        }
+    }
+    return false;
+}
+
 function gui_button(_x, _y, _w, _h, _label, _active, _mouse = undefined) {
     var _mx = (_mouse == undefined) ? device_mouse_x_to_gui(0) : _mouse.x;
     var _my = (_mouse == undefined) ? device_mouse_y_to_gui(0) : _mouse.y;

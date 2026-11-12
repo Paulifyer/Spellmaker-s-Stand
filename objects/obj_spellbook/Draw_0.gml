@@ -17,7 +17,10 @@ var _dx = mouse_x - x;
 var _dy = mouse_y - y;
 var _mx = (_dx * dcos(image_angle) - _dy * dsin(image_angle)) / image_xscale + _origin_x;
 var _my = (_dx * dsin(image_angle) + _dy * dcos(image_angle)) / image_yscale + _origin_y;
-var _mouse = { x: _mx, y: _my };
+// Route pointer input only to the confirmation while it is open.
+var _popup_mouse = { x: _mx, y: _my };
+var _mouse = confirm_no_damage ? { x: -10000, y: -10000 } : _popup_mouse;
+
 hover_text = "";
 info = "";
 draw_set_color(c_black);
@@ -220,7 +223,7 @@ draw_set_font(fnt_Arcane_Bold);
 draw_text_ext(850, 808, "Spell Name:", 200, 200);
 draw_rectangle(985, 805, 1400, 845, true);
 draw_text(990, 808, _name + (naming && (current_time div 500) mod 2 == 0 ? "|" : ""));
-if (mouse_check_button_pressed(mb_left)) {
+if (!confirm_no_damage && mouse_check_button_pressed(mb_left)) {
     var _in = point_in_rectangle(_mx, _my, 985, 805, 1400, 845);
     if (_in && !naming) { naming = true; keyboard_string = _name; }
     else if (!_in && naming) { naming = false; spell_prune(sel); }
@@ -290,10 +293,10 @@ if (_n > 0) {
         draw_set_colour(c_white);
 		draw_set_font(fnt_Arcane);
 		draw_set_halign(fa_left);
-        if (point_distance(_mx, _my, 1714, 310) <= 143) {
+        if (point_distance(_mouse.x, _mouse.y, 1714, 310) <= 143) {
             hover_text = _info.name + "\n" + _info.notes;
 			info = "(Use arrows to see other enemies!)";
-			if (mouse_check_button_pressed(mb_left)) {
+			if (!confirm_no_damage && mouse_check_button_pressed(mb_left)) {
 				if (_is_right_tri_hover)
 					enemy_view = (enemy_view + 1) mod _n;
 				else if (_is_left_tri_hover)
@@ -326,14 +329,33 @@ if (!close_requested && !naming && gui_button(1370, 950, 100, 70, "Start", false
     if (_start_message != "") {
         notice = _start_message;
         notice_timer = 120;
+    } else if (spellbook_has_damaging_spell()) {
+        start_prepared_wave();
     } else {
-        close_requested = true;
-		start_next_wave();
-		audio_play_sound(snd_button_click, 0, false);
-        alarm[0] = 1;
+        confirm_no_damage = true;
     }
 }
 draw_set_alpha(1);
+
+if (confirm_no_damage) {
+    draw_set_color(c_black);
+    draw_set_alpha(0.55);
+    draw_rectangle(0, 0, sprite_get_width(sprite_index), sprite_get_height(sprite_index), false);
+    draw_set_alpha(1);
+    draw_sprite_ext(spr_ui_menu_darkeroutline, 0, 960, 540, 0.75, 0.42, 0, c_white, 1);
+
+    draw_set_color(#33261E);
+    draw_set_font(fnt_Arcane_Bold);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_text(960, 470, "None of your spells have damaging effects.\nAre you sure you want to continue?");
+    var _back = gui_button(770, 570, 170, 60, "Go Back", false, _popup_mouse);
+    var _continue = gui_button(980, 570, 170, 60, "Continue", false, _popup_mouse);
+    if (_back || _continue) {
+        confirm_no_damage = false;
+        if (_continue) start_prepared_wave();
+    }
+}
 
 draw_set_color(c_white);
 matrix_set(matrix_world, _saved_world);

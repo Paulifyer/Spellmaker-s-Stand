@@ -6,6 +6,13 @@ display_set_gui_size(1920, 1080);   // so the wireframe's pixel coordinates line
 sel = 0;
 naming = false;
 close_requested = false;
+confirm_no_damage = false;
+start_prepared_wave = function() {
+    close_requested = true;
+    start_next_wave();
+    audio_play_sound(snd_button_click, 0, false);
+    alarm[0] = 1;
+};
 hover_text = "";
 enemy_view = 0;
 enemy_preview_view = -1;

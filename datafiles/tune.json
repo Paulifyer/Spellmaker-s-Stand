@@ -3,6 +3,13 @@
 
     "debug": { "level_select_enabled": true },
 
+    "spellbook": {
+        "start_warning": {
+            "_readme": "Effect glyph IDs that count as damaging for the Start confirmation.",
+            "damaging_effects": ["harm", "fire", "combust", "snap", "discharge"]
+        }
+    },
+
     "star_rating": {
         "_readme": "Remaining wall HP percent; awards require strictly ABOVE the threshold. Optional star_rating overrides in each level.json entry. Flawless requires zero damage throughout the run.",
         "two_star_wall_hp_percent": 33,
