@@ -28,6 +28,19 @@ function spell_max_glyphs() {
     return global.level_config[$ room_get_name(room)].max_glyphs;
 }
 
+function spell_effect_order_label(_order) {
+    static _values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+    static _numerals = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+    var _label = "";
+
+    for (var i = 0; i < array_length(_values) && _order > 0; i++) {
+        var _repeats = _order div _values[i];
+        if (_repeats > 0) _label += string_repeat(_numerals[i], _repeats);
+        _order = _order mod _values[i];
+    }
+    return _label;
+}
+
 function spell_glyph_count(_s) {
     if (_s == undefined || _s.form == undefined) return 0;
     var _count = 1 + array_length(_s.form_mods);

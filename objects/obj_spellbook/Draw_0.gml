@@ -132,7 +132,7 @@ for (var e = 0; e < _effect_slots; e++) {
         draw_set_color(c_white);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_text(_order_x, _order_y, string(e + 1));
+        draw_text(_order_x, _order_y, spell_effect_order_label(e + 1));
         draw_set_halign(fa_left);
         draw_set_valign(fa_top);
         draw_set_color(c_black);
