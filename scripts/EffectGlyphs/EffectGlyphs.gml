@@ -28,7 +28,7 @@ function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
 	cost = tune_params("effects", "fire", "cost", FIRE_COST);
-	desc = "Infuse the spell with fire. Affected enemies burn and take damage over time";
+	desc = "Burns enemies, dealing damage over time. Breaks fire wards.";
 	on_hit = function(spell, target, fx) {
 		var _base_dmg = fx.params.base_damage;
 		var _fire_dmg_mult = fx.params.fire_mult;
@@ -41,7 +41,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
 	cost = tune_params("effects", "ice", "cost", FROST_COST);
-	desc = "Infuse the spell with frost, frosting and slowing enemies down. Stacks intensity when applied repeatedly."
+	desc = "Applies Frost, slowing enemies more with each stack. Breaks frost wards."
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
 		var slow_amt = fx.params.slow_per_stack;
@@ -52,6 +52,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor {
 	icon = spr_glyph_lightning;
 	col = c_yellow;
+	desc = "Briefly stuns enemies, then leaves them Charged. Breaks lightning wards. Enemies can’t be stunned again until their Charge fades.";
 	cost = tune_params("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
@@ -73,6 +74,7 @@ function Elem_Hex() : EffectGlyph("Hex", HEX_COST) constructor {
 function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 	icon = spr_glyph_harm;
 	col = c_purple;
+	desc = "Deals damage on hit.";
 	cost = tune_params("effects", "harm", "cost", HARM_COST);
 	on_hit = function(spell, target, fx) {
 		var _dmg = fx.params.base_damage * fx.effect_multiplier;
@@ -118,7 +120,7 @@ function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
 	icon = spr_glyph_combust;
 	col = c_orange;
 	cost = tune_params("effects", "combust", "cost", 15);
-	desc = "Damages burning enemies. A direct kill with the spell causes an explosion and spreads Burn.";
+	desc = "Deals damage to burning enemies. A direct kill with the spell causes an explosion and spreads Burn.";
 	on_hit = function(spell, target, fx) {
 		if (!combat_status_active(target, "burn")) return;
 		spell_direct_damage(spell, target, fx.params.base_damage * fx.params.damage_mult * fx.effect_multiplier * spell_damage_scale(spell));
@@ -129,7 +131,7 @@ function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
 	icon = spr_glyph_discharge;
 	col = c_yellow;
 	cost = tune_params("effects", "discharge", "cost", 20);
-	desc = "Consumes Charged to damage nearby enemies. Other Charged enemies caught in the burst also discharge.";
+	desc = "Consumes Charged to deal damage nearby enemies. Other Charged enemies caught in the burst also discharge.";
 	on_hit = function(spell, target, fx) {
 		spell_discharge(spell, target, fx);
 	};

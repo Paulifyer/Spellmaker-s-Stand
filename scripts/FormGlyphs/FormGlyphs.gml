@@ -110,7 +110,7 @@ function Form_Beam() : FormGlyph("Beam", BEAM_COST) constructor {
 	icon = spr_glyph_beam;
 	sprite = spr_beam;
 	cost = tune_params("forms", "beam", "cost", BEAM_COST);
-	desc = "Fires a sustained beam which stops at the nearest enemy when the cast button is held down.";
+	desc = "Fires a sustained beam in a lane when the cast button is held down.";
 	is_channel = true;
 	on_cast = function(spell) {
 		spell.spd = 0;
