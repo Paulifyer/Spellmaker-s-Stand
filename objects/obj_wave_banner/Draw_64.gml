@@ -13,4 +13,4 @@ draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
 // Use our custom function to draw the text and the outline using the variables we set in the create event
-draw_text_transformed_outlined(x - 100, y + 40, text, 1, 1, 0, #baaa7d, c_black);
+draw_text_transformed_outlined(x - 100, y, text, 1, 1, 0, #baaa7d, c_black);
