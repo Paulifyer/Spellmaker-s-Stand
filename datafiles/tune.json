@@ -66,7 +66,7 @@
         "pierce": { "cost": 15, "max_per_form": 3, "pierce_amt": 1 },
         "amplify": { "cost": 25, "max_per_effect": 2, "dmg_multplier": 0.3, "cost_increase_per_stack": 5 },
         "extend_time": { "cost": 5, "duration_increase": 1 },
-        "delay": { "cost": 5, "delay_increase": 1 }
+        "delay": { "cost": 5, "delay_increase": 1, "follow_original_targets": true }
     },
     "compatibility": {
         "form_modifier_exclusions": { "beam": ["area"] },
