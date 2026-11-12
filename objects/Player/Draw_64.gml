@@ -25,7 +25,9 @@ draw_rectangle(_x, _y, _x + _w, _y + _h, false);
 draw_set_alpha(1);
 
 // Fills the Mana Bar
-if (mana_exhausted && (current_time div 500) mod 2 == 0) {
+if (mana_exhausted 
+	// && (current_time div 500) mod 2 == 0
+	) {
 	draw_set_colour(c_red);
 } else {
 	draw_set_colour(c_aqua);
