@@ -31,6 +31,8 @@ function makeExecutionContext() {
         enemy_begin_pull:(e,x,y,lane,frames,hold)=>{if(!e.pull)e.pull={tx:x,ty:y,lane,frames,hold};},
         json_stringify:JSON.stringify,Form_Beam:function(){},
         deal_damage:(e,amount)=>{e.hp-=amount;},
+        spr_harm:'harm',spr_pull:'pull',combat_spawn_vfx:()=>{},
+        enemy_get_leftpoint:target=>({x:target.x,y:target.y,scale:1}),
         spr_vfx_rune_complete:1,PROJECTILE_SPD:15,
         sprite:1,spr_projectile_start:'projectile_start',spr_projectile_mid:'projectile_mid',spr_projectile_end:'projectile_end',
         spr_strike_start:'strike_start',spr_strike_mid:'strike_mid',spr_strike_end:'strike_end',

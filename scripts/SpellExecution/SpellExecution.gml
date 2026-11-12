@@ -15,9 +15,14 @@ function spell_direct_damage(_spell, _enemy, _amount, _allow_combust = true) {
 	if (!is_struct(_spell) || !variable_struct_exists(_spell, "execution_scope")) return;
 	var _scope = _spell.execution_scope;
 	if (!is_struct(_scope) || _scope.combust == undefined) return;
-	var _eligible = (_scope.combust.target_policy == "entity" && !_scope.force_area)
-		? (_scope.lineage == enemy_get_lineage(_enemy))
-		: enemy_overlaps_region(_enemy, _scope.col - _scope.radius, _scope.col + _scope.radius, _scope.lane - _scope.radius, _scope.lane + _scope.radius);
+	var _eligible;
+	if (_scope.original_targets != undefined) {
+		_eligible = array_contains(_scope.original_targets, enemy_get_lineage(_enemy));
+	} else if (_scope.combust.target_policy == "entity" && !_scope.force_area) {
+		_eligible = _scope.lineage == enemy_get_lineage(_enemy);
+	} else {
+		_eligible = enemy_overlaps_region(_enemy, _scope.col - _scope.radius, _scope.col + _scope.radius, _scope.lane - _scope.radius, _scope.lane + _scope.radius);
+	}
 	if (!_eligible) return;
 	var _key = string(enemy_get_lineage(_enemy).id);
 	if (variable_struct_exists(_scope.exploded, _key)) return;
@@ -33,7 +38,7 @@ function spell_execution_scope_create(_spell, _segment, _target, _col, _lane, _r
 		var _fx = _spell.effects[i];
 		if (_fx.execution_segment == _segment && _fx.id == "combust") _combust = _fx;
 	}
-	return {id: combat_next_id(), combust: _combust, force_area: _force_area,
+	return {id: combat_next_id(), combust: _combust, force_area: _force_area, original_targets: undefined,
 		lineage: instance_exists(_target) ? enemy_get_lineage(_target) : undefined,
 		col: _col, lane: _lane, radius: _radius, exploded: {}, reactions: (_shared_reactions == undefined) ? {} : _shared_reactions, queue: [], cursor: 0, processing: false};
 }
@@ -248,6 +253,7 @@ function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force
 	var _delivery = spell_new_delivery(_spell);
 	var _snapshot = spell_snapshot(_spell);
 	var _scopes = {};
+	var _original_targets = undefined;
 	var _shared_reactions = undefined;
 	if (_spell.form.is_channel) {
 		var _has_epoch = is_struct(_spell) ? variable_struct_exists(_spell, "reaction_epoch") : variable_instance_exists(_spell, "reaction_epoch");
@@ -265,21 +271,37 @@ function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force
 		var _policy = (_force_area && _fx.target_policy != "location") ? "area" : _fx.target_policy;
 		var _lineage = (_policy == "entity" && instance_exists(_target)) ? enemy_get_lineage(_target) : undefined;
 		if (_policy == "entity" && _lineage == undefined) continue;
-		var _event = {
+		var _lineages = [_lineage];
+		var _scope = _scopes[$ _segment_key];
+		if (_policy == "area" && _fx.delay > 0 && _spell.compiled[$ "delay_follow_original_targets"] == true) {
+			if (_original_targets == undefined) {
+				// Capture this impact before immediate effects can move or kill its targets.
+				_original_targets = [];
+				var _targets = enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius);
+				for (var i = 0; i < array_length(_targets); i++) {
+					var _enemy = _targets[i];
+					if (enemy_can_receive_spell(_enemy, _spell.compiled) && _enemy.hp > 0)
+						array_push(_original_targets, enemy_get_lineage(_enemy));
+				}
+			}
+			_policy = "entity";
+			_lineages = _original_targets;
+			_scope.original_targets = _original_targets;
+		}
+		for (var i = 0; i < array_length(_lineages); i++) array_push(_state.events, {
 			due: _state.clock + max(0, round(_fx.delay * TARGET_ROOM_SPEED)), 
 			order: combat_next_id(),
 			cast_id: _delivery.cast_id, 
 			delivery_id: _delivery.id, 
 			fx: _fx, 
 			policy: _policy,
-			lineage: _lineage, 
+			lineage: _lineages[i],
 			col: _col, 
 			lane: _lane, 
 			radius: _radius,
 			epoch: _spell.hit_state.epoch, 
 			spell: _snapshot, 
-			scope: _scopes[$ _segment_key]};
-		array_push(_state.events, _event);
+			scope: _scope});
 	}
 	combat_execution_flush(_state);
 	return true;

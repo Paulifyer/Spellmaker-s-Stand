@@ -230,7 +230,7 @@ function compile_spell(_loadout) {
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});
 	}
 	var _compiled = {cost: _cost, cooldown_penalty: _cooldown_penalty, form: _f, form_id: _loadout.form,
-
+		delay_follow_original_targets: tune_setting("modifiers", "delay", "follow_original_targets", false) == true,
 		form_mods: _fmods, effects: _effects, area: false, pierce: 0, chain_hops: 0, form_modifier_penalty: _form_penalty};
 
 	if (_loadout.form == "strike") {
