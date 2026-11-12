@@ -34,3 +34,24 @@ function combat_draw_vfx() {
 		);
 	}
 }
+
+function combat_pending_delay(_enemy) {
+	var _state = combat_execution_state();
+	var _has_delay = false;
+	
+	if (is_struct(_state)) {
+		var _lineage = enemy_get_lineage(_enemy);
+		
+		for (var i = 0; i < array_length(_state.events); i++) {
+			var _event = _state.events[i];
+			
+			if (_event.policy == "entity"
+			&& _event.lineage == _lineage
+			&& _event.due > _state.clock) {
+				_has_delay = true;
+				break;
+			}
+		}
+	}
+	return _has_delay;
+}

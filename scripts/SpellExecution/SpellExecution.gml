@@ -153,6 +153,7 @@ function spell_record_contact(_spell, _enemy) {
 
 function spell_apply_once(_event, _enemy) {
 	if (!enemy_can_receive_spell(_enemy, _event.spell.compiled)) return;
+	if (_enemy.hp <= 0) return;
 	var _lineage = enemy_get_lineage(_enemy);
 	var _key = string(_event.fx.index) + ":" + string(_event.epoch) + ":" + string(_lineage.id);
 	if (variable_struct_exists(_event.spell.hit_state.applications, _key)) return;

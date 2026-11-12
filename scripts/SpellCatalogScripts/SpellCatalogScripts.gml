@@ -70,9 +70,9 @@ function spell_new_delivery(_spell) {
 }
 
 function apply_effect_group(_spell, _target, _fx) {
-	_fx.effect.on_hit(_spell, _target, _fx);
+	if (instance_exists(_target)) _fx.effect.on_hit(_spell, _target, _fx);
 	for (var i = 0; i < array_length(_fx.mods); i++)
-		if (_fx.mods[i].on_hit != undefined) _fx.mods[i].on_hit(_spell, _target, _fx);
+		if (_fx.mods[i].on_hit != undefined && instance_exists(_target)) _fx.mods[i].on_hit(_spell, _target, _fx);
 }
 
 // Snapshots retain immutable compiled values and shared cast hit records, never a projectile.

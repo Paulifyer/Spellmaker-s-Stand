@@ -154,6 +154,8 @@ is_attack_possible = false;
 is_dying = false;
 fade_speed = 0.05;
 
-
+delay_spr = spr_delay;
+delay_frame = 0;
+delay_speed = 2 / 15;
 
 

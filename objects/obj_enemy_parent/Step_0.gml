@@ -24,4 +24,7 @@ x_previous = x;
 y_previous = y;
 
 // Set image_speed as the ratio between my_speed and base_speed
-image_speed = my_speed / base_speed; 
+image_speed = my_speed / base_speed;
+
+var _frames = sprite_get_number(delay_spr);
+delay_frame = (delay_frame + delay_speed) % _frames;

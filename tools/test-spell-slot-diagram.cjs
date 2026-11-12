@@ -18,7 +18,8 @@ load(c,'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml',['draw_spell_
 for(const count of [0,1,2,3,6,12]) {
     calls.length=0;
     c.draw_spell_slot_diagram({form:'projectile',form_mods:['area'],effects:Array.from({length:count},(_,i)=>({effect:i%2?'ice':'fire',mods:['amplify']}))},60,61,82);
-    assert.equal(calls.length,2+count*2,'Draw form, effects and every modifier occurrence');
+    assert.equal(calls.length,1+count,'Draw only form and effects, omitting modifiers');
+    assert.deepEqual(calls.map(call=>call[0]),[1,...Array.from({length:count},(_,i)=>i%2?3:2)],'Preserve effect order');
     const centers=calls.map(call=>({x:call[2]+49.5*call[4],y:call[3]+49.5*call[5]}));
     assert.equal(centers[0].x,60);assert.equal(centers[0].y,61);
     for(let i=0;i<calls.length;i++) {
@@ -29,7 +30,7 @@ for(const count of [0,1,2,3,6,12]) {
         if(i) {
             assert.ok(call[4]<calls[0][4]);
             assert.ok(Math.abs(Math.hypot(centers[i].x-60,centers[i].y-61)-82*0.34)<1e-8);
-            const expected=90+(i-1)*360/(1+count*2);
+            const expected=90+(i-1)*360/count;
             assert.ok(Math.abs(centers[i].x-(60+82*0.34*Math.cos(expected*Math.PI/180)))<1e-8);
         }
         for(const x of [call[2]+10*call[4],call[2]+89*call[4]])
@@ -66,5 +67,5 @@ c.global.menu_lock=true;assert.equal(ready(),false);c.global.menu_lock=false;
 compiled={form:{name:'Beam'},cost:100};assert.equal(ready(),true,'Beam uses its drain rules rather than upfront cost');
 compiled={form:{name:'Rune'},cost:20};runes=[{form:{name:'Rune'},target_col:1,lane:1}];
 assert.equal(ready(),false,'Occupied rune target');runes=[];assert.equal(ready(),true);
-console.log('Spell slot diagram checks passed: centered form, effects and modifiers, circular bounds and disabled colour.');
+console.log('Spell slot diagram checks passed: centered form, ordered effects, omitted modifiers, circular bounds and disabled colour.');
 console.log('Spell slot readiness checks passed: cooldown, mana, channel, locks, targeting and rune occupancy.');

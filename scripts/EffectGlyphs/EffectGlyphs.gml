@@ -82,7 +82,7 @@ function Elem_Harm() : EffectGlyph("Harm", HARM_COST) constructor {
 			_dmg *= spell.compiled.beam_damage_multiplier_per_tick;
 		}
 		var pos = enemy_get_leftpoint(target, spr_harm, "center", 0.5);
-		combat_spawn_vfx(spr_harm, target.x, target.y, 0.5, 0.5);
+		combat_spawn_vfx(spr_harm, target.x, pos.y, 0.5, 0.5);
 		spell_direct_damage(spell, target, _dmg);
 	}
 }

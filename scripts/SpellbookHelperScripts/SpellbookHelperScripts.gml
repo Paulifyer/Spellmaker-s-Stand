@@ -442,18 +442,14 @@ function spell_slot_can_cast(_caster, _spell, _slot, _target) {
     return true;
 }
 
-// Form at the center; effects and modifiers share an evenly spaced outer ring.
+// Form at the center; effects follow spell order around the outer ring.
 function draw_spell_slot_diagram(_spell, _x, _y, _size, _disabled = false) {
     if (!is_struct(_spell) || _spell.form == undefined) return;
     var _form = global.spell_glyphs.form[$ _spell.form];
     var _icons = [];
-    for (var i = 0; i < array_length(_spell.form_mods); i++)
-        array_push(_icons, global.spell_glyphs.modifier[$ _spell.form_mods[i]].icon);
     for (var i = 0; i < array_length(_spell.effects); i++) {
         var _fx = _spell.effects[i];
         array_push(_icons, global.spell_glyphs.effect[$ _fx.effect].icon);
-        for (var j = 0; j < array_length(_fx.mods); j++)
-            array_push(_icons, global.spell_glyphs.modifier[$ _fx.mods[j]].icon);
     }
     var _count = array_length(_icons);
     draw_spell_slot_glyph(_form.icon, _x, _y, _size * (_count == 0 ? 0.7 : 0.36), _disabled);
