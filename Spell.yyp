@@ -99,6 +99,7 @@
   },
   "name":"Spell",
   "resources":[
+    {"id":{"name":"fnt_Arcane_Banner","path":"fonts/fnt_Arcane_Banner/fnt_Arcane_Banner.yy",},},
     {"id":{"name":"fnt_Arcane_Bold_Bold","path":"fonts/fnt_Arcane_Bold_Bold/fnt_Arcane_Bold_Bold.yy",},},
     {"id":{"name":"fnt_Arcane_Bold","path":"fonts/fnt_Arcane_Bold/fnt_Arcane_Bold.yy",},},
     {"id":{"name":"fnt_Arcane_More_Bold","path":"fonts/fnt_Arcane_More_Bold/fnt_Arcane_More_Bold.yy",},},
@@ -438,6 +439,7 @@
     {"id":{"name":"spr_ui_barrier_midhealth2","path":"sprites/spr_ui_barrier_midhealth2/spr_ui_barrier_midhealth2.yy",},},
     {"id":{"name":"spr_ui_gameovergraphic","path":"sprites/spr_ui_gameovergraphic/spr_ui_gameovergraphic.yy",},},
     {"id":{"name":"spr_ui_hexagram_border1","path":"sprites/spr_ui_hexagram_border1/spr_ui_hexagram_border1.yy",},},
+    {"id":{"name":"spr_ui_logobanner","path":"sprites/spr_ui_logobanner/spr_ui_logobanner.yy",},},
     {"id":{"name":"spr_ui_logofull","path":"sprites/spr_ui_logofull/spr_ui_logofull.yy",},},
     {"id":{"name":"spr_ui_menu_darkeroutline","path":"sprites/spr_ui_menu_darkeroutline/spr_ui_menu_darkeroutline.yy",},},
     {"id":{"name":"spr_ui_nextwave","path":"sprites/spr_ui_nextwave/spr_ui_nextwave.yy",},},

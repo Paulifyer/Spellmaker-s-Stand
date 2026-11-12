@@ -6,7 +6,7 @@
 event_inherited();
 
 // Set the font 
-draw_set_font(fnt_wave_banner);
+draw_set_font(fnt_Arcane_Banner);
 
 // Set the horizontal and verticle alignment of the text
 draw_set_halign(fa_center);
