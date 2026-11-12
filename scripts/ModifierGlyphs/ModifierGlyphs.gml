@@ -26,7 +26,7 @@ function Mod_Area() : ModifierGlyph("Area", AREA_COST) constructor {
 	scope = "both";
 	allowed_forms = ["projectile", "beam", "strike", "rune"];
 	allowed_effects = ["combust", "discharge"];
-	desc = "Expand a Form's delivery area or a compatible Effect's burst area. Pull keeps its normal 3x3 area.";
+	desc = "Widens compatible Glyphs' area of effect.";
 	cost = tune_params("modifiers", "area", "cost", AREA_COST);
 	on_cast = function(spell, fx) {
 		if (fx != undefined) fx.area = true;
@@ -39,6 +39,7 @@ function Mod_Amplify() : ModifierGlyph("Amplify", AMPLIFY_COST) constructor {
 	icon = spr_glyph_amplify;
 	cost = tune_params("modifiers", "amplify", "cost", AMPLIFY_COST);
 	is_stacks = true;
+	desc = "Increases the attached Effect's damage per stack.";
 	scope = "effect";
 	allowed_effects = ["harm", "fire", "snap", "combust", "discharge"];
 	on_cast = function(spell, fx) {
@@ -49,6 +50,7 @@ function Mod_Amplify() : ModifierGlyph("Amplify", AMPLIFY_COST) constructor {
 function Mod_Pierce() : ModifierGlyph("Pierce", PIERCE_COST) constructor {
 	icon = spr_glyph_pierce
 	cost = tune_params("modifiers", "pierce", "cost", PIERCE_COST);
+	desc = "Lets applicable forms hit additional enemies in their path per stack";
 	is_stacks = true;
 	scope = "spell";
 	allowed_forms = ["projectile", "beam"];
@@ -61,6 +63,7 @@ function Mod_Pierce() : ModifierGlyph("Pierce", PIERCE_COST) constructor {
 function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constructor {
 	icon = spr_glyph_extendtime;
 	cost = tune_params("modifiers", "extend_time", "cost", EXTEND_TIME_COST);
+	desc = "Makes status effects last longer per stack.";
 	is_stacks = true;
 	scope = "effect";
 	allowed_effects = ["fire", "ice", "lightning", "hex"];
@@ -72,6 +75,7 @@ function Mod_Extend_Time(): ModifierGlyph("ExtendTime", EXTEND_TIME_COST) constr
 function Mod_Delay(): ModifierGlyph("Delay", DELAY_COST) constructor {
 	icon = spr_glyph_delay;
 	cost = tune_params("modifiers", "delay", "cost", DELAY_COST);
+	desc = "Adds a one-second pause per stack before the following Effects trigger. You can repeat an Effect after the pause.";
 	is_stacks = true;
 	scope = "effect";
 	desc = "Delays the effects after this group. Allows an effect to repeat after the delay. Stacks add more time.";
@@ -89,7 +93,7 @@ function Mod_Chain() : ModifierGlyph("Chain", CHAIN_COST) constructor {
 	scope = "spell";
 	is_stacks = true;
 	allowed_forms = ["projectile", "beam", "strike", "rune"];
-	desc = "Each fresh Form hit chains sequentially to nearby unhit enemies. Stacks add more hops.";
+	desc = "Lets each hit jump to nearby enemies. Each stack adds more jumps.";
 	on_cast = function(spell, fx) {
 		var _hops = tune_setting("modifiers", "chain", "hops_per_stack", 2);
 		if (!is_real(_hops) || _hops < 0 || floor(_hops) != _hops) throw "chain.hops_per_stack must be a non-negative integer";

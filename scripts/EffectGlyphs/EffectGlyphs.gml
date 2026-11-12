@@ -28,7 +28,7 @@ function Elem_Fire() : EffectGlyph("Fire", FIRE_COST) constructor {
 	icon = spr_glyph_fire;
 	col = c_red
 	cost = tune_params("effects", "fire", "cost", FIRE_COST);
-	desc = "Infuse the spell with fire, leaving enemies burning taking damage over time";
+	desc = "Infuse the spell with fire. Affected enemies burn and take damage over time";
 	on_hit = function(spell, target, fx) {
 		var _base_dmg = fx.params.base_damage;
 		var _fire_dmg_mult = fx.params.fire_mult;
@@ -41,7 +41,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	icon = spr_glyph_frost;
 	col = c_teal;
 	cost = tune_params("effects", "ice", "cost", FROST_COST);
-	desc = "Infuse the spell with frost, frosting and slowing enemies down"
+	desc = "Infuse the spell with frost, frosting and slowing enemies down. Stacks intensity when applied repeatedly."
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
 		var slow_amt = fx.params.slow_per_stack;
@@ -62,7 +62,7 @@ function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor
 function Elem_Hex() : EffectGlyph("Hex", HEX_COST) constructor {
 	icon = spr_glyph_hex;
 	col = c_fuchsia;
-	desc = "Increases damage taken by 10% per active status, including Hex.";
+	desc = "Curses enemies, making them take 10% more damage for each active status.";
 	cost = tune_params("effects", "hex", "cost", HEX_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
@@ -90,7 +90,7 @@ function Elem_Pull() : EffectGlyph("Pull", PULL_COST) constructor {
 	col = c_ltgray;
 	allowed_forms = ["projectile", "strike", "rune"];
 	delivery_kind = "location";
-	desc = "Pulls enemies in a 3x3 area. Form AoE does not enlarge Pull.";
+	desc = "Pulls enemies in a 3x3 area around the point of impact.";
 	
 	on_impact = function(spell, fx, col, lane) {
 		var _tx = GRID_X0 + col * TILE_W + TILE_W / 2;
@@ -118,7 +118,7 @@ function Elem_Combust() : EffectGlyph("Combust", 15) constructor {
 	icon = spr_glyph_combust;
 	col = c_orange;
 	cost = tune_params("effects", "combust", "cost", 15);
-	desc = "Damages burning enemies. A direct kill in this immediate spell sequence causes an explosion and spreads Burn.";
+	desc = "Damages burning enemies. A direct kill with the spell causes an explosion and spreads Burn.";
 	on_hit = function(spell, target, fx) {
 		if (!combat_status_active(target, "burn")) return;
 		spell_direct_damage(spell, target, fx.params.base_damage * fx.params.damage_mult * fx.effect_multiplier * spell_damage_scale(spell));
@@ -129,7 +129,7 @@ function Elem_Discharge() : EffectGlyph("Discharge", 20) constructor {
 	icon = spr_glyph_discharge;
 	col = c_yellow;
 	cost = tune_params("effects", "discharge", "cost", 20);
-	desc = "Charged enemies emit area damage and consume Charged. Nearby charged enemies react; each enemy takes at most three burst hits per reaction.";
+	desc = "Consumes Charged to damage nearby enemies. Other Charged enemies caught in the burst also discharge.";
 	on_hit = function(spell, target, fx) {
 		spell_discharge(spell, target, fx);
 	};
@@ -140,7 +140,7 @@ function Elem_Snap() : EffectGlyph("Snap", 15) constructor {
 	col = c_teal;
 	cost = tune_params("effects", "snap", "cost", 15);
 	effect_sprites = [spr_snap_1, spr_snap_2, spr_snap_3];
-	desc = "Deals damage per Frost stack, then consumes all Frost. No Frost means no damage.";
+	desc = "Removes all frost stacks from an enemy, dealing heavy damage for each Frost stack.";
 	on_hit = function(spell, target, fx) {
 		var _stacks = combat_status_frost_stacks(target);
 		if (_stacks <= 0) return;
@@ -162,7 +162,7 @@ function Elem_Force() : EffectGlyph("Force", 10) constructor {
 	col = c_silver;
 	allowed_forms = ["projectile", "strike", "rune"];
 	cost = tune_params("effects", "force", "cost", 10);
-	desc = "Forces back enemies by 1 tile";
+	desc = "Pushes back enemies by 1 tile";
 	on_hit = function(spell, target, fx) {
 	    if (!enemy_can_be_displaced(target)) return;
 	    if (target.pull != undefined) return;
@@ -197,7 +197,7 @@ function Elem_Earth() : EffectGlyph("Earth", 20) constructor {
 	delivery_kind = "location";
 	allowed_forms = ["projectile", "strike", "rune"];
 	cost = tune_params("effects", "earth", "cost", 20);
-	desc = "Create a barrier of earth to stop enemies from attacking";
+	desc = "Create a temporary barrier of earth to impede enemies";
 	on_impact = function(spell, fx, col, lane) {
 		if (spell.compiled.form_id == "projectile") col -= 1;
 		col = clamp(col, 0, GRID_COLS - 1);
