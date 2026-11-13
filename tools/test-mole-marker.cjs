@@ -3,6 +3,8 @@ const vm=require('node:vm');
 const {read,load}=require('./gml-test-utils.cjs');
 const {makeEnemyContext}=require('./enemy-test-context.cjs');
 const h=makeEnemyContext(),ctx=h.ctx;
+let villageHp = 1;
+ctx.get_village_hp = () => villageHp;
 Object.assign(ctx,{obj_mole:'mole',obj_rock:'rock',place_meeting:()=>false,event_inherited:()=>{},path_exists:p=>p===1,path_get_x:(p,t)=>1000-800*t,path_get_y:()=>432});
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_initialize_mole_marker']);
 const e=h.enemy(2,0,{object_index:'mole',pos_to_stop:0.4,path_index:1,path_position:0.5,path_speed:1,emerged:false,ready_to_attack:false,
@@ -28,5 +30,8 @@ runEvent('objects/obj_mole/Step_0.gml');
 assert.equal(e.path_speed,0);assert.equal(e.image_speed,1);assert.equal(e.sprite_index,1);
 runEvent('objects/obj_mole/Step_1.gml');
 assert.equal(inherited,3,'Parent attacks resume after emerging');
+villageHp = 0;
+runEvent('objects/obj_mole/Step_0.gml');
+assert.equal(e.path_speed,2,'Surfaced moles advance after the barrier breaks');
 const ordinary=h.enemy();ctx.enemy_initialize_mole_marker(ordinary,1);assert.equal(ordinary.emergence_marker,undefined);
 console.log('Mole marker checks passed: assigned-path destination, exact emergence, marker removal and other enemies unchanged.');

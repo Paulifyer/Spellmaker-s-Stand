@@ -17,10 +17,22 @@ if (money_flash_alpha > 0)
 }
 
 // Check if the game is over, and if so, exit this event
-if (game_over) exit;
+if (paused || game_over) exit;
 
-// Check if the village's hp is less than zero
-if (get_village_hp() <= 0) 
+var _breached = false;
+if (village_hp <= 0)
+{
+	with (obj_enemy_parent)
+	{
+		if (hp > 0 && !is_bonepile && x <= BARRIER_BREACH_X)
+		{
+			_breached = true;
+			break;
+		}
+	}
+}
+
+if (_breached)
 {
 	// Use the custom game over function to turn off variables
 	set_game_over();	

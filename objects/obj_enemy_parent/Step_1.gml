@@ -6,13 +6,14 @@
 rock = enemy_detect_obstacle(id, detection_dist);
 is_blocked = rock != noone && is_targetable;
 
-if (path_position >= pos_to_stop || is_blocked)
+var _barrier_broken = get_village_hp() == 0;
+if ((!_barrier_broken && path_position >= pos_to_stop) || is_blocked)
 {
 	if (attack_sprite != undefined) sprite_index = attack_sprite;
 	if (ready_to_attack && stun_timer <= 0 && hitstun_timer <= 0) {
 		ready_to_attack = false
-		is_stop_reached = path_position >= pos_to_stop;
-		if (is_ranged) {
+		is_stop_reached = !_barrier_broken && path_position >= pos_to_stop;
+		if (is_ranged && !_barrier_broken) {
 			enemy_shoot_prj(x, y, depth, damage_dealt, range_obj);
 		} else {
 			if (is_blocked) {

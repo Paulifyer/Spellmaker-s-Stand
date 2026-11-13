@@ -1,3 +1,5 @@
+if (hp <= 0) exit;
+
 draw_self();
 
 if (flash_alpha > 0) {

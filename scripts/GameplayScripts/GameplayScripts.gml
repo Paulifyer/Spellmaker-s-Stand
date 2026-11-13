@@ -108,7 +108,7 @@ function reduce_village_hp(_amount)
 		}
 		
 		// Reduce the village hp by the amount provided
-		village_hp -= _amount;		
+		village_hp = max(0, village_hp - _amount);
 		
 		// Set this value to 1 in order to animate the HUD Text
 		village_flash_alpha = 1;
