@@ -16,6 +16,7 @@ const ranger = {
 };
 const ctx = vm.createContext({
     ranger, id: ranger, object_index: 'ranger', obj_mook: 'mook', obj_brute: 'brute',
+    obj_siege_beast: 'siege', obj_barrier: 'barrier',
     GRID_X0: 128, TARGET_ROOM_SPEED: 60, noone: -1, max: Math.max,
     get_village_hp: () => villageHp,
     enemy_detect_obstacle: () => -1,
@@ -49,4 +50,30 @@ step.runInContext(ctx);
 assert.equal(ranger.rock.hp, 2);
 assert.equal(ranger.path_speed, 0);
 assert.equal(shots, 1);
+
+villageHp = 1;
+ranger.is_ranged = false;
+ranger.ready_to_attack = true;
+ranger.path_position = 0.9;
+ranger.x = 280;
+ctx.enemy_detect_obstacle = () => -1;
+ctx.instance_find = () => ({front_x: 276});
+ctx.instance_exists = instance => !!instance;
+let hits = 0;
+ctx.reduce_village_hp = () => { hits++; };
+begin.runInContext(ctx);
+step.runInContext(ctx);
+assert.equal(hits, 0);
+assert.equal(ranger.path_speed, ranger.base_speed);
+
+ranger.x = 276;
+begin.runInContext(ctx);
+step.runInContext(ctx);
+assert.equal(hits, 1);
+assert.equal(ranger.path_speed, 0);
+
+villageHp = 0;
+begin.runInContext(ctx);
+step.runInContext(ctx);
+assert.equal(ranger.path_speed, ranger.base_speed);
 console.log('Ranger fires while the barrier stands and resumes advancing when it breaks.');

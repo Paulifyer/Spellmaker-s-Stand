@@ -1,18 +1,26 @@
 /// @description Enemy Parent
 
-// Check if the enemies position on the path is greater than or equal to 1
-// which means that it is at the end of the path
-
 rock = enemy_detect_obstacle(id, detection_dist);
 is_blocked = rock != noone && is_targetable;
 
 var _barrier_broken = get_village_hp() == 0;
-if ((!_barrier_broken && path_position >= pos_to_stop) || is_blocked)
+var _at_barrier = false;
+if (!_barrier_broken && pull == undefined && force_push == undefined) {
+	if (is_ranged) {
+		_at_barrier = path_position >= pos_to_stop;
+	} else {
+		var _barrier = instance_find(obj_barrier, 0);
+		_at_barrier = instance_exists(_barrier) ? x <= _barrier.front_x : path_position >= pos_to_stop;
+	}
+}
+is_stop_reached = _at_barrier;
+
+// Siege impacts resolve after spell effects in the gameplay manager.
+if ((_at_barrier && object_index != obj_siege_beast) || is_blocked)
 {
 	if (attack_sprite != undefined) sprite_index = attack_sprite;
 	if (ready_to_attack && stun_timer <= 0 && hitstun_timer <= 0) {
 		ready_to_attack = false
-		is_stop_reached = !_barrier_broken && path_position >= pos_to_stop;
 		if (is_ranged && !_barrier_broken) {
 			enemy_shoot_prj(x, y, depth, damage_dealt, range_obj);
 		} else {

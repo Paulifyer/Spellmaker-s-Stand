@@ -4,7 +4,12 @@ const {makeEnemyContext}=require('./enemy-test-context.cjs');
 const h=makeEnemyContext(),ctx=h.ctx;let damage=0;
 Object.assign(ctx,{tune_enemy:(_,__,v)=>v,reduce_village_hp:n=>damage+=n});
 load(ctx,'scripts/EnemyHelper/EnemyHelper.gml',['enemy_update_movement','enemy_siege_attack']);
-const beast=()=>h.enemy(2,0,{hp:750,path_position:1,charge_active:true,normal_speed:0.6,base_speed:4,damage_dealt:5,attack_delay:4,siege_attack_timer:-1});
+const beast=()=>h.enemy(2,0,{hp:750,path_position:0.92,is_stop_reached:true,charge_active:true,normal_speed:0.6,base_speed:4,damage_dealt:5,attack_delay:4,siege_attack_timer:-1});
+const approaching=beast();
+approaching.is_stop_reached=false;
+ctx.enemy_siege_attack(approaching);assert.equal(damage,0);
+approaching.is_stop_reached=true;approaching.is_blocked=true;
+ctx.enemy_siege_attack(approaching);assert.equal(damage,0);
 let e=beast();ctx.enemy_siege_attack(e);assert.equal(damage,10);assert.equal(e.charge_active,false);
 for(let i=0;i<239;i++)ctx.enemy_siege_attack(e);assert.equal(damage,10);ctx.enemy_siege_attack(e);assert.equal(damage,15);
 e=beast();damage=0;ctx.combat_status_apply(e,'lightning',60);assert.equal(e.charge_active,false);assert.equal(e.base_speed,0.6);
@@ -38,3 +43,18 @@ ctx.combat_status_advance(e,60);assert.equal(e.hp,700);
 e=h.enemy(2,0,{object_index:'other',hp:750,dmg_reduction:0,mutation_keys:[]});
 ctx.deal_damage(e,100);assert.equal(e.hp,650);
 console.log('Charge damage checks passed: configured multiplier, interruption, stacking, burn and ordinary enemies.');
+
+// The charge sprite touches the rune before the beast's origin enters its tile.
+const rune = h.spell('rune', [{effect:'lightning',mods:[]}, {effect:'harm',mods:[]}]);
+Object.assign(rune, {armed:true, lane:0, charges:1});
+const runeTarget = h.enemy(3, 0, {
+ object_index:'siege', hp:750, charge_active:true, normal_speed:0.6, base_speed:4,
+ dmg_reduction:0, mutation_keys:[]
+});
+ctx.forms.rune.on_hit(rune, runeTarget);
+assert.equal(rune.destroyed, true);
+assert.equal(runeTarget.stun_timer, 60);
+assert.equal(runeTarget.charge_active, false);
+assert.equal(runeTarget.path_speed, 0);
+assert.equal(runeTarget.hp, 650);
+console.log('Rune contact outside its tile applies Lightning and Harm to the Siege Beast.');

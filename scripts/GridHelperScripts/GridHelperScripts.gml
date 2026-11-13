@@ -5,7 +5,7 @@
 #macro ROWS_PER_LANE 2
 #macro LANE_H 144
 #macro GRID_X0 128 // x of the lanes' left edge
-#macro BARRIER_BREACH_X (GRID_X0 - 16) // Just past the lane endpoint, where siege attacks land.
+#macro BARRIER_BREACH_X (GRID_X0 - 16) // Just past the lane endpoint.
 
 global.lane_top = [144, 288, 432, 576, 720, 864];
 

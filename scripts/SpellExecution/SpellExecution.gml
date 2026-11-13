@@ -172,6 +172,13 @@ function combat_execute_event(_event) {
 		case "area":
 			var _r = _event.radius;
 			var _targets = enemies_in_region_list(_event.col - _r, _event.col + _r, _event.lane - _r, _event.lane + _r);
+			// Rune contact can happen before a large enemy's origin enters the tile.
+			var _contact = _event.scope.lineage;
+			if (_event.spell.compiled.form_id == "rune" && _event.fx.delay == 0
+				&& _contact != undefined && _contact.alive && !_contact.gap
+				&& !array_contains(_targets, _contact.target)) {
+				array_push(_targets, _contact.target);
+			}
 			for (var i = 0; i < array_length(_targets); i++) spell_apply_once(_event, _targets[i]);
 			break;
 		case "entity":
@@ -231,6 +238,8 @@ function spell_apply_impact_hitstun(_spell, _target, _col, _lane, _radius, _forc
 	var _targets = _area
 		? enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius)
 		: [ _target ];
+	if (_spell.compiled.form_id == "rune" && instance_exists(_target) && !array_contains(_targets, _target))
+		array_push(_targets, _target);
 	for (var i = 0; i < array_length(_targets); i++) {
 		var _enemy = _targets[i];
 		if (!enemy_can_receive_spell(_enemy, _spell.compiled) || _enemy.hp <= 0) continue;
@@ -279,6 +288,8 @@ function spell_deliver_payload(_spell, _target, _col, _lane, _radius = 0, _force
 				// Capture this impact before immediate effects can move or kill its targets.
 				_original_targets = [];
 				var _targets = enemies_in_region_list(_col - _radius, _col + _radius, _lane - _radius, _lane + _radius);
+				if (_spell.compiled.form_id == "rune" && instance_exists(_target) && !array_contains(_targets, _target))
+					array_push(_targets, _target);
 				for (var i = 0; i < array_length(_targets); i++) {
 					var _enemy = _targets[i];
 					if (enemy_can_receive_spell(_enemy, _spell.compiled) && _enemy.hp > 0)

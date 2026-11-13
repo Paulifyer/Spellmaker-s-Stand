@@ -172,8 +172,8 @@ function enemy_interrupt_charge(_enemy, _reason) {
 function enemy_siege_attack(_enemy) {
 	if (_enemy.hp <= 0) return;
 	if (_enemy.stun_timer > 0) { enemy_interrupt_charge(_enemy, "stun"); return; }
-	if (_enemy.pull != undefined) return;
-	if (_enemy.path_position < 1) { _enemy.siege_attack_timer = -1; return; }
+	if (_enemy.pull != undefined || _enemy.force_push != undefined) return;
+	if (!_enemy.is_stop_reached || _enemy.is_blocked) { _enemy.siege_attack_timer = -1; return; }
 	var _windup = max(1, round(_enemy.attack_delay * TARGET_ROOM_SPEED));
 	if (_enemy.charge_active) {
 		reduce_village_hp(_enemy.damage_dealt * tune_enemy("siege_beast", "charge_attack_mult", 2));
