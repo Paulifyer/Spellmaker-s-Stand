@@ -39,11 +39,11 @@
         "base_speed": 1,
         "base_hp": 150,
         "mook": { "spawn_weight": 1, "hp_mult": 1.6, "spd_mult": 1.0, "attack_delay": 1, "attack_dmg": 1 },
-        "ranger": { "spawn_weight": 2, "hp_mult": 1, "spd_mult": 1.5, "attack_delay": 2, "attack_dmg": 1, "attack_range_min_tiles": 7, "attack_range_max_tiles": 10 },
+        "ranger": { "spawn_weight": 2, "hp_mult": 1, "spd_mult": 1.5, "attack_delay": 3, "attack_dmg": 1, "attack_range_min_tiles": 7, "attack_range_max_tiles": 10 },
         "brute": { "spawn_weight": 4, "hp_mult": 4, "spd_mult": 1.1, "attack_delay": 2, "attack_dmg": 3, "enrange_mult": 2 },
-        "swarmer": { "spawn_weight": 2, "hp_mult": 0.1, "spd_mult": 3, "attack_delay": 1, "attack_dmg": 0.5 },
+        "swarmer": { "spawn_weight": 2, "hp_mult": 0.1, "spd_mult": 3, "attack_delay": 2, "attack_dmg": 1 },
         "siege_beast": { "spawn_weight": 10, "hp_mult": 5, "spd_mult": 0.7, "attack_delay": 4, "attack_dmg": 5, "charge_spd_mult": 5, "charge_attack_mult": 2, "charge_dmg_taken_mult": 0.5 },
-        "mole": { "spawn_weight": 3, "hp_mult": 1, "spd_mult": 1.6, "attack_delay": 3, "attack_dmg": 3, "attack_range_min_tiles": 4, "attack_range_max_tiles": 7 },
+        "mole": { "spawn_weight": 3, "hp_mult": 1, "spd_mult": 1.6, "attack_delay": 4, "attack_dmg": 2, "attack_range_min_tiles": 4, "attack_range_max_tiles": 7 },
         "carrion": { "spawn_weight": 7, "hp_mult": 4, "spd_mult": 0.7, "attack_delay": 1, "attack_dmg": 3, "hp_gain_per_death_mult": 0.8, "deaths_to_frenzy": 5, "frenzy_speed_mult": 4, "death_radius_tiles": 2, "screech_duration": 0.5, "heal_on_nearby_death_pct": 30 }
     },
     "forms": {
@@ -71,7 +71,7 @@
         "chain": { "cost": 20, "max_per_form": 3, "hops_per_stack": 1, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25, "cooldown_penalty": 2},
         "pierce": { "cost": 15, "max_per_form": 2, "pierce_amt": 2 },
-        "amplify": { "cost": 15, "max_per_effect": 2, "dmg_multplier": 0.35, "cost_increase_per_stack": 0 },
+        "amplify": { "cost": 10, "max_per_effect": 2, "dmg_multplier": 0.30, "cost_increase_per_stack": 0 },
         "extend_time": { "cost": 5, "duration_increase": 1 },
         "delay": { "cost": 5, "delay_increase": 1, "follow_original_targets": true }
     },
