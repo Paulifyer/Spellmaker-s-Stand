@@ -232,6 +232,7 @@ function carrion_update_frenzy(_enemy) {
 	if (_enemy.screech_timer > 0) return;
 	_enemy.base_speed *= _enemy.frenzy_speed_mult;
 	_enemy.is_rune_immune = true;
+	_enemy.hitstun_timer = 0;
 	_enemy.walk_side_sprite = spr_enemy_carrionflight;
 	_enemy.walk_up_sprite = spr_enemy_carrionflight;
 	_enemy.walk_down_sprite = spr_enemy_carrionflight;
@@ -428,6 +429,7 @@ function enemy_shoot_prj(_x, _y, _depth, _damage_dealt, _prj) {
 }
 
 function enemy_apply_hitstun(_spell, _target) {
+	if (_target.object_index == obj_carrion && _target.frenzied && _target.screech_timer <= 0) return;
 	var _hitstun_duration = tune_value("combat", "base_hitstun_duration", 0.08) * TARGET_ROOM_SPEED;
 	var _scaled_duration = _hitstun_duration * array_length(_spell.effects);
 	var _frames = max(0, round(_scaled_duration));
