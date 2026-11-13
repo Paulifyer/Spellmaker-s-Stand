@@ -32,6 +32,6 @@ runEvent('objects/obj_mole/Step_1.gml');
 assert.equal(inherited,3,'Parent attacks resume after emerging');
 villageHp = 0;
 runEvent('objects/obj_mole/Step_0.gml');
-assert.equal(e.path_speed,2,'Surfaced moles advance after the barrier breaks');
+assert.equal(e.path_speed,0,'Surfaced moles stay put after the barrier breaks');
 const ordinary=h.enemy();ctx.enemy_initialize_mole_marker(ordinary,1);assert.equal(ordinary.emergence_marker,undefined);
 console.log('Mole marker checks passed: assigned-path destination, exact emergence, marker removal and other enemies unchanged.');

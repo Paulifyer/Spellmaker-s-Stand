@@ -22,7 +22,8 @@ if (_barrier_broken) is_stop_reached = false;
 enemy_update_movement(id);
 
 // Continue on foot after the path ends so enemies at the wall still have to cross it.
-if (_barrier_broken && hp > 0 && !is_bonepile && x <= GRID_X0 && path_speed > 0) {
+if (_barrier_broken && hp > 0 && !is_bonepile && x <= GRID_X0 && path_speed > 0
+	&& !(object_index == obj_mole && emerged)) {
 	var _advance = path_speed;
 	if (path_index != -1) path_end();
 	x -= _advance;

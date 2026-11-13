@@ -193,6 +193,13 @@ function enemy_resolve_siege_attacks() {
 	for (var i = 0; i < instance_number(obj_siege_beast); i++) enemy_siege_attack(instance_find(obj_siege_beast, i));
 }
 
+// Convert attack range in tiles from the lane endpoint to path progress.
+function enemy_ranged_stop_position(_name, _default_min, _default_max) {
+	var _min = clamp(tune_enemy(_name, "attack_range_min_tiles", _default_min), 0, GRID_COLS);
+	var _max = clamp(tune_enemy(_name, "attack_range_max_tiles", _default_max), _min, GRID_COLS);
+	return 1 - random_range(_min, _max) / GRID_COLS;
+}
+
 function enemy_initialize_mole_marker(_enemy, _path) {
 	if (_enemy.object_index != obj_mole || !path_exists(_path)) return;
 	_enemy.emergence_marker = {x: path_get_x(_path, _enemy.pos_to_stop), y: path_get_y(_path, _enemy.pos_to_stop), active: true};

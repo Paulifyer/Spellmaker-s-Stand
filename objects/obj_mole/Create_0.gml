@@ -68,7 +68,7 @@ damage_dealt = tune_enemy(name, "attack_dmg", 1);
 attack_delay = tune_enemy(name, "attack_delay", 2);
 
 // Range Selector
-base_pos_to_stop = 1 - (0.9 - random(0.4));
+base_pos_to_stop = enemy_ranged_stop_position(name, 6.5, 11.7);
 
 pos_to_stop = base_pos_to_stop;
 
