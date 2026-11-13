@@ -609,11 +609,11 @@
             {
                 "enemy": "MOOK",
                 "weight_setting": [
-                    8,
+                    2,
                     0,
-                    8,
-                    8,
-                    8
+                    2,
+                    2,
+                    2
                 ],
                 "min_setting": [
                     3,
@@ -750,9 +750,9 @@
                 "max_setting": [
                     0,
                     0,
-                    5,
-                    6,
-                    6
+                    999,
+                    999,
+                    999
                 ],
                 "mutation": "banneret"
             },
