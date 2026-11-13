@@ -7,7 +7,7 @@ if (room == rm_menu && variable_global_exists("debug_level_select_active")
 
 if (room == rm_menu && tune_flag("debug", "level_select_enabled")
 && keyboard_check_pressed(vk_f8)) {
-	room_goto(rm_debug_level_select);
+	room_goto(rm_level_select);
 	exit;
 }
 

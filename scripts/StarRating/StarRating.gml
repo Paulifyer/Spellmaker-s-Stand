@@ -38,3 +38,17 @@ function save_level_stars(_level, _result) {
     ini_write_real(_level, "flawless", (_flawless || _result.flawless) ? 1 : 0);
     ini_close();
 }
+
+// A contiguous chain of clears unlocks the campaign, starting with level one.
+function level_select_progress(_rooms) {
+    var _progress = [];
+    var _unlocked = true;
+    ini_open("level_stars.ini");
+    for (var i = 0; i < array_length(_rooms); i++) {
+        var _stars = clamp(floor(ini_read_real(room_get_name(_rooms[i]), "stars", 0)), 0, 3);
+        array_push(_progress, {unlocked: _unlocked, stars: _stars});
+        _unlocked = _unlocked && _stars > 0;
+    }
+    ini_close();
+    return _progress;
+}
