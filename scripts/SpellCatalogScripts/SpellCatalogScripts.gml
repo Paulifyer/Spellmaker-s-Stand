@@ -315,6 +315,14 @@ function cast_spell(_caster, _loadout, _col, _row) {
 		_caster.mana = 0;
 		_caster.mana_exhausted = true;
 	}
+	switch (_loadout.form) {
+		case "strike":
+			audio_play_sound(choose(snd_impact_arc_01, snd_impact_arc_02), 1, false, 0.5);
+			break;
+		default:
+			audio_play_sound(sfx_castingspell, 1, false, 0.5);
+			break;
+	}
 
 	// Track rune casts by their configured spell
 	var _rune_spell_key = undefined;

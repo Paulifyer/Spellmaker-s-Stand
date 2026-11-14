@@ -120,7 +120,7 @@ function reduce_village_hp(_amount)
 		village_flash_alpha = 1;
 		
 		// Play a random villager death sound
-		audio_play_sound(choose(snd_villager_death_01, snd_villager_death_02, snd_villager_death_03, snd_villager_death_04, snd_villager_death_05, snd_villager_death_06), 100, false);
+		//audio_play_sound(choose(snd_villager_death_01, snd_villager_death_02, snd_villager_death_03, snd_villager_death_04, snd_villager_death_05, snd_villager_death_06), 100, false);
 	}
 
 }
