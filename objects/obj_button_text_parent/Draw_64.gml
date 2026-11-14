@@ -15,7 +15,7 @@ draw_set_valign(fa_middle);
 draw_set_alpha(image_alpha);
 
 // Use our custom function to draw the text and the outline using the variables we set in the create event
-draw_text_transformed_outlined(x, y, string(text), image_xscale, image_yscale, 0, text_outline_color, text_color);
+draw_text_transformed_outlined(x, y, string(text), 1, 1, 0, text_outline_color, text_color);
 
 // Reset the alpha, font alignment, and color to default values
 draw_set_alpha(1);

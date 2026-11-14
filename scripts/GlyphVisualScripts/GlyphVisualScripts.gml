@@ -55,3 +55,32 @@ function combat_pending_delay(_enemy) {
 	}
 	return _has_delay;
 }
+
+function combat_spawn_sfx(_snd, _gain = 0.7) {
+	var _state = combat_execution_state();
+	var _snd_frame = { snd: _snd, gain: _gain, frame: _state.clock };
+	array_push(_state.audio, _snd_frame);
+}
+
+function combat_play_sfx(_cooldown_frames = 6) {
+	var _state = combat_execution_state();
+	if (!is_struct(_state)) return;
+	
+	var _history = _state.audio_history;
+	
+	for (var i = array_length(_state.audio) - 1; i >= 0; i--) {
+		var _audio = _state.audio[i];
+		var _key = string(_audio.snd);
+		
+		if (variable_struct_exists(_history, _key)) {
+			if (_state.clock - _history[$ _key] < _cooldown_frames) {
+				continue;
+			}
+		}
+
+		_history[$ _key] = _state.clock;
+		audio_play_sound(_audio.snd, 10, false, _audio.gain);
+	}
+	
+	_state.audio = [];
+}

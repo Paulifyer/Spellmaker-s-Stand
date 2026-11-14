@@ -37,6 +37,11 @@ function enemy_lane(_e) {
 	return (_t != undefined) ? _t.lane : -1;
 }
 
+function is_enemy_in_lane(_e, _l) {
+	var _enemy_lane = enemy_lane(_e);
+	return _enemy_lane == _l;
+}
+
 function enemy_col_range(_e) {
 	var _half = _e.hit_w / 2;
 	var _cx = _e.x + _e.hit_x - GRID_X0;
