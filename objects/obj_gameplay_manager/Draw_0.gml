@@ -1,1 +1,2 @@
+
 combat_draw_vfx();

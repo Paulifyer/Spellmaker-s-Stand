@@ -19,8 +19,8 @@ if (collision_point(_mouse_gui_x, _mouse_gui_y, object_index, false, false) == i
 	if (mouse_check_button_pressed(mb_left))
 	{
 		// Reduce the scale of the instance so it appears smaller while it's pressed
-		image_xscale = 0.9;
-		image_yscale = 0.9;
+		image_xscale = 0.9 * base_xscale;
+		image_yscale = 0.9 * base_yscale;
 		audio_play_sound(snd_popup_click, 0, false);
 	}
 
@@ -31,8 +31,8 @@ if (collision_point(_mouse_gui_x, _mouse_gui_y, object_index, false, false) == i
 		image_index = 0;
 		
 		// Reset the scale so the button appears at its normal size
-		image_xscale = 1;
-		image_yscale = 1;
+		image_xscale = base_xscale;
+		image_yscale = base_yscale;
 		
 		// Call User Event 0 where the button performs its actions
 		event_user(0);
@@ -46,6 +46,6 @@ else
 	image_index = 0;
 	
 	// Reset the scale so the button appears at its normal size
-	image_xscale = 1;
-	image_yscale = 1;
+	image_xscale = base_xscale;
+	image_yscale = base_yscale;
 }

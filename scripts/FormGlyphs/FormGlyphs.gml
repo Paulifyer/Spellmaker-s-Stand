@@ -54,7 +54,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		// Overlap events repeat each frame, including for enemies hit by an earlier blast.
 		// Only a new, targetable contact consumes one penetration.
 		if (!instance_exists(target) || !target.is_targetable) return;
-		if (spell_contacted(spell, target)) return;
+		if (spell_contacted(spell, target) || is_enemy_in_lane(target, spell.target_row div ROWS_PER_LANE)) return;
 		if (spell.projectile_state == "end") return;
 		var _col = floor((target.x - GRID_X0) / TILE_W);
 		if (spell.area) {
@@ -269,7 +269,7 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 
 function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	icon = spr_glyph_rune;
-	sprite = spr_vfx_rune_arming;
+	sprite = spr_vfx_rune_armingcircle;
 	cost = tune_params("forms", "rune", "cost", RUNE_COST);
 	arming_time = tune_params("forms", "rune", "arm_time", 3) * TARGET_ROOM_SPEED;
 	max_charges = 1;
@@ -290,7 +290,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 	on_step = function(spell) {
 		if (!spell.armed && --spell.arm_timer <= 0) {
 			spell.armed = true;
-			spell.mask_index = spr_vfx_rune_complete;
+			spell.mask_index = spr_vfx_rune_completecircle;
 		}
 	};
 	on_hit = function(spell, target) {

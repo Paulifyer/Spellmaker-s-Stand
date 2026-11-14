@@ -1,6 +1,6 @@
 // A room-owned clock and queue. Begin Step advances time; End Step drains due work.
 function combat_execution_create() {
-	return {clock: 0, events: [], processing: false, chain_links: [], visuals: []};
+	return {clock: 0, events: [], processing: false, chain_links: [], visuals: [], audio: [], audio_history: {}};
 }
 
 function spell_damage_scale(_spell) {
@@ -85,11 +85,13 @@ function spell_drain_bursts(_spell, _scope) {
 			var _target = _targets[i];
 			if (!instance_exists(_target) || _target.hp <= 0) continue;
 			if (_burst.kind == "combust") {
+				combat_spawn_sfx(sfx_combust, 0.7);
 				spell_direct_damage(_spell, _target, _fx.params.base_damage * _fx.params.explosion_damage_mult * _fx.effect_multiplier * spell_damage_scale(_spell), false);
 				combat_status_apply(_target, "burn", _fx.params.burn_duration * TARGET_ROOM_SPEED, _fx.params.base_damage * _fx.params.burn_damage_mult * _fx.effect_multiplier);
 			} else if (_burst.kind == "discharge") {
 				if (!spell_reaction_claim_hit(_burst.reaction, _target, _fx.params.max_hits_per_enemy)) continue;
 				// Reserve a charged victim's emission before lethal damage can remove it.
+				combat_spawn_sfx(sfx_discharge, 0.7);
 				spell_discharge_enqueue(_scope, _fx, _target, _burst.reaction);
 				spell_direct_damage(_spell, _target, _fx.params.base_damage * _fx.params.damage_mult * _fx.effect_multiplier * spell_damage_scale(_spell));
 			}

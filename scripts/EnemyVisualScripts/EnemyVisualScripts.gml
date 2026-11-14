@@ -255,7 +255,7 @@ function enemy_draw_hex(_enemy) {
 	if (!is_struct(_execution)) return;
 	var _clock = _execution.clock;
 	
-	if (!variable_instance_exists(_enemy, "charged_visual") || !is_struct(_enemy.hex_visual)) _enemy.hex_visual = {since: _clock};
+	if (!variable_instance_exists(_enemy, "hex_visual") || !is_struct(_enemy.hex_visual)) _enemy.hex_visual = {since: _clock};
 	var _elapsed = _clock - _enemy.hex_visual.since;
 	var _sprite = spr_hex;
 	var _frame = floor(
