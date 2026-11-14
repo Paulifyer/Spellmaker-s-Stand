@@ -15,7 +15,6 @@ draw_set_color(c_black);
 draw_set_font(fnt_Arcane_Bold_Bold);
 draw_text(heading_x, heading_y, debug_unlock_all ? "LEVEL SELECT - DEBUG" : "LEVEL SELECT");
 draw_set_font(fnt_Arcane);
-draw_text(heading_x, instructions_y, "Click a level or press 1-8. Esc returns to menu.");
 draw_text(heading_x, instructions_y + 25,
 	debug_unlock_all ? "F8: Debug ON - all levels unlocked" : "");
 
