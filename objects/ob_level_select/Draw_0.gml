@@ -27,7 +27,6 @@ for (var n = 1; n <= array_length(level_rooms); n++) {
 	var _top = _button.y;
 	var _hover = _unlocked && point_in_rectangle(_mx, _my, _left, _top,
 		_left + _button.w, _top + _button.h);
-	var _config = global.level_config[$ room_get_name(level_rooms[n - 1])];
 	draw_set_color(!_unlocked ? #49433D : (_hover ? #376652 : #233A31));
 	draw_roundrect_ext(_left, _top, _left + _button.w, _top + _button.h, 16, 16, false);
 	draw_set_colour(_hover ? c_gray : c_black);
@@ -35,11 +34,29 @@ for (var n = 1; n <= array_length(level_rooms); n++) {
 	draw_roundrect_ext(_left + 5, _top + 5, _left + _button.w - 5, _top + _button.h - 5, 16, 16, false);
 	draw_set_alpha(1);
 	draw_set_color(_unlocked ? c_white : c_ltgray);
-	draw_text(_left + _button.w / 2, _top + _button.h * 0.34, "LEVEL " + string(n));
-	draw_text(_left + _button.w / 2, _top + _button.h * 0.7,
-		!_unlocked ? "Clear Level " + string(n - 1) + " to unlock"
-		: (_progress.stars > 0 ? string(_progress.stars) + " / 3 stars"
-		: string(_config.level_wave_config.wave_count) + " waves"));
+	var _center_x = _left + _button.w / 2;
+	var _detail_y = _top + _button.h * 0.7;
+	draw_text(_center_x, _top + _button.h * 0.34, "LEVEL " + string(n));
+	if (!_unlocked) {
+		draw_text(_center_x, _detail_y, "Clear Level " + string(n - 1) + " to unlock");
+	} else if (_progress.stars > 0) {
+		var _star_size = _button.h * 0.4;
+		var _star_scale = _star_size / sprite_get_height(spr_star_earned);
+		var _earned_sprite = _progress.flawless ? spr_star_flawless : spr_star_earned;
+		for (var i = 0; i < 3; i++) {
+			var _star_sprite = i < _progress.stars ? _earned_sprite : spr_star_empty;
+			draw_sprite_ext(_star_sprite, 0, _center_x + (i - 1) * _star_size * 1.2,
+				_detail_y, _star_scale, _star_scale, 0, c_white, 1);
+		}
+	} else {
+	    draw_set_font(fnt_Arcane_Bold_Bold);
+	    draw_text(_center_x, _detail_y, "NEW!");
+	    draw_set_font(fnt_Arcane);
+	}
+	// else {
+	// 	var _config = global.level_config[$ room_get_name(level_rooms[n - 1])];
+	// 	draw_text(_center_x, _detail_y, string(_config.level_wave_config.wave_count) + " waves");
+	// }
 }
 
 draw_set_color(point_in_rectangle(_mx, _my, back_button.x, back_button.y,

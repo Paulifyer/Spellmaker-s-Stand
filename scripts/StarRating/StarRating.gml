@@ -45,8 +45,10 @@ function level_select_progress(_rooms) {
     var _unlocked = true;
     ini_open("level_stars.ini");
     for (var i = 0; i < array_length(_rooms); i++) {
-        var _stars = clamp(floor(ini_read_real(room_get_name(_rooms[i]), "stars", 0)), 0, 3);
-        array_push(_progress, {unlocked: _unlocked, stars: _stars});
+        var _level = room_get_name(_rooms[i]);
+        var _stars = clamp(floor(ini_read_real(_level, "stars", 0)), 0, 3);
+        var _flawless = ini_read_real(_level, "flawless", 0) > 0;
+        array_push(_progress, {unlocked: _unlocked, stars: _stars, flawless: _flawless});
         _unlocked = _unlocked && _stars > 0;
     }
     ini_close();
