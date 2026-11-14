@@ -18,14 +18,16 @@ if (mouse_check_button_pressed(mb_left)) {
 	var _my = _mouse.y;
 	if (point_in_rectangle(_mx, _my, back_button.x, back_button.y,
 		back_button.x + back_button.w, back_button.y + back_button.h)) {
-		window_set_cursor(cr_none);
+		audio_play_sound(snd_popup_click, 0, false);
 		room_goto(rm_menu);
 		exit;
 	}
 	for (var n = 1; n <= array_length(level_rooms); n++) {
 		var _button = level_buttons[n - 1];
 		if (point_in_rectangle(_mx, _my, _button.x, _button.y,
-			_button.x + _button.w, _button.y + _button.h)) _chosen = n;
+			_button.x + _button.w, _button.y + _button.h)) { 
+			_chosen = n;
+		}
 	}
 }
 
@@ -33,6 +35,7 @@ if (_chosen > 0) {
 	if (!debug_unlock_all && !level_progress[_chosen - 1].unlocked) exit;
 	var _target = level_rooms[_chosen - 1];
 	var _name = room_get_name(_target);
+	audio_play_sound(snd_popup_click, 0, false);
 	if (!variable_struct_exists(global.level_config, _name)) {
 		show_debug_message("Debug level select: no configuration for " + _name);
 		exit;

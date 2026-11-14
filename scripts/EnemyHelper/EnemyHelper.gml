@@ -70,7 +70,10 @@ function combat_status_apply(_enemy, _key, _frames, _strength = 0) {
 	if (_frames > 0 && tune_setting("mutations", "warded", "break_permanently", false) == true
 		&& combat_status_active(_enemy, _key)) {
 		var _ward = (_key == "burn") ? "fire-warded" : ((_key == "frost") ? "frost-warded" : ((_key == "lightning") ? "lightning-warded" : ""));
-		if (_ward != "" && enemy_has_mutation(_enemy, _ward)) _enemy.ward_broken = true;
+		if (_ward != "" && enemy_has_mutation(_enemy, _ward)) {
+			_enemy.ward_broken = true;
+			audio_play_sound(sfx_wardbreak, 10, false, 0.7)
+		}
 	}
 }
 

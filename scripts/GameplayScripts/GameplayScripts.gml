@@ -107,8 +107,14 @@ function reduce_village_hp(_amount)
 			with (obj_barrier) flash_alpha = 1;
 		}
 		
-		// Reduce the village hp by the amount provided
+		
 		village_hp = max(0, village_hp - _amount);
+		// Reduce the village hp by the amount provided
+		if (village_hp != 0) {
+			audio_play_sound(sfx_barrierhit, 1, false);
+		} else {
+			audio_play_sound(sfx_barrierbreak, 1, false);
+		}
 		
 		// Set this value to 1 in order to animate the HUD Text
 		village_flash_alpha = 1;
@@ -142,6 +148,10 @@ function deal_damage(_id, _amount)
 	
 	// Set the enemy flash_alpha to 1 so that the hit flash will activate
 	_id.flash_alpha = 1;
+	
+	if (enemy_ward_active(_id)) {
+		audio_play_sound(sfx_wardhit, 10, false, 0.7);
+	}
 
 	// Check if the enemy still has hp left
 	if (_id.hp > 0)
@@ -150,13 +160,13 @@ function deal_damage(_id, _amount)
 		if (_id.object_index == obj_mook)
 		{
 			// If so, choose a zombie groan sound to play
-			audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false);
+			audio_play_sound(choose(snd_zombie_groan_01, snd_zombie_groan_02, snd_zombie_groan_03), 10, false, 0.7);
 		} 
 		// Otherwise check if the enemy is a frankenstein
 		else if (_id.object_index == obj_brute)
 		{
 			// If so, choose a frankenstein groan sound to play
-			audio_play_sound(choose(snd_frankenstein_groan_01, snd_frankenstein_groan_02, snd_frankenstein_groan_03), 10, false);		
+			audio_play_sound(choose(snd_frankenstein_groan_01, snd_frankenstein_groan_02, snd_frankenstein_groan_03), 10, false, 0.7);		
 		}	
 	}
 }

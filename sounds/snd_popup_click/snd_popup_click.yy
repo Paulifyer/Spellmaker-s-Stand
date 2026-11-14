@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.131542,
+  "duration":0.13154195,
   "exportDir":"",
   "name":"snd_popup_click",
   "parent":{

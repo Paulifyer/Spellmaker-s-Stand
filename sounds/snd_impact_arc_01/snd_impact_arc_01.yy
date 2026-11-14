@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":2.142688,
+  "duration":2.1426985,
   "exportDir":"",
   "name":"snd_impact_arc_01",
   "parent":{

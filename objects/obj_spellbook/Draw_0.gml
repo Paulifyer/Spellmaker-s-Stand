@@ -84,6 +84,7 @@ for (var c = 0; c < 3; c++) {
             else if (_key == "effect") active_group = array_length(_spell.effects) - 1;
             _spell = spell_prune(sel);
             _has_form = (_spell != undefined && _spell.form != undefined);
+			audio_play_sound(snd_popup_click, 0, false);
         }
     }
 }
@@ -98,8 +99,14 @@ if (_has_form) {
     var _fg = draw_glyph_group(craft_cx, craft_cy, 45, global.spell_glyphs.form[$ _spell.form],
                                _spell.form_mods, 90, 120, active_group == -1, _mouse);
     if (_fg.hover != "") hover_text = _fg.hover;
-    if (_fg.main.clicked)  active_group = -1;
-    if (_fg.main.rclicked) { spell_clear(_spell); active_group = -1; }   // removing the form clears the spell
+    if (_fg.main.clicked) {
+		active_group = -1; 
+		audio_play_sound(snd_popup_click, 0, false);
+	}
+    if (_fg.main.rclicked) { 
+		spell_clear(_spell); active_group = -1; 
+		audio_play_sound(snd_popup_click, 0, false);
+	}   // removing the form clears the spell
     if (_fg.mod_r >= 0)    array_delete(_spell.form_mods, _fg.mod_r, 1);
 } else {
     draw_set_alpha(0.4);
@@ -141,8 +148,14 @@ for (var e = 0; e < _effect_slots; e++) {
         draw_set_color(c_black);
 
         if (_gr.hover != "") hover_text = _gr.hover;
-        if (_gr.main.clicked)  active_group = e;
-        if (_gr.main.rclicked) _rm_effect = e;
+        if (_gr.main.clicked)  { 
+			active_group = e;
+			audio_play_sound(snd_popup_click, 0, false);
+		}
+        if (_gr.main.rclicked) { 
+			_rm_effect = e;
+			audio_play_sound(snd_popup_click, 0, false);
+		}
         if (_gr.mod_r >= 0) {
             if (spell_sequence_valid(_spell, -1, e, _gr.mod_r)) {
                 array_delete(_fx.mods, _gr.mod_r, 1);
@@ -174,6 +187,7 @@ if (_rm_effect >= 0) {
 if (_has_form && gui_button(1370, 680, 100, 70, "Clear spell", false, _mouse)) {
     spell_clear(_spell);
     active_group = -1;
+	audio_play_sound(snd_popup_click, 0, false);
 }
 _spell = spell_prune(sel);   // (name-only spells stay; empty ones free the slot)
 
@@ -260,7 +274,12 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
     if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
     if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) info = spell_validation_message(_sp);
     if (_b.hover && _too_expensive) info = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
-    if (_b.clicked) { sel = i; naming = false; active_group = -1; }
+    if (_b.clicked) { 
+		sel = i; 
+		naming = false; 
+		active_group = -1; 
+		audio_play_sound(snd_popup_click, 0, false);	
+	}
 }
 
 // ---- Crystal ball: enemies (click to cycle) ----
@@ -301,6 +320,7 @@ if (_n > 0) {
 					enemy_view = (enemy_view + 1) mod _n;
 				else if (_is_left_tri_hover)
 					enemy_view = (enemy_view == 0) ? _n - 1 : enemy_view - 1;
+				audio_play_sound(snd_popup_click, 0, false);
 			}
 		}
     }

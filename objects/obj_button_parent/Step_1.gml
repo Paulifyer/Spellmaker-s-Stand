@@ -21,6 +21,7 @@ if (collision_point(_mouse_gui_x, _mouse_gui_y, object_index, false, false) == i
 		// Reduce the scale of the instance so it appears smaller while it's pressed
 		image_xscale = 0.9;
 		image_yscale = 0.9;
+		audio_play_sound(snd_popup_click, 0, false);
 	}
 
 	// If the left mouse button is released (which is when we register a click),

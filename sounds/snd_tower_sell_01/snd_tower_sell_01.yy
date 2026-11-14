@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.785292,
+  "duration":0.7853061,
   "exportDir":"",
   "name":"snd_tower_sell_01",
   "parent":{

@@ -17,7 +17,7 @@ draw_text(heading_x, heading_y, debug_unlock_all ? "LEVEL SELECT - DEBUG" : "LEV
 draw_set_font(fnt_Arcane);
 draw_text(heading_x, instructions_y, "Click a level or press 1-8. Esc returns to menu.");
 draw_text(heading_x, instructions_y + 25,
-	debug_unlock_all ? "F8: Debug ON - all levels unlocked" : "F8: Unlock all levels for debugging");
+	debug_unlock_all ? "F8: Debug ON - all levels unlocked" : "");
 
 for (var n = 1; n <= array_length(level_rooms); n++) {
 	var _progress = level_progress[n - 1];
