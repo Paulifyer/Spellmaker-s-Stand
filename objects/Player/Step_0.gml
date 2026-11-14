@@ -46,14 +46,7 @@ if (_input_enabled && channel == noone) {
 			if (spell_cooldowns[k] > 0) continue;
 			var _loadout = spell_ensure(k);
 			if (_loadout == undefined || !is_spell_usable(_loadout)) continue;
-			switch (_loadout.form) {
-			    case "strike":
-			        audio_play_sound(choose(snd_impact_arc_01, snd_impact_arc_02), 1, false, 0.5);
-			        break;
-			    default:
-			        audio_play_sound(sfx_castingspell, 1, false, 0.5);
-			        break;
-			}
+			
 			var _s = cast_spell(id, _loadout, _t.col, _t.row);
 			if (_s.spell != noone) {
 				cast_flash_slot = k;
