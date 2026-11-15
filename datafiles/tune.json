@@ -50,7 +50,7 @@
         "projectile": { "cost": 15, "spd": 15 },
         "beam": { "cost": 15, "ticks_per_second": 3, "damage_multiplier_per_tick": 0.25 },
         "strike": { "cost": 25, "cast_time": 0.1 },
-        "rune": { "cost": 25, "max_placed": 6, "arm_time": 1.5 }
+        "rune": { "cost": 25, "max_placed": 6, "arm_time": 2 }
     },
     "effects": {
         "snap": { "cost": 15, "damage_per_stack_mult": 1.2 },
@@ -61,9 +61,9 @@
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 4},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 4, "cooldown_penalty": 0},
         "hex": {"cost": 5, "cooldown_penalty": 1, "duration": 5, "damage_per_status": 0.1},
-        "pull": { "cost": 25, "cooldown_penalty": 3, "pull_sec": 0.4, "hold_sec": 0.2 },
-        "force": { "cost": 10, "duration": 0.1, "push_mult": 1, "cooldown_penalty": 1 },
-        "earth": { "cost": 20, "hp": 20, "duration": 15, "cooldown_penalty": 2 }
+        "pull": { "cost": 30, "cooldown_penalty": 3, "pull_sec": 0.4, "hold_sec": 0.2 },
+        "force": { "cost": 10, "duration": 0.1, "push_mult": 1, "cooldown_penalty": 1.5 },
+        "earth": { "cost": 20, "hp": 15, "duration": 12, "cooldown_penalty": 2 }
     },
     "modifiers": {
         "_readme": "Optional max_per_form and max_per_effect cap copies of that modifier independently on each Form or Effect group, including repeated Effects after Delay. Omit a field for no additional cap; 0 forbids that attachment; positive integers set the maximum. Compatibility, non-stacking rules and level total glyph limits still apply. Restart after editing.",

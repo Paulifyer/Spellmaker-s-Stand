@@ -1,5 +1,5 @@
 
-max_hp = 10;
+max_hp = hp;
 
 health_bar = (hp / max_hp) * 100;
 
