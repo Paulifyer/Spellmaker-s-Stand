@@ -11,4 +11,6 @@ my_speed = base_speed;
 
 walk_side_sprite = spr_enemy_skeleton;
 
+stun_sprite = spr_enemy_skeleton;
+
 health_offset_y = -170;

@@ -1,0 +1,1 @@
+health_bar = (hp / max_hp) * 100;
