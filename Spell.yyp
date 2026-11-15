@@ -105,6 +105,7 @@
     {"id":{"name":"fnt_Arcane_Banner","path":"fonts/fnt_Arcane_Banner/fnt_Arcane_Banner.yy",},},
     {"id":{"name":"fnt_Arcane_Bold_Bold","path":"fonts/fnt_Arcane_Bold_Bold/fnt_Arcane_Bold_Bold.yy",},},
     {"id":{"name":"fnt_Arcane_Bold","path":"fonts/fnt_Arcane_Bold/fnt_Arcane_Bold.yy",},},
+    {"id":{"name":"fnt_Arcane_game_end_small","path":"fonts/fnt_Arcane_game_end_small/fnt_Arcane_game_end_small.yy",},},
     {"id":{"name":"fnt_Arcane_More_Bold","path":"fonts/fnt_Arcane_More_Bold/fnt_Arcane_More_Bold.yy",},},
     {"id":{"name":"fnt_Arcane","path":"fonts/fnt_Arcane/fnt_Arcane.yy",},},
     {"id":{"name":"fnt_button","path":"fonts/fnt_button/fnt_button.yy",},},
