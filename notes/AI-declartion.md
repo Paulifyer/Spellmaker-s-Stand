@@ -30,6 +30,9 @@ The prompts below are paraphrased. The outcomes reflect the available records.
 | Victory menu button scaling | “Why do the stretched buttons return to their original size when the victory menu animation ends?” | Reviewed how to preserve the initial button scale. |
 | Spell sound playback code review | “Check my implementation of `combat_play_sfx` and `combat_spawn_sfx`.” | Reviewed the existing sound playback helpers. |
 
+## Note on documentation
+AI was used to generate the technical documentation as seen in the notes folder. This documentation has been reviewed to ensure its accuracy withe existing implementation.
+
 ## Note on exact code changes
 
 The available records do not provide a complete line-by-line account for every entry. Some requests involved debugging advice, code review, or playtest guidance and produced no code edits. The repository chat archive preserves exact diffs for recorded editor operations and links relevant Git changes where available. Those diffs can include intermediate edits and diagnostic code, so they do not always show what shipped in the submitted build. See the [repository chat archive](notes/chat-history-ethan/README.md).
