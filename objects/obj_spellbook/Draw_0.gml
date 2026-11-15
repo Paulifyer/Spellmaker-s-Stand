@@ -22,6 +22,7 @@ var _popup_mouse = { x: _mx, y: _my };
 var _mouse = confirm_no_damage ? { x: -10000, y: -10000 } : _popup_mouse;
 
 hover_text = "";
+var _hover_glyph_name = "";
 info = "";
 draw_set_color(c_black);
 draw_set_font(fnt_Arcane);
@@ -70,8 +71,10 @@ for (var c = 0; c < 3; c++) {
         if (_b.hover) {
 			if (_locked) {
 				hover_text = "???\nNot unlocked yet...";
+				_hover_glyph_name = "";
 			} else {
 				hover_text = _glyph.name + "  (cost " + string(_glyph.cost) + ")\n" + _glyph.desc;
+				_hover_glyph_name = _glyph.name;
 				if (_status == GLYPH_STATE.disabled) info += "\nSome force has disabled this?";
                 if (!_enabled && _reason != "") info = _reason;
 			}
@@ -98,7 +101,10 @@ draw_sprite_ext(spr_ui_hexagram_border1, 0, craft_cx, craft_cy, 1.5, 1.5, 0, c_w
 if (_has_form) {
     var _fg = draw_glyph_group(craft_cx, craft_cy, 45, global.spell_glyphs.form[$ _spell.form],
                                _spell.form_mods, 90, 120, active_group == -1, _mouse);
-    if (_fg.hover != "") hover_text = _fg.hover;
+    if (_fg.hover != "") {
+        hover_text = _fg.hover;
+        _hover_glyph_name = _fg.hover_glyph_name;
+    }
     if (_fg.main.clicked) {
 		active_group = -1; 
 		audio_play_sound(snd_popup_click, 0, false);
@@ -147,7 +153,10 @@ for (var e = 0; e < _effect_slots; e++) {
         draw_set_valign(fa_top);
         draw_set_color(c_black);
 
-        if (_gr.hover != "") hover_text = _gr.hover;
+        if (_gr.hover != "") {
+            hover_text = _gr.hover;
+            _hover_glyph_name = _gr.hover_glyph_name;
+        }
         if (_gr.main.clicked)  { 
 			active_group = e;
 			audio_play_sound(snd_popup_click, 0, false);
@@ -261,6 +270,7 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
         if (_b.hover) {
             var _level = spell_slot_unlock_level(i);
             hover_text = (_level == undefined) ? "Slot locked" : "Unlocks at level " + string(_level);
+            _hover_glyph_name = "";
         }
         continue;
     }
@@ -271,7 +281,10 @@ for (var i = 0; i < SPELL_SLOTS; i++) {
 		draw_circle(_slot_x[i], 990, 30, true);
 		draw_set_colour(c_white);
 	}
-    if (_b.hover && _sp != undefined && _sp.name != "") hover_text = _sp.name;
+    if (_b.hover && _sp != undefined && _sp.name != "") {
+        hover_text = _sp.name;
+        _hover_glyph_name = "";
+    }
     if (_b.hover && _sp != undefined && _sp.form != undefined && !is_spell_usable(_sp)) info = spell_validation_message(_sp);
     if (_b.hover && _too_expensive) info = "Spell " + string(i + 1) + " is too expensive. Reduce its mana cost.";
     if (_b.clicked) { 
@@ -314,6 +327,7 @@ if (_n > 0) {
 		draw_set_halign(fa_left);
         if (point_distance(_mouse.x, _mouse.y, 1714, 310) <= 143) {
             hover_text = _info.name + "\n" + _info.notes;
+            _hover_glyph_name = "";
 			info = "(Use arrows to see other enemies!)";
 			if (!confirm_no_damage && mouse_check_button_pressed(mb_left)) {
 				if (_is_right_tri_hover)
@@ -333,7 +347,7 @@ draw_set_colour(c_black);
 draw_text_ext(1720, 660, "Description", 32, 220);
 draw_set_font(fnt_Arcane);
 draw_set_halign(fa_left)
-draw_text_ext(1610, 700, hover_text, 26, 220);
+draw_spellbook_description(1610, 700, hover_text, _hover_glyph_name);
 draw_set_colour(#990000);
 draw_text_ext(1610, 920, info, 26, 220);
 draw_set_colour(c_white);

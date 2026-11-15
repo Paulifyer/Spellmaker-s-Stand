@@ -3,6 +3,7 @@ const vm = require('node:vm');
 const {read, load} = require('./gml-test-utils.cjs');
 const {makeContext} = require('./construction-test-context.cjs');
 const ctx = makeContext(8);
+load(ctx, 'scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml', ['draw_spellbook_description']);
 const valid = () => ({form:'projectile',form_mods:[],effects:[{effect:'harm',mods:[]}]});
 const formOnly = {form:'projectile',form_mods:[],effects:[]};
 ctx.global.spellbook=[undefined,{name:'unused'},formOnly];

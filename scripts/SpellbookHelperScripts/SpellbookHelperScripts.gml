@@ -465,8 +465,14 @@ function draw_spell_slot_diagram(_spell, _x, _y, _size, _disabled = false) {
     }
 }
 
+function draw_spellbook_description(_x, _y, _text, _glyph_name) {
+    draw_text_ext(_x, _y, _text, 26, 220);
+    // Thicken the name using the same font metrics as the rest of the line.
+    if (_glyph_name != "") draw_text_ext(_x + 1, _y, _glyph_name, 26, 220);
+}
+
 function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selected, _mouse = undefined) {
-    var _out = { main: undefined, mod_r: -1, hover: "" };
+    var _out = { main: undefined, mod_r: -1, hover: "", hover_glyph_name: "" };
     var _n = array_length(_mod_ids);
     var _px = [], _py = [];
 
@@ -490,13 +496,19 @@ function draw_glyph_group(_x, _y, _r, _glyph, _mod_ids, _base, _spread, _selecte
     for (var k = 0; k < _n; k++) {
         var _m = global.spell_glyphs.modifier[$ _mod_ids[k]];
         var _b = gui_circle_button(_px[k], _py[k], 24, _m.icon, _m.name, false, true, _mouse);
-        if (_b.hover)    _out.hover = _m.name + "\n" + _m.desc + "\n(right-click to remove)";
+        if (_b.hover) {
+            _out.hover = _m.name + "\n" + _m.desc + "\n(right-click to remove)";
+            _out.hover_glyph_name = _m.name;
+        }
         if (_b.rclicked) _out.mod_r = k;
     }
 
     _out.main = gui_circle_button(_x, _y, _r, _glyph.icon, _glyph.name, false, true, _mouse);
-    if (_out.main.hover) _out.hover = _glyph.name + "\n" + _glyph.desc
-                                    + "\n(click: select group, right-click: remove)";
+    if (_out.main.hover) {
+        _out.hover = _glyph.name + "\n" + _glyph.desc
+                   + "\n(click: select group, right-click: remove)";
+        _out.hover_glyph_name = _glyph.name;
+    }
     return _out;
 }
 

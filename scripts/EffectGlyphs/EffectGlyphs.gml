@@ -54,7 +54,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 function Elem_Lightning() : EffectGlyph("Lightning", LIGHTNING_COST) constructor {
 	icon = spr_glyph_lightning;
 	col = c_yellow;
-	desc = "Briefly stuns enemies, then leaves them Charged. Breaks lightning wards. Enemies can’t be stunned again until their Charge fades.";
+	desc = "Briefly stuns enemies, then leaves them Charged. Breaks lightning wards. Enemies cannot be stunned again until their Charge fades.";
 	cost = tune_params("effects", "lightning", "cost", LIGHTNING_COST);
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
