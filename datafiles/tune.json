@@ -1,7 +1,7 @@
 {
     "_readme": "Times/Durations are in SECONDS. Costs are mana. player.mana_regen_rate is percent of max mana regenerated every 6 frames (0.5 = 0.5%). Don't rename the names in the quotes, just change numbers!",
 
-    "debug": { "level_select_enabled": true },
+    "debug": { "level_select_enabled": false },
 
     "spellbook": {
         "start_warning": {
