@@ -178,6 +178,19 @@ function spell_form_modifier_penalty(_ids) {
 	return _pairs * _unit;
 }
 
+// Count prior copies on this Form or Effect attachment only.
+function spell_modifier_cost(_mods, _index, _modifier) {
+	if (!_modifier.is_stacks) return _modifier.cost;
+	var _id = _mods[_index];
+	var _increase = tune_params("modifiers", _id, "cost_increase_per_stack", _id == "amplify" ? 5 : 0);
+	if (_increase == 0) return _modifier.cost;
+	var _prior_copies = 0;
+	for (var i = 0; i < _index; i++) {
+		if (_mods[i] == _id) _prior_copies++;
+	}
+	return _modifier.cost + _prior_copies * _increase;
+}
+
 function compile_spell(_loadout) {
 	if (_loadout == undefined || _loadout.form == undefined) return undefined;
 	var _g = global.spell_glyphs;
@@ -195,7 +208,7 @@ function compile_spell(_loadout) {
 		var _m = _g.modifier[$ _loadout.form_mods[i]];
 		if (!is_struct(_m)) return undefined;
 		array_push(_fmods, _m);
-		_cost += _m.cost;
+		_cost += spell_modifier_cost(_loadout.form_mods, i, _m);
 		var _penalty = tune_setting("modifiers", _loadout.form_mods[i], "cooldown_penalty", 0);
 		if (!is_real(_penalty) || _penalty < 0) throw "Modifier cooldown_penalty must be non-negative seconds";
 		_cooldown_penalty += _penalty;
@@ -211,20 +224,14 @@ function compile_spell(_loadout) {
 		_cooldown_penalty += _penalty;
 
 		var _mods = [];
-		var _amp_count = 0;
 		for (var i = 0; i < array_length(_loadout.effects[e].mods); i++) {
 			var _m = _g.modifier[$ _loadout.effects[e].mods[i]];
 			if (!is_struct(_m)) return undefined;
 			array_push(_mods, _m);
-			_cost += _m.cost;
+			_cost += spell_modifier_cost(_loadout.effects[e].mods, i, _m);
 			var _mod_penalty = tune_setting("modifiers", _loadout.effects[e].mods[i], "cooldown_penalty", 0);
 			if (!is_real(_mod_penalty) || _mod_penalty < 0) throw "Modifier cooldown_penalty must be non-negative seconds";
 			_cooldown_penalty += _mod_penalty;
-			if (_loadout.effects[e].mods[i] == "amplify") {
-				var _amp_cost = tune_params("modifiers", "amplify", "cost_increase_per_stack", 5);
-				_cost += (_amp_count * _amp_cost);
-				_amp_count++;
-			}
 		}
 
 		array_push(_effects, {index: e, id: _loadout.effects[e].effect, params: compile_effect_parameters(_loadout.effects[e].effect), effect: _el, mods: _mods, effect_multiplier: 1, area: false, duration: 0, delay: 0, delay_after: 0});

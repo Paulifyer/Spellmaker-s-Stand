@@ -10,7 +10,7 @@ function extract(source, name) {
     while (depth) { if (source[end] === '{') depth++; if (source[end] === '}') depth--; end++; }
     return source.slice(start, end).replace(/\[\$\s*([^\]]+)\]/g, '[$1]');
 }
-const amplify = {cost: 15, amplify: true};
+const amplify = {cost: 15, amplify: true, is_stacks: true};
 const ctx = {
     min:Math.min, spell_slot_count:()=>4,
     global: {spellbook: [], spell_glyphs: {
@@ -29,7 +29,7 @@ const ctx = {
 vm.createContext(ctx);
 ctx.tune_setting=(...args)=>ctx.tune_params(...args);
 const source = read('scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml');
-for(const name of ['compile_effect_parameters','spell_form_modifier_penalty','compile_spell']) vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),name),ctx);
+for(const name of ['compile_effect_parameters','spell_form_modifier_penalty','spell_modifier_cost','compile_spell']) vm.runInContext(extract(read('scripts/SpellCatalogScripts/SpellCatalogScripts.gml'),name),ctx);
 for (const name of ['spell_cost', 'spell_mana_preview', 'spellbook_expensive_slots'])
     vm.runInContext(extract(source, name), ctx);
 const spell = (mods = []) => ({form: 'projectile', form_mods: [], effects: [{effect: 'harm', mods}]});

@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');
 const {makeContext}=require('./construction-test-context.cjs');
-const {load}=require('./gml-test-utils.cjs');
+const {load,read}=require('./gml-test-utils.cjs');
 const c=makeContext();
 for(const [ids,expected]of [[[],0],[['pierce','pierce','pierce'],0],[['pierce','chain'],10],[['pierce','chain','area'],30],[['pierce','pierce','chain'],20],[['pierce','pierce','chain','chain'],40],[['pierce','unlisted'],0]]) {
     assert.equal(c.spell_form_modifier_penalty(ids),expected);
@@ -25,4 +25,24 @@ load(c,'scripts/TuneScript/TuneScript.gml',['tune_setting']);
 assert.equal(c.spell_form_modifier_penalty(['pierce','chain','area']),3);
 c.global.tuning.modifiers.interaction_penalty.penalized_modifiers=[];
 assert.equal(c.spell_form_modifier_penalty(['pierce','chain']),0);
+
+c.global.tuning=JSON.parse(read('datafiles/tune.json'));
+load(c,'scripts/TuneScript/TuneScript.gml',['tune_params']);
+const stacked={
+    form:'projectile',
+    form_mods:['chain','pierce','chain','pierce','chain'],
+    effects:[
+        {effect:'fire',mods:['extend_time','extend_time','delay','delay']},
+        {effect:'ice',mods:['extend_time','delay']},
+    ],
+};
+const base=c.compile_spell(stacked);
+const increases={chain:6,pierce:4,extend_time:3,delay:2};
+for(const [id,increase] of Object.entries(increases)) {
+    c.global.tuning.modifiers[id].cost_increase_per_stack=increase;
+}
+const tuned=c.compile_spell(stacked);
+assert.equal(tuned.cost-base.cost,6+12+4+3+2);
+assert.equal(tuned.form_modifier_penalty,base.form_modifier_penalty);
+assert.equal(c.spell_mana_preview(stacked,tuned.cost).cost,tuned.cost);
 console.log('Form interaction cost checks passed: explicit JSON list, cross-type stack pairs, order independence, Effect exclusion, shared cost/Start/preview and tunable validation.');

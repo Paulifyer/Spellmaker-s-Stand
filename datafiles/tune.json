@@ -66,14 +66,12 @@
         "earth": { "cost": 20, "hp": 20, "duration": 12, "cooldown_penalty": 2 }
     },
     "modifiers": {
-        "_readme": "Optional max_per_form and max_per_effect cap copies of that modifier independently on each Form or Effect group, including repeated Effects after Delay. Omit a field for no additional cap; 0 forbids that attachment; positive integers set the maximum. Compatibility, non-stacking rules and level total glyph limits still apply. Restart after editing.",
-        "interaction_penalty": { "cost_per_pair": 10, "penalized_modifiers": ["area", "pierce", "chain"] },
-        "chain": { "cost": 20, "max_per_form": 3, "hops_per_stack": 1, "range_radius_tiles": 2, "visual_duration": 0.15 },
+        "chain": { "cost": 20, "cost_increase_per_stack": 5, "max_per_form": 3, "hops_per_stack": 1, "range_radius_tiles": 2, "visual_duration": 0.15 },
         "area": { "cost": 25, "cooldown_penalty": 1.5},
-        "pierce": { "cost": 15, "max_per_form": 2, "pierce_amt": 2 },
+        "pierce": { "cost": 15, "cost_increase_per_stack": 5, "max_per_form": 2, "pierce_amt": 2 },
         "amplify": { "cost": 10, "max_per_effect": 2, "dmg_multplier": 0.30, "cost_increase_per_stack": 5 },
-        "extend_time": { "cost": 5, "duration_increase": 1 },
-        "delay": { "cost": 5, "delay_increase": 1, "follow_original_targets": true }
+        "extend_time": { "cost": 5, "cost_increase_per_stack": 0, "duration_increase": 1 },
+        "delay": { "cost": 5, "cost_increase_per_stack": 0, "delay_increase": 1, "follow_original_targets": true }
     },
     "compatibility": {
         "form_modifier_exclusions": { "beam": ["area"] },
