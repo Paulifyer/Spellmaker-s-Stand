@@ -63,7 +63,7 @@
         "hex": {"cost": 5, "cooldown_penalty": 1, "duration": 5, "damage_per_status": 0.1},
         "pull": { "cost": 30, "cooldown_penalty": 3, "pull_sec": 0.4, "hold_sec": 0.2 },
         "force": { "cost": 10, "duration": 0.1, "push_mult": 1, "cooldown_penalty": 1.5 },
-        "earth": { "cost": 20, "hp": 15, "duration": 12, "cooldown_penalty": 2 }
+        "earth": { "cost": 20, "hp": 20, "duration": 12, "cooldown_penalty": 2 }
     },
     "modifiers": {
         "_readme": "Optional max_per_form and max_per_effect cap copies of that modifier independently on each Form or Effect group, including repeated Effects after Delay. Omit a field for no additional cap; 0 forbids that attachment; positive integers set the maximum. Compatibility, non-stacking rules and level total glyph limits still apply. Restart after editing.",
