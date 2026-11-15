@@ -20,7 +20,7 @@ function init_enemy_catalog() {
 		},
 		SIEGE_BEAST: {
 			object: obj_siege_beast,
-			cost: tune_enemy("siege_beast", "spawn_weight", 10)
+			cost: tune_enemy("siege_beast", "spawn_weight", 8)
 		},
 		MOLE: {
 			object: obj_mole,
@@ -28,7 +28,7 @@ function init_enemy_catalog() {
 		},
 		CARRION: {
 			object: obj_carrion,
-			cost: tune_enemy("carrion", "spawn_weight", 7)
+			cost: tune_enemy("carrion", "spawn_weight", 6)
 		}
     };
 }
