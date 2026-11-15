@@ -19,7 +19,7 @@ for (var i = 0; i < array_length(level_rooms); i++) {
 		x: _left + _width * (0.15 + (i mod 2) * 0.365),
 		y: _top + _height * (0.25 + (i div 2) * 0.145),
 		w: _width * 0.335,
-		h: _height * 0.115
+		h: _height * 0.125
 	});
 }
 back_button = {x: _left + _width * 0.36, y: _top + _height * 0.86,

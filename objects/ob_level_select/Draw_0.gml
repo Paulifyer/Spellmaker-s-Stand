@@ -26,15 +26,15 @@ for (var n = 1; n <= array_length(level_rooms); n++) {
 	var _top = _button.y;
 	var _hover = _unlocked && point_in_rectangle(_mx, _my, _left, _top,
 		_left + _button.w, _top + _button.h);
-	draw_set_color(!_unlocked ? #49433D : (_hover ? #376652 : #233A31));
-	draw_roundrect_ext(_left, _top, _left + _button.w, _top + _button.h, 16, 16, false);
-	draw_set_colour(_hover ? c_gray : c_black);
-	draw_set_alpha(_hover ? 0.5 : 0.7);
-	draw_roundrect_ext(_left + 5, _top + 5, _left + _button.w - 5, _top + _button.h - 5, 16, 16, false);
-	draw_set_alpha(1);
-	draw_set_color(_unlocked ? c_white : c_ltgray);
+	var _col = (_unlocked ? c_white : c_gray);
+	var _spr = _hover ? spr_level_button_hover : spr_level_button;
+	var _xscale = _button.w / sprite_get_width(_spr);
+	var _yscale = _button.h / sprite_get_height(_spr);
+	show_debug_message($"xs: {_xscale}, ys: {_yscale}");
+	draw_sprite_ext(_spr, 0, _left, _top, _xscale, _yscale, 0, _col, 1);
 	var _center_x = _left + _button.w / 2;
 	var _detail_y = _top + _button.h * 0.7;
+	draw_set_colour(c_white);
 	draw_text(_center_x, _top + _button.h * 0.34, "LEVEL " + string(n));
 	if (!_unlocked) {
 		draw_text(_center_x, _detail_y, "Clear Level " + string(n - 1) + " to unlock");
@@ -58,13 +58,13 @@ for (var n = 1; n <= array_length(level_rooms); n++) {
 	// }
 }
 
-draw_set_color(point_in_rectangle(_mx, _my, back_button.x, back_button.y,
-	back_button.x + back_button.w, back_button.y + back_button.h)
-	? #376652 : #233A31);
-draw_roundrect_ext(back_button.x, back_button.y,
-	back_button.x + back_button.w, back_button.y + back_button.h, 16, 16, false);
-draw_set_color(c_white);
-draw_text(back_button.x + back_button.w / 2, back_button.y + back_button.h / 2, "BACK");
+//draw_set_color(point_in_rectangle(_mx, _my, back_button.x, back_button.y,
+//	back_button.x + back_button.w, back_button.y + back_button.h)
+//	? #376652 : #233A31);
+//draw_roundrect_ext(back_button.x, back_button.y,
+//	back_button.x + back_button.w, back_button.y + back_button.h, 16, 16, false);
+//draw_set_color(c_white);
+//draw_text(back_button.x + back_button.w / 2, back_button.y + back_button.h / 2, "BACK");
 
 draw_set_color(c_white);
 draw_set_halign(fa_left);
