@@ -46,7 +46,7 @@ function Elem_Ice() : EffectGlyph("Ice", FROST_COST) constructor {
 	on_hit = function(spell, target, fx) {
 		var _duration = fx.params.duration;
 		var slow_amt = fx.params.slow_per_stack;
-		combat_spawn_sfx(sfx_frost, 0.7);
+		combat_spawn_sfx(sfx_frost, 0.3);
 		combat_status_apply(target, "frost", TARGET_ROOM_SPEED * (_duration + fx.duration), slow_amt);
 	};
 }
