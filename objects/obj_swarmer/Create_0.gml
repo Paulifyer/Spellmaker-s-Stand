@@ -57,3 +57,5 @@ damage_dealt = tune_enemy(name, "attack_dmg", 0.5);
 // This variable is the delay in seconds between this enemy's attacks
 attack_delay = tune_enemy(name, "attack_delay", 1);
 
+// This variable controls if the enemy can trigger rune
+is_rune_immune = true;

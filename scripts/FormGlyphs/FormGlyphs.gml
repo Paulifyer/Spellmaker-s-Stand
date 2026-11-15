@@ -54,7 +54,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		// Overlap events repeat each frame, including for enemies hit by an earlier blast.
 		// Only a new, targetable contact consumes one penetration.
 		if (!instance_exists(target) || !target.is_targetable) return;
-		if (spell_contacted(spell, target) || is_enemy_in_lane(target, spell.target_row div ROWS_PER_LANE)) return;
+		if (spell_contacted(spell, target) || !is_enemy_in_lane(target, spell.target_row div ROWS_PER_LANE)) return;
 		if (spell.projectile_state == "end") return;
 		var _col = floor((target.x - GRID_X0) / TILE_W);
 		if (spell.area) {
@@ -298,7 +298,8 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		if (enemy_lane(target) != spell.lane) return; //ignore sprites poking from neighbouring lanes
 		var _c = spell.target_col;
 		var _l = spell.lane;
-		if (spell.area) {
+		var is_enemy_targettable = variable_instance_exists(target, "is_rune_immune") && target.is_rune_immune;
+		if (spell.area && !is_enemy_targettable) {
 			combat_spawn_vfx(spr_aoe, spell.x, spell.y, 2.5, 2.5); 
 		}
 		if (spell_deliver(spell, target, _c, _l, spell.area ? 1 : 0)) spell.charges--;

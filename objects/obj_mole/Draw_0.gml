@@ -1,10 +1,16 @@
 if (hp > 0 && is_struct(emergence_marker) && emergence_marker.active) {
-	draw_set_color(c_orange); draw_set_alpha(0.75);
+	//draw_set_color(c_orange); draw_set_alpha(0.75);
 	var _mx = emergence_marker.x, _my = emergence_marker.y;
-	draw_ellipse(_mx - TILE_W * 0.3, _my - LANE_H * 0.12, _mx + TILE_W * 0.3, _my + LANE_H * 0.12, true);
-	draw_line(_mx - 10, _my, _mx + 10, _my);
-	draw_line(_mx, _my - 6, _mx, _my + 6);
-	draw_set_alpha(1); draw_set_color(c_white);
+	//draw_ellipse(_mx - TILE_W * 0.3, _my - LANE_H * 0.12, _mx + TILE_W * 0.3, _my + LANE_H * 0.12, true);
+	//draw_line(_mx - 10, _my, _mx + 10, _my);
+	//draw_line(_mx, _my - 6, _mx, _my + 6
+	draw_sprite_ext(
+		burrow_sprite, burrow_sprite, 
+		_mx, _my, image_xscale, 
+		image_yscale, 0, image_blend, 
+		image_alpha
+	);
+	//draw_set_alpha(1); draw_set_color(c_white);
 }
 
 // trail_points: newest position first
