@@ -306,7 +306,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		if (spell.charges <= 0) instance_destroy(spell);
 	};
 	on_draw = function(spell) {
-		var _sprite = spell.armed ? spr_vfx_rune_complete : spr_vfx_rune_arming;
+		var _sprite = spell.armed ? spr_vfx_rune_completecircle : spr_vfx_rune_arming;
 		var _size_multiplier = 1;
 		var scale = 0.5 * _size_multiplier;
 		draw_spell_sprite_ext(_sprite, 0, spell.x, spell.y, scale, scale, 0, spell.col, 1);
