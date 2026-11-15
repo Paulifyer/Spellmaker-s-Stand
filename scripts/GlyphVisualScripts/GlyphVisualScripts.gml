@@ -1,5 +1,5 @@
 
-function combat_spawn_vfx(_sprite, _x, _y, _xs, _ys) {
+function combat_spawn_vfx(_sprite, _x, _y, _xs, _ys, _spell_colour = undefined) {
 	var _state = combat_execution_state();
 	
 	array_push(_state.visuals, {
@@ -8,6 +8,7 @@ function combat_spawn_vfx(_sprite, _x, _y, _xs, _ys) {
 		y: _y,
 		xs: _xs,
 		ys: _ys,
+		spell_colour: _spell_colour,
 		born: _state.clock
 	});
 }
@@ -27,11 +28,13 @@ function combat_draw_vfx() {
 			continue;
 		}
 		
-		draw_sprite_ext(
-			_vfx.sprite, _frame,
-			_vfx.x, _vfx.y,
-			_vfx.xs, _vfx.ys, 0, c_white, 1
-		);
+		if (_vfx.spell_colour != undefined) {
+			draw_spell_sprite_ext(_vfx.sprite, _frame, _vfx.x, _vfx.y,
+				_vfx.xs, _vfx.ys, 0, _vfx.spell_colour, 1);
+		} else {
+			draw_sprite_ext(_vfx.sprite, _frame, _vfx.x, _vfx.y,
+				_vfx.xs, _vfx.ys, 0, c_white, 1);
+		}
 	}
 }
 

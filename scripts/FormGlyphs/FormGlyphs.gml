@@ -59,7 +59,7 @@ function Form_Projectile() : FormGlyph("Projectile", PROJECTILE_COST) constructo
 		var _col = floor((target.x - GRID_X0) / TILE_W);
 		if (spell.area) {
 			xy = grid_to_world_center(_col, spell.target_row);
-			combat_spawn_vfx(spr_aoe, xy.x, xy.y, 2.5, 2.5); 
+			combat_spawn_vfx(spr_aoe, xy.x, xy.y, 2.5, 2.5, spell.col);
 		}
 		if (!spell_deliver(spell, target, _col, enemy_lane(target), spell.area ? 1 : 0)) return;
 		if (spell.pierce-- <= 0) {
@@ -248,7 +248,7 @@ function Form_Strike() : FormGlyph("Strike", STRIKE_COST) constructor {
 			var _c = spell.target_col;
 			var _l = spell.target_row div ROWS_PER_LANE;
 			if (spell.area) {
-				combat_spawn_vfx(spr_aoe, spell.x, spell.y, 2.5, 2.5); 
+				combat_spawn_vfx(spr_aoe, spell.x, spell.y, 2.5, 2.5, spell.col);
 			}
 			spell_deliver(spell, noone, _c, _l, spell.area ? 1 : 0);
 		}	
@@ -300,7 +300,7 @@ function Form_Rune() : FormGlyph("Rune", RUNE_COST) constructor {
 		var _l = spell.lane;
 		var is_enemy_targettable = variable_instance_exists(target, "is_rune_immune") && target.is_rune_immune;
 		if (spell.area && !is_enemy_targettable) {
-			combat_spawn_vfx(spr_aoe, spell.x, spell.y, 2.5, 2.5); 
+			combat_spawn_vfx(spr_aoe, spell.x, spell.y, 2.5, 2.5, spell.col);
 		}
 		if (spell_deliver(spell, target, _c, _l, spell.area ? 1 : 0)) spell.charges--;
 		if (spell.charges <= 0) instance_destroy(spell);
