@@ -1,0 +1,1282 @@
+{
+  "exported_at_utc": "2026-11-15T10:57:04.598641+00:00",
+  "display_timezone": "Asia/Singapore",
+  "repository": "C:\\Users\\ethan\\GameMakerProjects\\Spell",
+  "git_head": "f28c03a8a0d18dfeb034fd71940ae6206fed8c7e",
+  "scope": "locally available repository conversations",
+  "counts": {
+    "user_messages": 120,
+    "assistant_messages": 230,
+    "tool_calls": 287,
+    "edit_operations": 69,
+    "shell_write_operations": 3
+  },
+  "chats": [
+    {
+      "id": "01a15fb9-da50-75f2-9f35-9ca2f83a9df1",
+      "title": "Fix level wave settings",
+      "file": "2026-10-22-fix-level-wave-settings-01a15fb9.md",
+      "first": "2026-10-21T18:33:21.226243+00:00",
+      "last": "2026-10-21T19:41:40.472611+00:00",
+      "logs": [
+        "rollout-2026-10-22T02-29-38-01a15fb9-da50-75f2-9f35-9ca2f83a9df1.jsonl"
+      ],
+      "counts": {
+        "user_messages": 8,
+        "assistant_messages": 15,
+        "tool_calls": 24,
+        "edit_operations": 5,
+        "shell_write_operations": 0,
+        "repository_files": 6
+      },
+      "git_commits": [
+        {
+          "sha": "afc6ac0cb751be41a6d9e22f8d8d2db46fca5f8e",
+          "subject": "Implement modifiers, json level loading andglyph tuning",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 2,
+              "path": "objects/obj_enemy_parent/Destroy_0.gml",
+              "commit_path": "objects/obj_enemy_parent/Destroy_0.gml",
+              "matched_lines": 5,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "objects/obj_revive_manager/Alarm_1.gml",
+              "commit_path": "objects/obj_revive_manager/Alarm_1.gml",
+              "matched_lines": 5,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "objects/obj_revive_manager/Create_0.gml",
+              "commit_path": "objects/obj_revive_manager/Create_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "scripts/MutationScripts/MutationScripts.gml",
+              "commit_path": "scripts/MutationScripts/MutationScripts.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 3,
+              "path": "objects/obj_revive_manager/Alarm_1.gml",
+              "commit_path": "objects/obj_revive_manager/Alarm_1.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 4,
+              "path": "objects/obj_enemy_parent/Destroy_0.gml",
+              "commit_path": "objects/obj_enemy_parent/Destroy_0.gml",
+              "matched_lines": 8,
+              "signature_lines": 11,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "datafiles/level.json",
+              "commit_path": "datafiles/level.json",
+              "matched_lines": 3,
+              "signature_lines": 6,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "14a8cfd5887939614c0ecfe1241a6ce7f675a2676cfaeb125734d04e3e3a95b4",
+      "output_bytes": 202831
+    },
+    {
+      "id": "01a16c75-37ec-77d3-86be-4906ec75b1d0",
+      "title": "Fix enemy tuning lookup",
+      "file": "2026-10-24-fix-enemy-tuning-lookup-01a16c75.md",
+      "first": "2026-10-24T05:50:24.494780+00:00",
+      "last": "2026-10-25T07:10:33.375837+00:00",
+      "logs": [
+        "rollout-2026-10-24T13-49-43-01a16c75-37ec-77d3-86be-4906ec75b1d0.jsonl"
+      ],
+      "counts": {
+        "user_messages": 24,
+        "assistant_messages": 49,
+        "tool_calls": 83,
+        "edit_operations": 15,
+        "shell_write_operations": 1,
+        "repository_files": 14
+      },
+      "git_commits": [
+        {
+          "sha": "84f0e5f942bc42097947bbc535c61334ccf58546",
+          "subject": "Fix archer attack logic",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 2,
+              "path": "objects/obj_brute/Step_0.gml",
+              "commit_path": "objects/obj_brute/Step_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "objects/obj_spells/Step_0.gml",
+              "commit_path": "objects/obj_spells/Step_0.gml",
+              "matched_lines": 3,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "objects/obj_persistent_manager/Create_0.gml",
+              "commit_path": "objects/obj_persistent_manager/Create_0.gml",
+              "matched_lines": 5,
+              "signature_lines": 9,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "objects/obj_persistent_manager/obj_persistent_manager.yy",
+              "commit_path": "objects/obj_persistent_manager/obj_persistent_manager.yy",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 6,
+              "path": "options/windows/options_windows.yy",
+              "commit_path": "options/windows/options_windows.yy",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "e4dbd1521763de95d57e1d95d82cde3b12c84787",
+          "subject": "animate beam, update spellbook to use the new interface",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 2,
+              "path": "scripts/GlyphAccessScripts/GlyphAccessScripts.gml",
+              "commit_path": "scripts/GlyphAccessScripts/GlyphAccessScripts.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "eb25cad5e2af26236b53bdabe47eb1a6656e7d1cf9d90a73f053aed122bb90d6",
+      "output_bytes": 1418627
+    },
+    {
+      "id": "01a178f8-fdfd-7460-9b9e-125af7fc06e4",
+      "title": "Make enemies untargetable by hit",
+      "file": "2026-10-27-make-enemies-untargetable-by-hit-01a178f8.md",
+      "first": "2026-10-26T16:09:32.238330+00:00",
+      "last": "2026-10-26T17:09:01.322874+00:00",
+      "logs": [
+        "rollout-2026-10-27T00-09-06-01a178f8-fdfd-7460-9b9e-125af7fc06e4.jsonl"
+      ],
+      "counts": {
+        "user_messages": 9,
+        "assistant_messages": 11,
+        "tool_calls": 6,
+        "edit_operations": 0,
+        "shell_write_operations": 0,
+        "repository_files": 0
+      },
+      "output_sha256": "b33e9ba6dffad1681c1f93c130f531de0db0feef90f789a83009e9f46c99b7ae",
+      "output_bytes": 69966
+    },
+    {
+      "id": "01a17964-0d50-73f0-8b6e-e17879922157",
+      "title": "Prevent duplicate rune placement",
+      "file": "2026-10-27-prevent-duplicate-rune-placement-01a17964.md",
+      "first": "2026-10-26T18:06:37.726414+00:00",
+      "last": "2026-10-26T18:06:53.895262+00:00",
+      "logs": [
+        "rollout-2026-10-27T02-06-02-01a17964-0d50-73f0-8b6e-e17879922157.jsonl"
+      ],
+      "counts": {
+        "user_messages": 1,
+        "assistant_messages": 2,
+        "tool_calls": 2,
+        "edit_operations": 0,
+        "shell_write_operations": 0,
+        "repository_files": 0
+      },
+      "output_sha256": "8604c182c734851af0cd5d1af8c91eaaa34e3578a951997821f3419b82f2b93a",
+      "output_bytes": 19421
+    },
+    {
+      "id": "01a17ddd-4b3d-7270-8639-0c43998b3b42",
+      "title": "Add projectile glyph flight states",
+      "file": "2026-10-27-add-projectile-glyph-flight-states-01a17ddd.md",
+      "first": "2026-10-27T14:57:52.276359+00:00",
+      "last": "2026-10-28T08:38:32.591634+00:00",
+      "logs": [
+        "rollout-2026-10-27T22-56-57-01a17ddd-4b3d-7270-8639-0c43998b3b42.jsonl"
+      ],
+      "counts": {
+        "user_messages": 3,
+        "assistant_messages": 9,
+        "tool_calls": 12,
+        "edit_operations": 3,
+        "shell_write_operations": 0,
+        "repository_files": 6
+      },
+      "git_commits": [
+        {
+          "sha": "e4dbd1521763de95d57e1d95d82cde3b12c84787",
+          "subject": "animate beam, update spellbook to use the new interface",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 1,
+              "path": "objects/obj_spells/Step_0.gml",
+              "commit_path": "objects/obj_spells/Step_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 1,
+              "path": "scripts/FormGlyphs/FormGlyphs.gml",
+              "commit_path": "scripts/FormGlyphs/FormGlyphs.gml",
+              "matched_lines": 29,
+              "signature_lines": 32,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "objects/obj_spellbook/Draw_64.gml",
+              "commit_path": "objects/obj_spellbook/Draw_0.gml",
+              "matched_lines": 20,
+              "signature_lines": 27,
+              "basis": "matching added block in another file involved in this chat"
+            },
+            {
+              "edit": 2,
+              "path": "objects/obj_spellbook/obj_spellbook.yy",
+              "commit_path": "objects/obj_spellbook/obj_spellbook.yy",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "commit_path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "matched_lines": 13,
+              "signature_lines": 13,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 3,
+              "path": "scripts/FormGlyphs/FormGlyphs.gml",
+              "commit_path": "scripts/FormGlyphs/FormGlyphs.gml",
+              "matched_lines": 7,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "6fe920bb3bc8e37009363ab624edaa8ea75b3710f62fc5df1e5752ff462e9f13",
+      "output_bytes": 150207
+    },
+    {
+      "id": "01a18375-1954-7a03-a075-dd144b1c2ddb",
+      "title": "Check branch commit history",
+      "file": "2026-10-29-check-branch-commit-history-01a18375.md",
+      "first": "2026-10-28T17:01:13.715954+00:00",
+      "last": "2026-10-28T20:45:31.082584+00:00",
+      "logs": [
+        "rollout-2026-10-29T01-00-52-01a18375-1954-7a03-a075-dd144b1c2ddb.jsonl"
+      ],
+      "counts": {
+        "user_messages": 7,
+        "assistant_messages": 15,
+        "tool_calls": 19,
+        "edit_operations": 2,
+        "shell_write_operations": 0,
+        "repository_files": 2
+      },
+      "git_commits": [
+        {
+          "sha": "522542083c64008c0c0455a4750519e658eab65a",
+          "subject": "Fix Delay behavior and add repeating effects",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "89796deebd859a3164a3375831bd12f53e49df8e",
+          "subject": "refactor: share spell compilation and mana calculation",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "312aeb8b74ea71bd1552e87e40ad64d8e4b62ca9",
+          "subject": "refactor: identify casts deliveries and enemy continuations",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "1e1f9fd62440e0d448f3c7ece593b8832c31b0d9",
+          "subject": "refactor: unify ordered effect execution and scheduling",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "5c95cce68eaeb1a9cc4888f4a6f4272231c3e36f",
+          "subject": "refactor: add shared status consumption and reaction helpers",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "f7fe0e931d158a99534676ed79c5adc4860b3d74",
+          "subject": "feat: implement tunable combust effect",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "feb5b8a41f032f3bdb91f7292b3ccf0ecc4675ab",
+          "subject": "feat: implement bounded discharge reactions",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "17c1ff4d8a6aacd95c1c83f9c934150a067fd0f0",
+          "subject": "feat: implement sequential chain deliveries",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "aeffbe75792132bb5baabe72a98e5021239f0676",
+          "subject": "Merge pull request #20 from Paulifyer/adjustment/carrion-behavior-overhaul",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Merge metadata and change summary; constituent commits contain the code diffs.",
+          "matches": []
+        },
+        {
+          "sha": "99fca6f89a0ece826ea4d9b5f4e513fc753abc5b",
+          "subject": "Merge pull request #19 from Paulifyer/feature/chain-glyph",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Merge metadata and change summary; constituent commits contain the code diffs.",
+          "matches": []
+        },
+        {
+          "sha": "c6dce90db8a00b1ed00f49f817b191f95097a3b2",
+          "subject": "Fix targeting when enemy at tower",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "dea3cbe5ae2db9d4d8782e3c1894b81a21ec1606",
+          "subject": "animate carrion",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Full textual commit diff; Git reports binary assets by filename.",
+          "matches": []
+        },
+        {
+          "sha": "3a04a5149773c1f8a1e8ec4d42454ed82af3a4c0",
+          "subject": "Merge branch 'main' of https://github.com/Paulifyer/Spellmaker-s-Stand",
+          "reasons": [
+            "Explicitly discussed/cited in the conversation"
+          ],
+          "scope": "Merge metadata and change summary; constituent commits contain the code diffs.",
+          "matches": []
+        },
+        {
+          "sha": "6d93834903e28b77cb9ccf4c8cdb5eb43109fd2f",
+          "subject": "Fix pull bug with skeletal, implement force & push glyph, fix spellbook ui",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 2,
+              "path": "scripts/EffectGlyphs/EffectGlyphs.gml",
+              "commit_path": "scripts/EffectGlyphs/EffectGlyphs.gml",
+              "matched_lines": 7,
+              "signature_lines": 14,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "9a0663834e56d487f8630faefb523deb2fcd2bc31b53c042e0e09a6926108beb",
+      "output_bytes": 400382
+    },
+    {
+      "id": "01a1a20e-3fc5-77f3-87c9-effc68c50a22",
+      "title": "Plan spell hitstun integration",
+      "file": "2026-11-03-plan-spell-hitstun-integration-01a1a20e.md",
+      "first": "2026-11-03T15:36:47.359392+00:00",
+      "last": "2026-11-04T20:04:41.766996+00:00",
+      "logs": [
+        "rollout-2026-11-03T23-36-45-01a1a20e-3fc5-77f3-87c9-effc68c50a22.jsonl",
+        "rollout-2026-11-05T03-41-58-01a1a20e-3fc5-77f3-87c9-effc68c50a22_01a1a815-1d37-79b0-a136-43d01a94d8d3.jsonl"
+      ],
+      "counts": {
+        "user_messages": 37,
+        "assistant_messages": 63,
+        "tool_calls": 68,
+        "edit_operations": 27,
+        "shell_write_operations": 0,
+        "repository_files": 38
+      },
+      "git_commits": [
+        {
+          "sha": "84f79d3b3ebcf757a91c7c4dd083359c2169891a",
+          "subject": "Add hitstun mechanic and animate walking for enemies in commit",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 1,
+              "path": "objects/obj_enemy_parent/Step_1.gml",
+              "commit_path": "objects/obj_enemy_parent/Step_1.gml",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 1,
+              "path": "scripts/SpellExecution/SpellExecution.gml",
+              "commit_path": "scripts/SpellExecution/SpellExecution.gml",
+              "matched_lines": 16,
+              "signature_lines": 17,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 2,
+              "path": "scripts/SpellExecution/SpellExecution.gml",
+              "commit_path": "scripts/SpellExecution/SpellExecution.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 3,
+              "path": "tools/execution-test-context.cjs",
+              "commit_path": "tools/execution-test-context.cjs",
+              "matched_lines": 4,
+              "signature_lines": 4,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "87f78e1676f2f245bc9e7ffd7c9e06ee83e573ff",
+          "subject": "Animate Mole emerging",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 4,
+              "path": "objects/obj_mole/Step_1.gml",
+              "commit_path": "objects/obj_mole/Step_1.gml",
+              "matched_lines": 8,
+              "signature_lines": 8,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 4,
+              "path": "objects/obj_mole/obj_mole.yy",
+              "commit_path": "objects/obj_mole/obj_mole.yy",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "tools/test-mole-marker.cjs",
+              "commit_path": "tools/test-mole-marker.cjs",
+              "matched_lines": 17,
+              "signature_lines": 18,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 6,
+              "path": "tools/test-mole-marker.cjs",
+              "commit_path": "tools/test-mole-marker.cjs",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "54f747c6388ae718d35ec2899c803a0d302fc02c",
+          "subject": "Add animation for status effects",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 8,
+              "path": "objects/obj_enemy_parent/Draw_0.gml",
+              "commit_path": "objects/obj_enemy_parent/Draw_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 8,
+              "path": "scripts/EnemyHelper/EnemyHelper.gml",
+              "commit_path": "scripts/EnemyHelper/EnemyHelper.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 10,
+              "path": "tools/test-frost-animation.cjs",
+              "commit_path": "tools/test-frost-animation.cjs",
+              "matched_lines": 3,
+              "signature_lines": 4,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 11,
+              "path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "commit_path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "matched_lines": 10,
+              "signature_lines": 22,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "e8d9b7a1e5f7d2060d083c7181dd1cc93a861b32",
+          "subject": "Add rest of spell vfx",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 13,
+              "path": "scripts/EffectGlyphs/EffectGlyphs.gml",
+              "commit_path": "scripts/EffectGlyphs/EffectGlyphs.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 16,
+              "path": "tools/test-snap-visual.cjs",
+              "commit_path": "tools/test-snap-visual.cjs",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 17,
+              "path": "tools/test-snap-visual.cjs",
+              "commit_path": "tools/test-snap-visual.cjs",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 18,
+              "path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "commit_path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 19,
+              "path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "commit_path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "matched_lines": 6,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 20,
+              "path": "objects/obj_mook/Create_0.gml",
+              "commit_path": "objects/obj_mook/Create_0.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 20,
+              "path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "commit_path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "62013c68151c7d7aabfde7e85589804e51e326e7",
+          "subject": "Add spell icon",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 23,
+              "path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "commit_path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "matched_lines": 21,
+              "signature_lines": 21,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 24,
+              "path": "tools/test-spell-slot-progression.cjs",
+              "commit_path": "tools/test-spell-slot-progression.cjs",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "bca57bab05a0ed72af68d4696f28042e3cd10991",
+          "subject": "Add new ui elements",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 26,
+              "path": "objects/obj_spellbook/Create_0.gml",
+              "commit_path": "objects/obj_spellbook/Create_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 26,
+              "path": "objects/obj_spellbook/Draw_0.gml",
+              "commit_path": "objects/obj_spellbook/Draw_0.gml",
+              "matched_lines": 7,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 26,
+              "path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "commit_path": "scripts/EnemyVisualScripts/EnemyVisualScripts.gml",
+              "matched_lines": 42,
+              "signature_lines": 42,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "6190ceb01b6c73198ada7a8e0ae8f05089ce09c814eb06100737356b80caf2f1",
+      "output_bytes": 560149
+    },
+    {
+      "id": "01a1bbca-2973-7ca0-b81d-27a6ff008102",
+      "title": "Add effect order indicator",
+      "file": "2026-11-08-add-effect-order-indicator-01a1bbca.md",
+      "first": "2026-11-08T15:32:56.810401+00:00",
+      "last": "2026-11-14T18:07:36.379073+00:00",
+      "logs": [
+        "rollout-2026-11-08T23-32-30-01a1bbca-2973-7ca0-b81d-27a6ff008102.jsonl"
+      ],
+      "counts": {
+        "user_messages": 21,
+        "assistant_messages": 42,
+        "tool_calls": 41,
+        "edit_operations": 8,
+        "shell_write_operations": 2,
+        "repository_files": 19
+      },
+      "git_commits": [
+        {
+          "sha": "20230443c89c001471b298a0da942048b736cd17",
+          "subject": "Add numeric representation for glyphs",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 1,
+              "path": "objects/obj_spellbook/Draw_64.gml",
+              "commit_path": "objects/obj_spellbook/Draw_0.gml",
+              "matched_lines": 10,
+              "signature_lines": 10,
+              "basis": "matching added block in another file involved in this chat"
+            }
+          ]
+        },
+        {
+          "sha": "803ed94eb9f370c83f48733efe43522c7ea1870c",
+          "subject": "Animate delay and fix some sprite positioning for harm",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 2,
+              "path": "scripts/GlyphVisualScripts/GlyphVisualScripts.gml",
+              "commit_path": "scripts/GlyphVisualScripts/GlyphVisualScripts.gml",
+              "matched_lines": 3,
+              "signature_lines": 6,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "a0f48c3f9c2692daaf947f541511b691cd9b9a93",
+          "subject": "Add level selector to play button and make it dynamically unlock as game progresses",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 3,
+              "path": "objects/obj_debug_level_select/Step_0.gml",
+              "commit_path": "objects/ob_level_select/Step_0.gml",
+              "matched_lines": 5,
+              "signature_lines": 12,
+              "basis": "matching added block in another file involved in this chat"
+            },
+            {
+              "edit": 5,
+              "path": "objects/obj_button_start/Other_10.gml",
+              "commit_path": "objects/obj_button_start/Other_10.gml",
+              "matched_lines": 2,
+              "signature_lines": 2,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "objects/obj_debug_level_select/Create_0.gml",
+              "commit_path": "objects/obj_debug_level_select/Create_0.gml",
+              "matched_lines": 4,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "scripts/StarRating/StarRating.gml",
+              "commit_path": "scripts/StarRating/StarRating.gml",
+              "matched_lines": 10,
+              "signature_lines": 10,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 7,
+              "path": "tools/test-level-select-progression.cjs",
+              "commit_path": "tools/test-level-select-progression.cjs",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 8,
+              "path": "objects/ob_level_select/Create_0.gml",
+              "commit_path": "objects/ob_level_select/Create_0.gml",
+              "matched_lines": 1,
+              "signature_lines": 1,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 8,
+              "path": "objects/ob_level_select/Draw_0.gml",
+              "commit_path": "objects/ob_level_select/Draw_0.gml",
+              "matched_lines": 8,
+              "signature_lines": 13,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 8,
+              "path": "objects/ob_level_select/Step_0.gml",
+              "commit_path": "objects/ob_level_select/Step_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 8,
+              "path": "tools/test-level-select-progression.cjs",
+              "commit_path": "tools/test-level-select-progression.cjs",
+              "matched_lines": 10,
+              "signature_lines": 12,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "6a1810b8006be7624984280d5b413063c7cc343643215b0d20b444ccdd0b621c",
+      "output_bytes": 327048
+    },
+    {
+      "id": "01a1cb9a-bbee-7691-9d90-5b821726bbed",
+      "title": "Fix barrier hit shader trigger",
+      "file": "2026-11-12-fix-barrier-hit-shader-trigger-01a1cb9a.md",
+      "first": "2026-11-11T17:16:19.882866+00:00",
+      "last": "2026-11-12T14:57:06.280677+00:00",
+      "logs": [
+        "rollout-2026-11-12T01-14-38-01a1cb9a-bbee-7691-9d90-5b821726bbed.jsonl"
+      ],
+      "counts": {
+        "user_messages": 10,
+        "assistant_messages": 24,
+        "tool_calls": 32,
+        "edit_operations": 9,
+        "shell_write_operations": 0,
+        "repository_files": 12
+      },
+      "git_commits": [
+        {
+          "sha": "d13989e0dc7ac0ef291db0a18c42a9c5e51d261e",
+          "subject": "Start banner, arrow collision",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 1,
+              "path": "objects/obj_barrier/Create_0.gml",
+              "commit_path": "objects/obj_barrier/Create_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 1,
+              "path": "objects/obj_barrier/Draw_0.gml",
+              "commit_path": "objects/obj_barrier/Draw_0.gml",
+              "matched_lines": 6,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 1,
+              "path": "objects/obj_barrier/Step_0.gml",
+              "commit_path": "objects/obj_barrier/Step_0.gml",
+              "matched_lines": 2,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 1,
+              "path": "scripts/GameplayScripts/GameplayScripts.gml",
+              "commit_path": "scripts/GameplayScripts/GameplayScripts.gml",
+              "matched_lines": 4,
+              "signature_lines": 8,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "98d949e25b1324f3b27bf395951cbd8129a9aeb2",
+          "subject": "Change spell icons to circular and Add icon greying out when spell is uncastable",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 4,
+              "path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "commit_path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "matched_lines": 25,
+              "signature_lines": 27,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "objects/Player/Draw_64.gml",
+              "commit_path": "objects/Player/Draw_64.gml",
+              "matched_lines": 29,
+              "signature_lines": 30,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 5,
+              "path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "commit_path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "matched_lines": 15,
+              "signature_lines": 15,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 6,
+              "path": "objects/Player/Draw_64.gml",
+              "commit_path": "objects/Player/Draw_64.gml",
+              "matched_lines": 4,
+              "signature_lines": 4,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 6,
+              "path": "tools/test-spell-slot-diagram.cjs",
+              "commit_path": "tools/test-spell-slot-diagram.cjs",
+              "matched_lines": 16,
+              "signature_lines": 17,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 6,
+              "path": "tools/test-spell-slot-progression.cjs",
+              "commit_path": "tools/test-spell-slot-progression.cjs",
+              "matched_lines": 3,
+              "signature_lines": 3,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 7,
+              "path": "tools/test-spell-slot-diagram.cjs",
+              "commit_path": "tools/test-spell-slot-diagram.cjs",
+              "matched_lines": 25,
+              "signature_lines": 26,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        },
+        {
+          "sha": "803ed94eb9f370c83f48733efe43522c7ea1870c",
+          "subject": "Animate delay and fix some sprite positioning for harm",
+          "reasons": [
+            "Contains text matching recorded edits"
+          ],
+          "scope": "Commit diff restricted to files edited in this chat (including shell edits).",
+          "matches": [
+            {
+              "edit": 9,
+              "path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "commit_path": "scripts/SpellbookHelperScripts/SpellbookHelperScripts.gml",
+              "matched_lines": 4,
+              "signature_lines": 4,
+              "basis": "matching added/deleted lines"
+            },
+            {
+              "edit": 9,
+              "path": "tools/test-spell-slot-diagram.cjs",
+              "commit_path": "tools/test-spell-slot-diagram.cjs",
+              "matched_lines": 7,
+              "signature_lines": 7,
+              "basis": "matching added/deleted lines"
+            }
+          ]
+        }
+      ],
+      "output_sha256": "bc8c2d4b348099b662403387f815e87dfd5676b43d84eef84962e291d99cff37",
+      "output_bytes": 256465
+    }
+  ],
+  "skipped": [
+    {
+      "id": "01a178de-7360-7513-a58a-621fdf950510",
+      "title": "Explain pull glyph end lag",
+      "reason": "Brief code lookup/explanation; no recorded edits or substantial code proposal",
+      "logs": [
+        "rollout-2026-10-26T23-40-07-01a178de-7360-7513-a58a-621fdf950510.jsonl"
+      ]
+    },
+    {
+      "id": "01a1de20-ab38-7232-b2a9-a37140e9ed55",
+      "title": "Locate rune enemy hit checks",
+      "reason": "Brief code lookup/explanation; no recorded edits or substantial code proposal",
+      "logs": [
+        "rollout-2026-11-15T15-34-05-01a1de20-ab38-7232-b2a9-a37140e9ed55.jsonl"
+      ]
+    },
+    {
+      "id": "01a1dece-e07b-71c0-a3d4-fa729dfff745",
+      "title": "Export chat histories with code changes",
+      "reason": "Current export conversation; still in progress at the export snapshot",
+      "logs": [
+        "rollout-2026-11-15T18-44-22-01a1dece-e07b-71c0-a3d4-fa729dfff745.jsonl"
+      ]
+    }
+  ],
+  "vscode_sessions": [
+    {
+      "id": "07b33050-9edd-44f1-bd51-d012503294e4",
+      "requests": 0,
+      "reason": "Empty chat"
+    },
+    {
+      "id": "36122111-bf00-428c-b13b-de630c5f4e9d",
+      "requests": 0,
+      "reason": "Empty chat"
+    },
+    {
+      "id": "36a9fe00-6ab1-4a88-926a-82de2b3e14f0",
+      "requests": 1,
+      "reason": "Copilot setup response only; no code changes"
+    },
+    {
+      "id": "9b96326a-5b43-4932-9793-45d25e58d89b",
+      "requests": 0,
+      "reason": "Empty chat"
+    },
+    {
+      "id": "bdd6cc25-1274-4e70-a435-6627896f9f64",
+      "requests": 0,
+      "reason": "Empty chat"
+    },
+    {
+      "id": "e93173ce-f0df-4272-82f9-181211bea60a",
+      "requests": 0,
+      "reason": "Empty chat"
+    },
+    {
+      "id": "ec722c97-8f78-4b69-b5f9-a63ba14673ff",
+      "requests": 0,
+      "reason": "Empty chat"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\22\\rollout-2026-10-22T02-29-38-01a15fb9-da50-75f2-9f35-9ca2f83a9df1.jsonl",
+      "bytes": 558208,
+      "sha256": "757c1febb904da0e78db08bb0c254b4938d7c9d2280175cbf62f7d2e3b0d1ea5"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\24\\rollout-2026-10-24T13-49-43-01a16c75-37ec-77d3-86be-4906ec75b1d0.jsonl",
+      "bytes": 2566853,
+      "sha256": "4253be87fd984b51b3938bb2fe4de824f6794d470f49288af767fb87b237488c"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\24\\rollout-2026-10-24T22-56-21-01a16e69-aa39-7192-8bc3-79b941dfd0b1.jsonl",
+      "bytes": 1509940,
+      "sha256": "e758326872ef421a31517980b1e2fcdf59c7c03d0e1a9a2baf6f554118d81779"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\25\\rollout-2026-10-25T00-43-13-01a16ecb-825e-74e2-9962-c6228d2a8e08.jsonl",
+      "bytes": 1592180,
+      "sha256": "6ca7acc431a42103a850cbe6e8818d9f37ce665c3a46c80d79639b90a0d7da0c"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\26\\rollout-2026-10-26T23-40-07-01a178de-7360-7513-a58a-621fdf950510.jsonl",
+      "bytes": 161253,
+      "sha256": "19e198af414c109e7dbae92c82515410a30b784d3ab06622390b150d5b7b661c"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\27\\rollout-2026-10-27T00-09-06-01a178f8-fdfd-7460-9b9e-125af7fc06e4.jsonl",
+      "bytes": 341491,
+      "sha256": "2e9d4de28f416d7dd4ff4a0955fa5f0d79ab9d58e5c0cb3b11dff70dea257020"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\27\\rollout-2026-10-27T02-06-02-01a17964-0d50-73f0-8b6e-e17879922157.jsonl",
+      "bytes": 159883,
+      "sha256": "08dfa9720b2a075603614ba8c2524d1716227ac18135a2a91765cbeb3c309016"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\27\\rollout-2026-10-27T22-56-57-01a17ddd-4b3d-7270-8639-0c43998b3b42.jsonl",
+      "bytes": 360531,
+      "sha256": "3e914067d51f8c74ff871643c80b9e130c70e29b7bfea441259a12c81fb319c9"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\10\\29\\rollout-2026-10-29T01-00-52-01a18375-1954-7a03-a075-dd144b1c2ddb.jsonl",
+      "bytes": 516250,
+      "sha256": "e84fa8f4bbb3e5e572b92e73d2c74a1202319173f2901300e347653dd7bbb323"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\03\\rollout-2026-11-03T23-36-45-01a1a20e-3fc5-77f3-87c9-effc68c50a22.jsonl",
+      "bytes": 1531164,
+      "sha256": "0e3f808ff9d32ce651ac6d284641a9e92b7c441ec957cd00c974bb0b15d9f34e"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\05\\rollout-2026-11-05T03-41-58-01a1a20e-3fc5-77f3-87c9-effc68c50a22_01a1a815-1d37-79b0-a136-43d01a94d8d3.jsonl",
+      "bytes": 269545,
+      "sha256": "276b68b1d9476ab1dc4f758794f8dc3abab6b7ecc7b24cf833fb92b75bafffa0"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\08\\rollout-2026-11-08T23-32-30-01a1bbca-2973-7ca0-b81d-27a6ff008102.jsonl",
+      "bytes": 2310826,
+      "sha256": "e30a4a0dc5566389d7a8f0b03b02f22a3b2b7092204ceeeac821ebd7c7287e22"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\12\\rollout-2026-11-12T01-14-38-01a1cb9a-bbee-7691-9d90-5b821726bbed.jsonl",
+      "bytes": 663669,
+      "sha256": "dc9f9aba1e385b9ca57972c0e005e6d0bc7e51af3af131b6505b600676efbf79"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\15\\rollout-2026-11-15T15-34-05-01a1de20-ab38-7232-b2a9-a37140e9ed55.jsonl",
+      "bytes": 159072,
+      "sha256": "1bce14af61a433c4b0551f1a522ede0d7960474c3ca2c6b48b9b5d07db4a9b36"
+    },
+    {
+      "kind": "rollout",
+      "path": "C:\\Users\\ethan\\.codex\\sessions\\2026\\11\\15\\rollout-2026-11-15T18-44-22-01a1dece-e07b-71c0-a3d4-fa729dfff745.jsonl",
+      "bytes": 950392,
+      "sha256": "30b38035bdf78b865203a60ff5244052003332db69579940ca911fb838134ba4"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\07b33050-9edd-44f1-bd51-d012503294e4.jsonl",
+      "bytes": 552,
+      "sha256": "94f436b117ceafa2265db84ae6d360cf5e2e42156704e2520ba1299c7d02da36"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\36122111-bf00-428c-b13b-de630c5f4e9d.jsonl",
+      "bytes": 552,
+      "sha256": "1ae53361ce9a6050518ee1ea57732eb5c4b2453212d1e752403e12e434eb2135"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\36a9fe00-6ab1-4a88-926a-82de2b3e14f0.jsonl",
+      "bytes": 3694,
+      "sha256": "df246d0bcf6b5e7d36bb0978edfaad149499d0ee5336085906eb111a922f111a"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\9b96326a-5b43-4932-9793-45d25e58d89b.jsonl",
+      "bytes": 552,
+      "sha256": "892da4539670df73890a1abc83549908a4d3e4fa9f3c4fcb9ae6b66f3b6aefb8"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\bdd6cc25-1274-4e70-a435-6627896f9f64.jsonl",
+      "bytes": 552,
+      "sha256": "bb76bcf552d32827b580265101452cc64941a160a66639a2b65ac9e075dd86dc"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\e93173ce-f0df-4272-82f9-181211bea60a.jsonl",
+      "bytes": 552,
+      "sha256": "8ca56827296a626fcb6683fccca417b244eae26ea0c71e6bb94001cbd9d25485"
+    },
+    {
+      "kind": "vscode_chat_journal",
+      "path": "C:\\Users\\ethan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c55922ec856da7daf5a55ac6c4702ebc\\chatSessions\\ec722c97-8f78-4b69-b5f9-a63ba14673ff.jsonl",
+      "bytes": 553,
+      "sha256": "468a4b89dfc8c43a9e7e019279ca19c27441a50f4238159864ca18b08092d9f0"
+    }
+  ],
+  "attachments": [
+    {
+      "file": "attachments/f15aebd569b2d78805c9bc548e932ef415d0488eeef6d54b203dac47a67fe756.png",
+      "bytes": 93140,
+      "sha256": "f15aebd569b2d78805c9bc548e932ef415d0488eeef6d54b203dac47a67fe756",
+      "mime": "image/png"
+    },
+    {
+      "file": "attachments/eb6174f3ee1d3c02fb87fb88432ee05319ed4510806136dbe075ae0fcc78b875.png",
+      "bytes": 36506,
+      "sha256": "eb6174f3ee1d3c02fb87fb88432ee05319ed4510806136dbe075ae0fcc78b875",
+      "mime": "image/png"
+    },
+    {
+      "file": "attachments/e58b3ff1a7b1dfab3bd476f962920aef3fe96d48455f020f71571671278454ff.png",
+      "bytes": 2571,
+      "sha256": "e58b3ff1a7b1dfab3bd476f962920aef3fe96d48455f020f71571671278454ff",
+      "mime": "image/png"
+    },
+    {
+      "file": "attachments/fb7e4eab041ba76ee34a61895cfb40398bcc97706a25a5b81cdb09baba56e9cc.png",
+      "bytes": 18713,
+      "sha256": "fb7e4eab041ba76ee34a61895cfb40398bcc97706a25a5b81cdb09baba56e9cc",
+      "mime": "image/png"
+    },
+    {
+      "file": "attachments/ae6b8e71678e4c2ee18b8486e5b6d010f06aae1bab4feda63122bab248f6ca7f.png",
+      "bytes": 808702,
+      "sha256": "ae6b8e71678e4c2ee18b8486e5b6d010f06aae1bab4feda63122bab248f6ca7f",
+      "mime": "image/png"
+    }
+  ],
+  "warnings": [],
+  "validation": {
+    "passed": true,
+    "chat_files_checked": 9,
+    "messages_checked": 357,
+    "supporting_background_messages": 7,
+    "structured_file_diffs_checked": 124,
+    "tool_inputs_checked": 342,
+    "attachment_hashes_checked": 5,
+    "markdown_fences_balanced": true
+  }
+}
