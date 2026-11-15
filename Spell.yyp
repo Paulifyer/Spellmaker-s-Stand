@@ -304,6 +304,8 @@
     {"id":{"name":"snd_zombie_groan_03","path":"sounds/snd_zombie_groan_03/snd_zombie_groan_03.yy",},},
     {"id":{"name":"crafting_interface_bg","path":"sprites/crafting_interface_bg/crafting_interface_bg.yy",},},
     {"id":{"name":"crafting_interface_hexagram","path":"sprites/crafting_interface_hexagram/crafting_interface_hexagram.yy",},},
+    {"id":{"name":"Default190","path":"sprites/Default190/Default190.yy",},},
+    {"id":{"name":"Hover","path":"sprites/Hover/Hover.yy",},},
     {"id":{"name":"spr_acr_short","path":"sprites/spr_acr_short/spr_acr_short.yy",},},
     {"id":{"name":"spr_aoe","path":"sprites/spr_aoe/spr_aoe.yy",},},
     {"id":{"name":"spr_arc_ball","path":"sprites/spr_arc_ball/spr_arc_ball.yy",},},
