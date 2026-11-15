@@ -1,5 +1,9 @@
 /// @description Pick a level with a click or number key
-if (keyboard_check_pressed(vk_f8)) debug_unlock_all = !debug_unlock_all;
+if (!tune_flag("debug", "level_select_enabled")) {
+	debug_unlock_all = false;
+} else if (keyboard_check_pressed(vk_f8)) {
+	debug_unlock_all = !debug_unlock_all;
+}
 
 if (keyboard_check_pressed(vk_escape)) {
 	window_set_cursor(cr_none);

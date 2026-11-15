@@ -34,7 +34,7 @@ Object.assign(ctx, {
     level_rooms:rooms, level_progress:ctx.level_select_progress(rooms),
     level_buttons:rooms.map((_,i)=>({x:i*100,y:0,w:90,h:50})),
     back_button:{x:0,y:200,w:90,h:50},
-    global:{level_config:Object.fromEntries(rooms.map(r=>[r,{}]))},
+    global:{level_config:Object.fromEntries(rooms.map(r=>[r,{}])), tuning:{debug:{level_select_enabled:false}}},
     vk_escape:27, vk_f8:119, debug_unlock_all:false, mb_left:1, cr_none:0, rm_menu:'menu',
     keyboard_check_pressed:k=>k===chosenKey, ord:s=>s.charCodeAt(0), string:String,
     mouse_check_button_pressed:()=>!!click,
@@ -42,8 +42,12 @@ Object.assign(ctx, {
     level_select_mouse:()=>({x:click?.x,y:click?.y}),
     point_in_rectangle:(x,y,a,b,c,d)=>x>=a&&x<=c&&y>=b&&y<=d,
     variable_struct_exists:(o,k)=>Object.hasOwn(o,k),
-    window_set_cursor:()=>{}, room_goto:r=>visits.push(r), show_debug_message:()=>{}
+    variable_global_exists:k=>Object.hasOwn(ctx.global,k),
+    is_struct:v=>v!=null&&typeof v==='object', is_bool:v=>typeof v==='boolean',
+    window_set_cursor:()=>{}, room_goto:r=>visits.push(r), show_debug_message:()=>{},
+    audio_play_sound:()=>{}, snd_popup_click:0
 });
+load(ctx, 'scripts/TuneScript/TuneScript.gml', ['tune_flag']);
 const run = ()=>vm.runInContext('(function(){'+step+'})()',ctx);
 chosenKey=50; run(); assert.deepEqual(visits,[]);
 chosenKey=undefined; click={x:110,y:20}; run(); assert.deepEqual(visits,[]);
@@ -52,6 +56,9 @@ ctx.save_level_stars('level1',{stars:1,flawless:false});
 ctx.level_progress=ctx.level_select_progress(rooms);
 click=undefined; chosenKey=50; run(); assert.deepEqual(visits,['level1','level2']);
 const beforeDebug = JSON.stringify(saved);
+chosenKey=119; run(); assert.equal(ctx.debug_unlock_all,false);
+chosenKey=52; run(); assert.deepEqual(visits,['level1','level2']);
+ctx.global.tuning.debug.level_select_enabled=true;
 chosenKey=119; run(); assert.equal(ctx.debug_unlock_all,true);
 chosenKey=52; run(); assert.equal(visits.at(-1),'level4');
 chosenKey=undefined; click={x:310,y:20}; run(); assert.equal(visits.at(-1),'level4');
@@ -59,4 +66,8 @@ assert.equal(JSON.stringify(saved),beforeDebug,'Debug override must not change s
 click=undefined; chosenKey=119; run(); assert.equal(ctx.debug_unlock_all,false);
 const count=visits.length;
 chosenKey=52; run(); assert.equal(visits.length,count,'Turning debug off restores locks');
+chosenKey=119; run(); assert.equal(ctx.debug_unlock_all,true);
+ctx.global.tuning.debug.level_select_enabled=false;
+chosenKey=52; run(); assert.equal(ctx.debug_unlock_all,false);
+assert.equal(visits.length,count,'Disabling debug tuning restores locks before handling input');
 console.log('Level selection checks passed: saved progression, losses, replays, final level, keyboard and mouse locks.');
