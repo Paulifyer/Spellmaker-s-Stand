@@ -587,7 +587,7 @@
         "level_wave_config": {
             "wave_count": 5,
             "starting_budget": 15,
-            "ending_budget": 40,
+            "ending_budget": 50,
             "difficulty_curve": 1
         },
         "unlocked_glyphs": [
