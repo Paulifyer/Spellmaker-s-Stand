@@ -1,7 +1,7 @@
 {
     "_readme": "Times/Durations are in SECONDS. Costs are mana. player.mana_regen_rate is percent of max mana regenerated every 6 frames (0.5 = 0.5%). Don't rename the names in the quotes, just change numbers!",
 
-    "debug": { "level_select_enabled": false },
+    "debug": { "level_select_enabled": true },
 
     "spellbook": {
         "start_warning": {
@@ -55,9 +55,9 @@
     "effects": {
         "snap": { "cost": 15, "damage_per_stack_mult": 1.2 },
         "discharge": { "cost": 20, "cooldown_penalty": 1, "damage_mult": 0.5, "radius_tiles": 1, "area_radius_tiles": 2, "max_hits_per_enemy": 3 },
-        "combust": { "cost": 15, "damage_mult": 1, "explosion_damage_mult": 0.5, "radius_tiles": 1, "area_radius_tiles": 2, "burn_duration": 3, "burn_damage_mult": 0.4 },
+        "combust": { "cost": 15, "damage_mult": 1, "explosion_damage_mult": 0.2, "radius_tiles": 1, "area_radius_tiles": 2, "burn_duration": 3, "burn_damage_mult": 0.4 },
         "harm": {"cost": 10},
-        "fire": {"cost": 10, "fire_dmg_mult": 0.35,"duration": 4},
+        "fire": {"cost": 10, "fire_dmg_mult": 0.20,"duration": 5},
         "ice": {"cost": 10, "slow_amt_per_stack": 0.2,"duration": 4},
         "lightning": {"cost": 10, "duration": 1, "stun_immune_duration": 4, "cooldown_penalty": 0},
         "hex": {"cost": 5, "cooldown_penalty": 1, "duration": 5, "damage_per_status": 0.1},
