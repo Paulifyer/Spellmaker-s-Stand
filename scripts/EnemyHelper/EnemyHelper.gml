@@ -208,15 +208,14 @@ function enemy_initialize_mole_marker(_enemy, _path) {
 	_enemy.emergence_marker = {x: path_get_x(_path, _enemy.pos_to_stop), y: path_get_y(_path, _enemy.pos_to_stop), active: true};
 }
 
-// Distances use columns and lanes. Radius one deliberately includes diagonals.
+// A radius of N covers a (2N + 1) square in columns and lanes.
 function carrion_death_in_range(_source, _target, _radius) {
 	var _from = world_to_grid(_source.x, _source.y);
 	var _to = world_to_grid(_target.x, _target.y);
 	if (_from == undefined || _to == undefined) return false;
 	var _dx = abs(_from.col - _to.col);
 	var _dy = abs(_from.lane - _to.lane);
-	if (_radius == 1) return _dx <= 1 && _dy <= 1;
-	return _dx * _dx + _dy * _dy <= _radius * _radius;
+	return _dx <= _radius && _dy <= _radius;
 }
 
 function carrion_begin_frenzy(_enemy) {
@@ -246,7 +245,8 @@ function carrion_update_frenzy(_enemy) {
 
 // Notification comes from combat death, never from Destroy/room cleanup/replacement.
 function enemy_notify_combat_death(_enemy) {
-	if (_enemy.hp > 0 || _enemy.death_notified || enemy_is_bonepile(_enemy)) return;
+	if (_enemy.hp > 0 || _enemy.death_notified) return;
+	if (enemy_is_bonepile(_enemy) && tune_setting("enemies", "carrion", "feed_on_bonepiles", false) != true) return;
 	_enemy.death_notified = true;
 	var _radius = max(0, floor(tune_enemy("carrion", "death_radius_tiles", 1)));
 	for (var i = 0; i < instance_number(obj_carrion); i++) {

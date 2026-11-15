@@ -68,8 +68,8 @@ const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
     assert.equal(h.sounds.length, 1); assert.equal(c.sprite_index, 'flight');
     c.hp = 0; h.kill(h.dead()); assert.equal(c.hp, 0); assert.equal(c.nearby_deaths, 8);
 }
-// Count complete shapes, including the adjacent diagonal cells at radius two.
-for (const [radius, expected] of [[0, 1], [1, 9], [2, 13], [3, 29]]) {
+// Count complete squares, including their corners.
+for (const [radius, expected] of [[0, 1], [1, 9], [2, 25], [3, 49]]) {
     const h = setup({death_radius_tiles: radius}), c = h.carrion();
     let count = 0;
     for (let dx = -4; dx <= 4; dx++) for (let dy = -4; dy <= 4; dy++) {
@@ -86,7 +86,7 @@ for (const [radius, expected] of [[0, 1], [1, 9], [2, 13], [3, 29]]) {
     c.slow_timer = 60; c.slow_amt = 0.6;
     h.ctx.enemy_banner_speed = () => 1.3;
     [h.dead(5, 5), h.dead(4, 6), h.dead(5, 4)].forEach(h.kill);
-    assert.equal(c.nearby_deaths, 3); assert.equal(other.nearby_deaths, 2);
+    assert.equal(c.nearby_deaths, 3); assert.equal(other.nearby_deaths, 3);
     assert.equal(c.screech_timer, 30); assert.equal(other.screech_timer, 30);
     h.advance(c); h.advance(other);
     assert.equal(c.max_hp, 930); near(c.base_speed, 2.8);
